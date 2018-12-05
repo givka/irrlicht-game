@@ -181,6 +181,43 @@ struct MyEventReceiver : IEventReceiver
     return false;
   }
 };
+
+void updateEnemyRotation(is::IAnimatedMeshSceneNode *player, is::IAnimatedMeshSceneNode *enemy)
+{
+  // enemy will face player
+  core::vector3df position_player = player->getPosition();
+  core::vector3df position_enemy = enemy->getPosition();
+  core::vector3df rotation_enemy = enemy->getRotation();
+
+  core::vector3df position_diff = position_player - position_enemy;
+  rotation_enemy.Y = atan(position_diff.Z / position_diff.X) * (180.0f / irr::core::PI);
+  if ((position_player.X - position_enemy.X) > 0)
+  {
+    rotation_enemy.Y = 90 - rotation_enemy.Y;
+  }
+  else if ((position_player.X - position_enemy.X) < 0)
+  {
+    rotation_enemy.Y = -90 - rotation_enemy.Y;
+  }
+  rotation_enemy.Y -= 90;
+  enemy->setRotation(rotation_enemy);
+}
+
+void updateEnemyPosition(is::IAnimatedMeshSceneNode *player, is::IAnimatedMeshSceneNode *enemy)
+{
+  core::vector3df position_player = player->getPosition();
+  core::vector3df position_enemy = enemy->getPosition();
+  float speed_enemy = 0.01f;
+
+  if (fabs(position_enemy.X - position_player.X) > 20)
+    position_enemy.X += speed_enemy * (position_player.X - position_enemy.X);
+
+  if (fabs(position_enemy.Z - position_player.Z) > 20)
+    position_enemy.Z += speed_enemy * (position_player.Z - position_enemy.Z);
+
+  enemy->setPosition(position_enemy);
+}
+
 int main()
 {
   // Le gestionnaire d'événements
@@ -204,23 +241,23 @@ int main()
   perso->setMaterialTexture(0, driver->getTexture("data/blue_texture.pcx"));
 
   // Un deuxième personnage, en rouge et qui cours entre deux points
-  is::IAnimatedMeshSceneNode *perso_cours = smgr->addAnimatedMeshSceneNode(mesh);
-  perso_cours->setMaterialFlag(iv::EMF_LIGHTING, false);
-  perso_cours->setMD2Animation(is::EMAT_RUN);
-  perso_cours->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
-  is::ISceneNodeAnimator *anim =
-      smgr->createFlyStraightAnimator(ic::vector3df(-100, 0, 60),
-                                      ic::vector3df(100, 0, 60), 3500, true);
-  perso_cours->addAnimator(anim);
+  // is::IAnimatedMeshSceneNode *perso_cours = smgr->addAnimatedMeshSceneNode(mesh);
+  // perso_cours->setMaterialFlag(iv::EMF_LIGHTING, false);
+  // perso_cours->setMD2Animation(is::EMAT_RUN);
+  // perso_cours->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
+  // is::ISceneNodeAnimator *anim =
+  //     smgr->createFlyStraightAnimator(ic::vector3df(-100, 0, 60),
+  //                                     ic::vector3df(100, 0, 60), 3500, true);
+  // perso_cours->addAnimator(anim);
 
   // Un troisième personnage, qui saute en rond
-  is::IAnimatedMeshSceneNode *perso_cercle = smgr->addAnimatedMeshSceneNode(mesh);
-  perso_cercle->setMaterialFlag(iv::EMF_LIGHTING, false);
-  perso_cercle->setMD2Animation(is::EMAT_JUMP);
-  perso_cercle->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
-  is::ISceneNodeAnimator *anim_cercle =
-      smgr->createFlyCircleAnimator(core::vector3df(30, 0, 0), 20.0f);
-  perso_cercle->addAnimator(anim_cercle);
+  // is::IAnimatedMeshSceneNode *perso_cercle = smgr->addAnimatedMeshSceneNode(mesh);
+  // perso_cercle->setMaterialFlag(iv::EMF_LIGHTING, false);
+  // perso_cercle->setMD2Animation(is::EMAT_JUMP);
+  // perso_cercle->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
+  // is::ISceneNodeAnimator *anim_cercle =
+  //     smgr->createFlyCircleAnimator(core::vector3df(30, 0, 0), 20.0f);
+  // perso_cercle->addAnimator(anim_cercle);
 
   //ajouyt decor
   device->getFileSystem()->addFileArchive("data/map-20kdm2.pk3");
@@ -239,10 +276,30 @@ int main()
 
   is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(selector, perso, ellipseRadius);
 
-  selector->drop();
-
   perso->addAnimator(collision);
   collision->drop();
+
+  is::IAnimatedMeshSceneNode *enemies[100];
+
+  for (int i = 0; i < 100; i++)
+  {
+
+    enemies[i] = smgr->addAnimatedMeshSceneNode(mesh);
+
+    enemies[i]->setMaterialFlag(iv::EMF_LIGHTING, false);
+    enemies[i]->setMD2Animation(is::EMAT_RUN);
+    enemies[i]->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
+    enemies[i]->setPosition(core::vector3df(rand() % 500, 0, rand() % 500));
+
+    float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
+    std::cout << scale << std::endl;
+    enemies[i]->setScale(core::vector3df(scale, scale, scale));
+    is::ISceneNodeAnimatorCollisionResponse *c = smgr->createCollisionResponseAnimator(selector, enemies[i], ellipseRadius);
+    enemies[i]->addAnimator(c);
+    c->drop();
+  }
+
+  selector->drop();
 
   smgr->addCameraSceneNode(nullptr, ic::vector3df(0, 30, -70), ic::vector3df(0, 0, 0));
   cam = device->getSceneManager()->getActiveCamera();
@@ -259,6 +316,15 @@ int main()
 
     // Dessin de la scène :
     update();
+
+    ic::vector3df perso_position = node->getPosition();
+    ic::vector3df perso_rotation = node->getRotation();
+
+    for (int i = 0; i < 100; i++)
+    {
+      updateEnemyRotation(node, enemies[i]);
+      updateEnemyPosition(node, enemies[i]);
+    }
 
     smgr->drawAll();
     //
