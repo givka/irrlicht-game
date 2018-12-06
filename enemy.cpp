@@ -15,8 +15,8 @@ Enemy::Enemy()
 void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh)
 {
   float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
-  float const X = rand() % 500;
-  float const Z = rand() % 500;
+  float const X = rand() % 200;
+  float const Z = rand() % 200;
   node = smgr->addAnimatedMeshSceneNode(mesh);
   node->setMaterialFlag(iv::EMF_LIGHTING, false);
   node->setMD2Animation(is::EMAT_RUN);

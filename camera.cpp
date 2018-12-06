@@ -1,5 +1,4 @@
 #include <irrlicht.h>
-
 #include "camera.hpp"
 
 using namespace irr;
@@ -29,11 +28,10 @@ void Camera::updatePosition(is::IAnimatedMeshSceneNode *player)
   float cam_rot_y = 180 - node_rotation.Y;
 
   ic::vector3df target_position = node_position;
-  target_position.Y = 30;
 
   cam_position = target_position;
 
-  cam_position.Y = node_position.Y + 50;
+  cam_position.Y += 100.0;
   cam_position.X += cam_offset * cos(cam_rot_y * M_PI / 180.0);
   cam_position.Z += cam_offset * sin(cam_rot_y * M_PI / 180.0);
 
