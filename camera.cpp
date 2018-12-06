@@ -16,6 +16,7 @@ void Camera::setNode(irr::IrrlichtDevice *device, is::ISceneManager *smgr)
 {
   smgr->addCameraSceneNode(nullptr, ic::vector3df(0, 30, -70), ic::vector3df(0, 0, 0));
   node = device->getSceneManager()->getActiveCamera();
+  node->setFOV(1.5);
 }
 
 void Camera::updatePosition(is::IAnimatedMeshSceneNode *player)
