@@ -3,3 +3,8 @@ exec
 build
 build/*
 .vscode
+vscode/*
+.idea
+.idea/*
+test_data
+test_data/*
