@@ -2,3 +2,4 @@
 exec
 build
 build/*
+.vscode

@@ -12,11 +12,12 @@ Enemy::Enemy()
 {
 }
 
-void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh)
+void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int enemy_id)
 {
   float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
   float const X = rand() % 200;
   float const Z = rand() % 200;
+  id = enemy_id;
   node = smgr->addAnimatedMeshSceneNode(mesh);
   node->setMaterialFlag(iv::EMF_LIGHTING, false);
   node->setMD2Animation(is::EMAT_RUN);
@@ -36,11 +37,16 @@ void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *sele
   collision->drop();
 }
 
-void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player)
+void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player, std::vector<Enemy> enemies)
 {
+  updateRotation(player);
+
+  if (!isAllowedToMove(enemies))
+    return;
+
   core::vector3df position_player = player->getPosition();
   core::vector3df position_enemy = node->getPosition();
-  float speed_enemy = 0.01f;
+  float speed_enemy = 0.05f;
 
   if (fabs(position_enemy.X - position_player.X) > 20)
     position_enemy.X += speed_enemy * (position_player.X - position_enemy.X);
@@ -49,8 +55,7 @@ void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player)
     position_enemy.Z += speed_enemy * (position_player.Z - position_enemy.Z);
 
   node->setPosition(position_enemy);
-
-  updateRotation(player);
+  // map->setPositionEnemy(id, position_enemy);
 }
 
 // Enemy will always face player
@@ -72,4 +77,43 @@ void Enemy::updateRotation(is::IAnimatedMeshSceneNode *player)
   }
   rotation_enemy.Y -= 90;
   node->setRotation(rotation_enemy);
+}
+
+bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
+{
+  ic::vector3df position_enemy = node->getPosition();
+
+  for (int i = 0; i < enemies.size(); i++)
+  {
+
+    Enemy neighbour = enemies[i];
+    if (id != neighbour.id)
+    {
+      ic::vector3df position_neighbour = neighbour.node->getPosition();
+      bool isAllowed = true;
+
+      float const distanceX = position_enemy.X - position_neighbour.X;
+      float const distanceZ = position_enemy.Z - position_neighbour.Z;
+
+      if (fabs(distanceX) < 5.0)
+      {
+        position_enemy.X += distanceX > 0 ? 1.0 : -1.0;
+        node->setPosition(position_enemy);
+        isAllowed = false;
+      }
+
+      if (fabs(distanceZ) < 5.0)
+      {
+        position_enemy.Z += distanceZ > 0 ? 1.0 : -1.0;
+        node->setPosition(position_enemy);
+        isAllowed = false;
+      }
+
+      if (!isAllowed)
+      {
+        return false;
+      }
+    }
+  }
+  return true;
 }

@@ -14,6 +14,8 @@ namespace iv = irr::video;
 
 using namespace std;
 
+int const NBR_ENEMIES = 10;
+
 int main()
 {
   EventReceiver receiver;
@@ -43,11 +45,13 @@ int main()
   player.addCollisionMap(smgr, selector);
 
   // add enemy
-  Enemy enemies[100];
-  for (int i = 0; i < 100; i++)
+  std::vector<Enemy> enemies;
+  for (int i = 0; i < NBR_ENEMIES; i++)
   {
-    enemies[i].setNode(driver, smgr, meshSkeleton);
-    enemies[i].addCollisionMap(smgr, selector);
+    Enemy enemy;
+    enemy.setNode(driver, smgr, meshSkeleton, i);
+    enemy.addCollisionMap(smgr, selector);
+    enemies.push_back(enemy);
   }
 
   // remove collision selector
@@ -69,9 +73,9 @@ int main()
     player.updatePosition(&receiver);
     camera.updatePosition(player.node);
 
-    for (int i = 0; i < 100; i++)
+    for (int i = 0; i < enemies.size(); i++)
     {
-      enemies[i].updatePosition(player.node);
+      enemies[i].updatePosition(player.node, enemies);
     }
 
     smgr->drawAll();
