@@ -4,6 +4,7 @@
 #define PLAYER_H
 
 #include <irrlicht.h>
+#include <iostream>
 #include "events.hpp"
 
 namespace ic = irr::core;
@@ -21,6 +22,7 @@ public:
   void setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh);
   void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
   void updatePosition(EventReceiver *receiver);
+  void updateAnimation(EventReceiver *receiver);
 };
 
 #endif

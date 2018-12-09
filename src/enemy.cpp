@@ -1,4 +1,5 @@
 #include <irrlicht.h>
+#include <iostream>
 
 #include "enemy.hpp"
 
@@ -14,7 +15,8 @@ Enemy::Enemy()
 
 void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int enemy_id)
 {
-  float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
+  // float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
+  float const scale = 1.0f;
   float const X = rand() % 200;
   float const Z = rand() % 200;
   id = enemy_id;
@@ -39,13 +41,19 @@ void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *sele
 
 void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player, std::vector<Enemy> enemies)
 {
+  if (isDead)
+  {
+    std::cout << id << std::endl;
+    updateDeath();
+    return;
+  }
   updateRotation(player);
 
   if (!isAllowedToMove(enemies))
     return;
 
-  core::vector3df position_player = player->getPosition();
-  core::vector3df position_enemy = node->getPosition();
+  ic::vector3df position_player = player->getPosition();
+  ic::vector3df position_enemy = node->getPosition();
   float speed_enemy = 0.05f;
 
   if (fabs(position_enemy.X - position_player.X) > 20)
@@ -55,7 +63,7 @@ void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player, std::vector<Enemy
     position_enemy.Z += speed_enemy * (position_player.Z - position_enemy.Z);
 
   node->setPosition(position_enemy);
-  // map->setPositionEnemy(id, position_enemy);
+  lastPosition = position_enemy;
 }
 
 // Enemy will always face player
@@ -116,4 +124,28 @@ bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
     }
   }
   return true;
+}
+
+void Enemy::updateDeath()
+{
+
+  float speedDying = 0.5f;
+
+  ic::vector3df position = node->getPosition();
+
+  // blocked by wall
+  if ((int)lastPosition.X == (int)position.X && (int)lastPosition.Z == (int)position.Z)
+  {
+    isDead = false;
+    // Segmentation fault (core dumped)
+    // node->remove();
+    // return;
+  }
+
+  lastPosition = position;
+  position.X += speedDying * whereToDie.X;
+  position.Y += speedDying * whereToDie.Y + 5.0;
+  position.Z += speedDying * whereToDie.Z;
+
+  node->setPosition(position);
 }

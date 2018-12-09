@@ -34,52 +34,80 @@ void Player::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *sel
 
 void Player::updatePosition(EventReceiver *receiver)
 {
+  updateAnimation(receiver);
+
   auto states = receiver->states;
   ic::vector3df position = node->getPosition();
   ic::vector3df rotation = node->getRotation();
 
-  if (states[receiver->STATE_UP] || states[receiver->STATE_DOWN] || states[receiver->STATE_STRAFE_LEFT] || states[receiver->STATE_STRAFE_RIGHT])
-  {
-    if (states[receiver->STATE_MOVING] == false)
-    {
-      states[receiver->STATE_MOVING] = true;
-      node->setMD2Animation(is::EMAT_RUN);
-    }
-  }
-  else if (states[receiver->STATE_MOVING])
-  {
-    node->setMD2Animation(is::EMAT_STAND);
-    states[receiver->STATE_MOVING] = false;
-  }
-  if (states[receiver->STATE_UP])
+  if (states[receiver->KEY_UP])
   {
     position.X += speedPosition * cos(rotation.Y * M_PI / 180.0);
     position.Z += -speedPosition * sin(rotation.Y * M_PI / 180.0);
   }
-  if (states[receiver->STATE_DOWN])
+  if (states[receiver->KEY_DOWN])
   {
     position.X += -0.5 * speedPosition * cos(rotation.Y * M_PI / 180.0);
     position.Z += 0.5 * speedPosition * sin(rotation.Y * M_PI / 180.0);
   }
 
-  if (states[receiver->STATE_STRAFE_LEFT])
+  if (states[receiver->KEY_STRAFE_LEFT])
   {
     position.X += -speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
     position.Z += speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
   }
-  if (states[receiver->STATE_STRAFE_RIGHT])
+  if (states[receiver->KEY_STRAFE_RIGHT])
   {
     position.X += speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
     position.Z += -speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
   }
-  if (states[receiver->STATE_ROT_RIGHT])
+  if (states[receiver->KEY_ROT_RIGHT])
   {
     rotation.Y += speedRotation;
   }
-  if (states[receiver->STATE_ROT_LEFT])
+  if (states[receiver->KEY_ROT_LEFT])
   {
     rotation.Y -= speedRotation;
   }
   node->setPosition(position);
   node->setRotation(rotation);
+}
+
+void Player::updateAnimation(EventReceiver *receiver)
+{
+  auto states = receiver->states;
+  bool attackJustFinished = false;
+
+  if (states[receiver->KEY_ATTACK])
+  {
+    if (states[receiver->STATE_ATTACKING] == false)
+    {
+      states[receiver->STATE_ATTACKING] = true;
+      node->setMD2Animation(is::EMAT_ATTACK);
+    }
+  }
+
+  // When attack animation is done
+  if (states[receiver->STATE_ATTACKING] && (int)(node->getEndFrame() - node->getFrameNr()) == 0)
+  {
+    states[receiver->STATE_ATTACKING] = false;
+    attackJustFinished = true;
+  }
+
+  if (states[receiver->STATE_ATTACKING] == false)
+  {
+    if (states[receiver->KEY_UP] || states[receiver->KEY_DOWN] || states[receiver->KEY_STRAFE_LEFT] || states[receiver->KEY_STRAFE_RIGHT])
+    {
+      if (states[receiver->STATE_MOVING] == false || attackJustFinished)
+      {
+        states[receiver->STATE_MOVING] = true;
+        node->setMD2Animation(is::EMAT_RUN);
+      }
+    }
+    else if (states[receiver->STATE_MOVING] || attackJustFinished)
+    {
+      node->setMD2Animation(is::EMAT_STAND);
+      states[receiver->STATE_MOVING] = false;
+    }
+  }
 }

@@ -8,6 +8,10 @@
 
 #include <irrlicht.h>
 
+namespace ic = irr::core;
+namespace is = irr::scene;
+namespace iv = irr::video;
+
 class EventReceiver : public irr::IEventReceiver
 {
   irr::scene::ISceneNode *node;
@@ -22,20 +26,21 @@ class EventReceiver : public irr::IEventReceiver
 public:
   EventReceiver();
   bool OnEvent(const irr::SEvent &event);
-  void setNode(irr::scene::ISceneNode *node);
+  void setNode(is::ISceneNode *node);
   enum key_id
   {
-    STATE_UP,
-    STATE_DOWN,
-    STATE_ROT_LEFT,
-    STATE_ROT_RIGHT,
-    STATE_STRAFE_LEFT,
-    STATE_STRAFE_RIGHT,
+    KEY_UP,
+    KEY_DOWN,
+    KEY_ROT_LEFT,
+    KEY_ROT_RIGHT,
+    KEY_STRAFE_LEFT,
+    KEY_STRAFE_RIGHT,
+    KEY_ATTACK,
     STATE_MOVING,
-    STATE_JUMP,
-    STATE_END_ARRAY
+    STATE_ATTACKING,
+    END_ARRAY
   };
-  int states[STATE_END_ARRAY] = {0};
+  int states[END_ARRAY] = {0};
 };
 
 #endif

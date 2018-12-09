@@ -4,6 +4,7 @@
 #define CAMERA_H
 
 #include <irrlicht.h>
+#include "player.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;
@@ -17,7 +18,7 @@ public:
   Camera();
   is::ICameraSceneNode *node;
   void setNode(irr::IrrlichtDevice *device, is::ISceneManager *smgr);
-  void updatePosition(is::IAnimatedMeshSceneNode *player);
+  void updatePosition(Player player);
 };
 
 #endif

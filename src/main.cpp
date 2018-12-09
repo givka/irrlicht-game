@@ -5,6 +5,7 @@
 #include "player.hpp"
 #include "enemy.hpp"
 #include "camera.hpp"
+#include "computer.hpp"
 
 using namespace irr;
 
@@ -14,7 +15,7 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 10;
+int const NBR_ENEMIES = 200;
 
 int main()
 {
@@ -45,13 +46,11 @@ int main()
   player.addCollisionMap(smgr, selector);
 
   // add enemy
-  std::vector<Enemy> enemies;
+  Computer computer;
+
   for (int i = 0; i < NBR_ENEMIES; i++)
   {
-    Enemy enemy;
-    enemy.setNode(driver, smgr, meshSkeleton, i);
-    enemy.addCollisionMap(smgr, selector);
-    enemies.push_back(enemy);
+    computer.addEnemy(driver, smgr, meshSkeleton, selector, i);
   }
 
   // remove collision selector
@@ -71,12 +70,8 @@ int main()
     driver->beginScene(true, true, iv::SColor(100, 150, 200, 255));
 
     player.updatePosition(&receiver);
-    camera.updatePosition(player.node);
-
-    for (int i = 0; i < enemies.size(); i++)
-    {
-      enemies[i].updatePosition(player.node, enemies);
-    }
+    camera.updatePosition(player);
+    computer.update(player, &receiver);
 
     smgr->drawAll();
     driver->endScene();

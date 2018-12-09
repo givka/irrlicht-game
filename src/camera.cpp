@@ -18,12 +18,12 @@ void Camera::setNode(irr::IrrlichtDevice *device, is::ISceneManager *smgr)
   node->setFOV(1.5);
 }
 
-void Camera::updatePosition(is::IAnimatedMeshSceneNode *player)
+void Camera::updatePosition(Player player)
 {
 
   ic::vector3df cam_position = node->getPosition();
-  ic::vector3df node_position = player->getPosition();
-  ic::vector3df node_rotation = player->getRotation();
+  ic::vector3df node_position = player.node->getPosition();
+  ic::vector3df node_rotation = player.node->getRotation();
 
   float cam_rot_y = 180 - node_rotation.Y;
 

@@ -20,22 +20,25 @@ bool EventReceiver::keyboard(const SEvent &event)
   case KEY_ESCAPE:
     exit(0);
   case KEY_KEY_Z:
-    states[STATE_UP] = event.KeyInput.PressedDown;
+    states[KEY_UP] = event.KeyInput.PressedDown;
     break;
   case KEY_KEY_S:
-    states[STATE_DOWN] = event.KeyInput.PressedDown;
+    states[KEY_DOWN] = event.KeyInput.PressedDown;
     break;
   case KEY_KEY_A:
-    states[STATE_ROT_LEFT] = event.KeyInput.PressedDown;
+    states[KEY_ROT_LEFT] = event.KeyInput.PressedDown;
     break;
   case KEY_KEY_E:
-    states[STATE_ROT_RIGHT] = event.KeyInput.PressedDown;
+    states[KEY_ROT_RIGHT] = event.KeyInput.PressedDown;
     break;
   case KEY_KEY_Q:
-    states[STATE_STRAFE_LEFT] = event.KeyInput.PressedDown;
+    states[KEY_STRAFE_LEFT] = event.KeyInput.PressedDown;
     break;
   case KEY_KEY_D:
-    states[STATE_STRAFE_RIGHT] = event.KeyInput.PressedDown;
+    states[KEY_STRAFE_RIGHT] = event.KeyInput.PressedDown;
+    break;
+  case KEY_SPACE:
+    states[KEY_ATTACK] = event.KeyInput.PressedDown;
     break;
   default:
     break;
@@ -87,7 +90,7 @@ bool EventReceiver::OnEvent(const SEvent &event)
   return false;
 }
 
-void EventReceiver::setNode(irr::scene::ISceneNode *n)
+void EventReceiver::setNode(is::ISceneNode *n)
 {
   node = n;
 }
