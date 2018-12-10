@@ -40,7 +40,7 @@ public:
     STATE_ATTACKING,
     END_ARRAY
   };
-  int states[END_ARRAY] = {0};
+  int states[END_ARRAY] = {false};
 };
 
 #endif

@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <vector>
+#include <algorithm>
 #include <irrlicht.h>
 #include "computer.hpp"
 #include "enemy.hpp"
@@ -19,12 +20,12 @@ class Computer
   std::vector<Enemy> enemies;
 
   void updatePosition(Player player);
-  void updateDeath();
   void checkAttack(Player player, EventReceiver *receiver);
+  int nbrEnemiesAdded = 0;
 
 public:
   Computer();
-  void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector, int const id);
+  void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
 
   void update(Player player, EventReceiver *receiver);
 };

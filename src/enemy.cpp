@@ -39,20 +39,24 @@ void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *sele
   collision->drop();
 }
 
-void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player, std::vector<Enemy> enemies)
+void Enemy::update(Player player, std::vector<Enemy> enemies)
 {
-  if (isDead)
+  if (state == IS_DYING)
   {
-    std::cout << id << std::endl;
     updateDeath();
     return;
   }
-  updateRotation(player);
 
+  updateRotation(player);
+  updatePosition(player, enemies);
+}
+
+void Enemy::updatePosition(Player player, std::vector<Enemy> enemies)
+{
   if (!isAllowedToMove(enemies))
     return;
 
-  ic::vector3df position_player = player->getPosition();
+  ic::vector3df position_player = player.node->getPosition();
   ic::vector3df position_enemy = node->getPosition();
   float speed_enemy = 0.05f;
 
@@ -67,9 +71,9 @@ void Enemy::updatePosition(is::IAnimatedMeshSceneNode *player, std::vector<Enemy
 }
 
 // Enemy will always face player
-void Enemy::updateRotation(is::IAnimatedMeshSceneNode *player)
+void Enemy::updateRotation(Player player)
 {
-  core::vector3df position_player = player->getPosition();
+  core::vector3df position_player = player.node->getPosition();
   core::vector3df position_enemy = node->getPosition();
   core::vector3df rotation_enemy = node->getRotation();
 
@@ -91,9 +95,8 @@ bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
 {
   ic::vector3df position_enemy = node->getPosition();
 
-  for (int i = 0; i < enemies.size(); i++)
+  for (size_t i = 0; i < enemies.size(); i++)
   {
-
     Enemy neighbour = enemies[i];
     if (id != neighbour.id)
     {
@@ -136,10 +139,10 @@ void Enemy::updateDeath()
   // blocked by wall
   if ((int)lastPosition.X == (int)position.X && (int)lastPosition.Z == (int)position.Z)
   {
-    isDead = false;
-    // Segmentation fault (core dumped)
-    // node->remove();
-    // return;
+    isDead = true;
+    node->remove();
+    node = 0;
+    return;
   }
 
   lastPosition = position;

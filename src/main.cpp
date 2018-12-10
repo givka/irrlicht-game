@@ -48,9 +48,9 @@ int main()
   // add enemy
   Computer computer;
 
-  for (int i = 0; i < NBR_ENEMIES; i++)
+  for (size_t i = 0; i < NBR_ENEMIES; i++)
   {
-    computer.addEnemy(driver, smgr, meshSkeleton, selector, i);
+    computer.addEnemy(driver, smgr, meshSkeleton, selector);
   }
 
   // remove collision selector

@@ -12,10 +12,10 @@ Computer::Computer()
 {
 }
 
-void Computer::addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector, int const id)
+void Computer::addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector)
 {
   Enemy enemy;
-  enemy.setNode(driver, smgr, meshSkeleton, id);
+  enemy.setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
   enemy.addCollisionMap(smgr, selector);
   enemies.push_back(enemy);
 }
@@ -31,57 +31,32 @@ void Computer::checkAttack(Player player, EventReceiver *receiver)
   if (receiver->states[receiver->KEY_ATTACK] == false)
     return;
 
-  for (int index = 0; index < enemies.size(); index++)
+  for (size_t index = 0; index < enemies.size(); index++)
   {
 
-    Enemy *enemy = &enemies[index];
-
     ic::vector3df positionPlayer = player.node->getPosition();
-    ic::vector3df positionEnemy = enemy->node->getPosition();
+    ic::vector3df positionEnemy = enemies[index].node->getPosition();
     float const distance = positionEnemy.getDistanceFrom(positionPlayer);
 
     if (distance < 50.0)
     {
-      enemy->whereToDie = positionEnemy - positionPlayer;
-      enemy->isDead = true;
+      enemies[index].whereToDie = positionEnemy - positionPlayer;
+      enemies[index].state = Enemy::IS_DYING;
     }
   }
 }
 
 void Computer::updatePosition(Player player)
 {
-  for (int i = 0; i < enemies.size(); i++)
+  for (size_t index = 0; index < enemies.size();)
   {
-    enemies[i].updatePosition(player.node, enemies);
-
-    //draw line
-
-    // is::ISceneCollisionManager *collMan = smgr->getSceneCollisionManager();
-
-    // ic::line3d<f32> ray;
-
-    // ray.start = enemies[0].node->getPosition();
-    // ray.end = ray.start + (player.node->getPosition() - ray.start).normalize() * 1000.0f;
-
-    // // driver->draw3DLine(ray.start, ray.end);
-
-    // // Tracks the current intersection point with the level or a mesh
-    // ic::vector3df intersection;
-    // // Used to show with triangle has been hit
-    // ic::triangle3df hitTriangle;
-
-    // is::ISceneNode *selectedSceneNode = collMan->getSceneNodeAndCollisionPointFromRay(
-    //     ray,
-    //     intersection,
-    //     hitTriangle);
-
-    // // cout << fabs(intersection.getDistanceFrom(enemies[i].node->getPosition())) << endl;
-
-    // iv::SMaterial m;
-    // m.Lighting = false;
-    // driver->setMaterial(m);
-    // driver->setTransform(video::ETS_WORLD, core::matrix4());
-
-    // driver->draw3DLine(enemies[i].node->getPosition(), intersection);
+    enemies[index].update(player, enemies);
+    if (enemies[index].isDead)
+    {
+      enemies.erase(enemies.begin() + index);
+      std::cout << "enemies remaining: " << enemies.size() << std::endl;
+    }
+    else
+      index++;
   }
 }
