@@ -19,8 +19,11 @@ class Player
 public:
   Player();
   is::IAnimatedMeshSceneNode *node;
+
   void setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh);
+  is::IAnimatedMeshSceneNode *getNode();
   void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
+  
   void updatePosition(EventReceiver *receiver);
   void updateAnimation(EventReceiver *receiver);
 };

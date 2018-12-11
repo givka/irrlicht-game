@@ -111,3 +111,8 @@ void Player::updateAnimation(EventReceiver *receiver)
     }
   }
 }
+
+is::IAnimatedMeshSceneNode *Player::getNode()
+{
+  return node;
+}
