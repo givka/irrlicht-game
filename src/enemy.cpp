@@ -9,14 +9,13 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-Enemy::Enemy()
+Enemy::Enemy(): m_health(100), m_damage(15), m_scale(1.0f)
 {
 }
 
 void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int enemy_id)
 {
     // float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
-    float const scale = 1.0f;
     float const X = rand() % 200;
     float const Z = rand() % 200;
     m_id = enemy_id;
@@ -26,7 +25,7 @@ void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnim
     m_node->setMD2Animation(is::EMAT_RUN);
     m_node->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
     m_node->setPosition(core::vector3df(X, 0, Z));
-    m_node->setScale(core::vector3df(scale, scale, scale));
+    m_node->setScale(core::vector3df(m_scale, m_scale, m_scale));
 }
 
 void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector)
@@ -172,4 +171,17 @@ is::IAnimatedMeshSceneNode *Enemy::getNode() {
 void Enemy::kill(core::vector3df df) {
     m_death_dir = df;
     state = IS_DYING;
+}
+
+Enemy::Enemy(int health, int damage, float scale) :m_health(health), m_damage(damage), m_scale(scale)
+{
+
+}
+
+void Enemy::setPosition(ic::vector3df pos) {
+    m_node->setPosition(pos);
+}
+
+void Enemy::setOrientation(ic::vector3df ori) {
+    m_node->setRotation(ori);
 }

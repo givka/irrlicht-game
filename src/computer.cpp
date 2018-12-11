@@ -20,6 +20,17 @@ void Computer::addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::I
     m_enemies.push_back(enemy);
 }
 
+
+void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, iv::IVideoDriver *driver, is::ISceneManager *smgr,
+                        is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector) {
+    enemy->setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
+    enemy->addCollisionMap(smgr, selector);
+    Enemy e = *enemy;
+    e.setPosition(pos);
+    e.setOrientation(ori);
+    m_enemies.push_back(e);
+}
+
 void Computer::update(Player player, EventReceiver *receiver)
 {
     checkAttack(player, receiver);

@@ -48,3 +48,15 @@ void WaveManager::loadJSON(std::string path_to_json) {
 int WaveManager::getCurrentWave() {
     return m_current_wave;
 }
+
+void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, iv::IVideoDriver *driver, is::ISceneManager *smgr,
+                            is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector) {
+    for(auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
+    {
+        Enemy enemy(spawn.health, spawn.damage, spawn.scale);
+        auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
+        auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
+
+        computer.addEnemy(&enemy, pos, rot, driver, smgr, meshSkeleton, selector);
+    }
+}
