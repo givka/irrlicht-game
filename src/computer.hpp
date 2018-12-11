@@ -17,17 +17,17 @@ namespace iv = irr::video;
 
 class Computer
 {
-  std::vector<Enemy> enemies;
-
-  void updatePosition(Player player);
-  void checkAttack(Player player, EventReceiver *receiver);
-  int nbrEnemiesAdded = 0;
-
 public:
-  Computer();
-  void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
+    Computer();
+    void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
+    void update(Player player, EventReceiver *receiver);
 
-  void update(Player player, EventReceiver *receiver);
+private:
+    std::vector<Enemy> m_enemies;
+
+    void updatePosition(Player player);
+    void checkAttack(Player player, EventReceiver *receiver);
+    int nbrEnemiesAdded = 0;
 };
 
 #endif

@@ -14,48 +14,48 @@ Computer::Computer()
 
 void Computer::addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector)
 {
-  Enemy enemy;
-  enemy.setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
-  enemy.addCollisionMap(smgr, selector);
-  enemies.push_back(enemy);
+    Enemy enemy;
+    enemy.setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
+    enemy.addCollisionMap(smgr, selector);
+    m_enemies.push_back(enemy);
 }
 
 void Computer::update(Player player, EventReceiver *receiver)
 {
-  checkAttack(player, receiver);
-  updatePosition(player);
+    checkAttack(player, receiver);
+    updatePosition(player);
 }
 
 void Computer::checkAttack(Player player, EventReceiver *receiver)
 {
-  if (receiver->states[receiver->KEY_ATTACK] == false)
-    return;
+    if (receiver->states[receiver->KEY_ATTACK] == false)
+        return;
 
-  for (size_t index = 0; index < enemies.size(); index++)
-  {
-
-    ic::vector3df positionPlayer = player.node->getPosition();
-    ic::vector3df positionEnemy = enemies[index].getNode()->getPosition();
-    float const distance = positionEnemy.getDistanceFrom(positionPlayer);
-
-    if (distance < 50.0)
+    for (size_t index = 0; index < m_enemies.size(); index++)
     {
-      enemies[index].kill(positionEnemy - positionPlayer);
+
+        ic::vector3df positionPlayer = player.node->getPosition();
+        ic::vector3df positionEnemy = m_enemies[index].getNode()->getPosition();
+        float const distance = positionEnemy.getDistanceFrom(positionPlayer);
+
+        if (distance < 50.0)
+        {
+            m_enemies[index].kill(positionEnemy - positionPlayer);
+        }
     }
-  }
 }
 
 void Computer::updatePosition(Player player)
 {
-  for (size_t index = 0; index < enemies.size();)
-  {
-    enemies[index].update(player, enemies);
-    if (enemies[index].isDead())
+    for (size_t index = 0; index < m_enemies.size();)
     {
-      enemies.erase(enemies.begin() + index);
-      std::cout << "enemies remaining: " << enemies.size() << std::endl;
+        m_enemies[index].update(player, m_enemies);
+        if (m_enemies[index].isDead())
+        {
+            m_enemies.erase(m_enemies.begin() + index);
+            std::cout << "enemies remaining: " << m_enemies.size() << std::endl;
+        }
+        else
+            index++;
     }
-    else
-      index++;
-  }
 }

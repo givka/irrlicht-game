@@ -13,16 +13,16 @@ namespace iv = irr::video;
 
 class Sword
 {
-  bool swordGoingDown = true;
-  ic::vector3df destination;
+    bool swordGoingDown = true;
+    ic::vector3df destination;
 
 public:
-  Sword();
-  void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
-  is::IMeshSceneNode *node;
-  void updatePosition();
-  bool isAttacking = false;
-  void setAttack();
+    Sword();
+    void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
+    is::IMeshSceneNode *node;
+    void updatePosition();
+    bool isAttacking = false;
+    void setAttack();
 };
 
 #endif

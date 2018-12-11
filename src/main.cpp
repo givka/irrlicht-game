@@ -23,68 +23,68 @@ int const HEIGHT = 900;
 
 int main()
 {
-  EventReceiver receiver;
+    EventReceiver receiver;
 
-  IrrlichtDevice *device = createDevice(iv::EDT_OPENGL,
-                                        ic::dimension2d<u32>(WIDTH, HEIGHT),
-                                        16, false, false, false, &receiver);
+    IrrlichtDevice *device = createDevice(iv::EDT_OPENGL,
+                                          ic::dimension2d<u32>(WIDTH, HEIGHT),
+                                          16, false, false, false, &receiver);
 
-  iv::IVideoDriver *driver = device->getVideoDriver();
-  is::ISceneManager *smgr = device->getSceneManager();
+    iv::IVideoDriver *driver = device->getVideoDriver();
+    is::ISceneManager *smgr = device->getSceneManager();
 
-  Level level;
-  level.loadFromJSON("data/level.json", device, driver, smgr);
+    Level level;
+    level.loadFromJSON("data/level.json", device, driver, smgr);
 
-  // add collision map selector
-  is::ITriangleSelector *selector;
-  selector = smgr->createOctreeTriangleSelector(level.getMapNode()->getMesh(), level.getMapNode());
-  level.getMapNode()->setTriangleSelector(selector);
-  level.getMapNode()->setMaterialType(iv::EMT_SOLID);
-  level.getMapNode()->setMaterialFlag(iv::EMF_LIGHTING, true);
-  is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
+    // add collision map selector
+    is::ITriangleSelector *selector;
+    selector = smgr->createOctreeTriangleSelector(level.getMapNode()->getMesh(), level.getMapNode());
+    level.getMapNode()->setTriangleSelector(selector);
+    level.getMapNode()->setMaterialType(iv::EMT_SOLID);
+    level.getMapNode()->setMaterialFlag(iv::EMF_LIGHTING, true);
+    is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
 
-  Player player;
-  player.initialise(device, selector);
+    Player player;
+    player.initialise(device, selector);
 
-  // add enemy
-  Computer computer;
+    // add enemy
+    Computer computer;
 
-  for (size_t i = 0; i < NBR_ENEMIES; i++)
-  {
-    computer.addEnemy(driver, smgr, meshSkeleton, selector);
-  }
-
-  // remove collision selector
-  selector->drop();
-
-  // infinite loop
-  int lastFPS = -1;
-  while (device->run())
-  {
-    driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
-
-    player.updatePosition(&receiver);
-    computer.update(player, &receiver);
-
-    smgr->drawAll();
-
-    driver->endScene();
-
-    int fps = driver->getFPS();
-    if (lastFPS != fps)
+    for (size_t i = 0; i < NBR_ENEMIES; i++)
     {
-      core::stringw str = L"BARRIERE - BOUCAUD - Irrlicht Engine [";
-      str += driver->getName();
-      str += "] FPS:";
-      str += fps;
-
-      device->setWindowCaption(str.c_str());
-      lastFPS = fps;
+        computer.addEnemy(driver, smgr, meshSkeleton, selector);
     }
 
-    driver->endScene();
-  }
-  device->drop();
+    // remove collision selector
+    selector->drop();
 
-  return 0;
+    // infinite loop
+    int lastFPS = -1;
+    while (device->run())
+    {
+        driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
+
+        player.updatePosition(&receiver);
+        computer.update(player, &receiver);
+
+        smgr->drawAll();
+
+        driver->endScene();
+
+        int fps = driver->getFPS();
+        if (lastFPS != fps)
+        {
+            core::stringw str = L"BARRIERE - BOUCAUD - Irrlicht Engine [";
+            str += driver->getName();
+            str += "] FPS:";
+            str += fps;
+
+            device->setWindowCaption(str.c_str());
+            lastFPS = fps;
+        }
+
+        driver->endScene();
+    }
+    device->drop();
+
+    return 0;
 }
