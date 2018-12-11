@@ -4,7 +4,6 @@
 #include "events.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
-#include "camera.hpp"
 #include "computer.hpp"
 
 using namespace irr;
@@ -15,14 +14,16 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 200;
+int const NBR_ENEMIES = 100;
+int const WIDTH = 1400;
+int const HEIGHT = 900;
 
 int main()
 {
   EventReceiver receiver;
 
   IrrlichtDevice *device = createDevice(iv::EDT_OPENGL,
-                                        ic::dimension2d<u32>(1366, 768),
+                                        ic::dimension2d<u32>(WIDTH, HEIGHT),
                                         16, false, false, false, &receiver);
 
   iv::IVideoDriver *driver = device->getVideoDriver();
@@ -30,9 +31,12 @@ int main()
 
   // add map
   device->getFileSystem()->addFileArchive("data/map-20kdm2.pk3");
+
   is::IAnimatedMesh *meshMap = smgr->getMesh("20kdm2.bsp");
   is::IMeshSceneNode *nodeMap = smgr->addOctreeSceneNode(meshMap->getMesh(0));
   nodeMap->setPosition(core::vector3df(-1300, -104, -1249));
+  nodeMap->setMaterialType(iv::EMT_SOLID);
+  nodeMap->setMaterialFlag(iv::EMF_LIGHTING, true);
 
   // add collision map selector
   is::ITriangleSelector *selector;
@@ -42,8 +46,7 @@ int main()
   is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
 
   Player player;
-  player.setNode(driver, smgr, meshSkeleton);
-  player.addCollisionMap(smgr, selector);
+  player.initialise(device, selector);
 
   // add enemy
   Computer computer;
@@ -56,24 +59,17 @@ int main()
   // remove collision selector
   selector->drop();
 
-  // add camera
-  Camera camera;
-  camera.setNode(device, smgr);
-
-  // add events
-  receiver.setNode(player.node);
-
   // infinite loop
   int lastFPS = -1;
   while (device->run())
   {
-    driver->beginScene(true, true, iv::SColor(100, 150, 200, 255));
+    driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
 
     player.updatePosition(&receiver);
-    camera.updatePosition(player);
     computer.update(player, &receiver);
 
     smgr->drawAll();
+
     driver->endScene();
 
     int fps = driver->getFPS();

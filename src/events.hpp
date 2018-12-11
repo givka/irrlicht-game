@@ -14,19 +14,12 @@ namespace iv = irr::video;
 
 class EventReceiver : public irr::IEventReceiver
 {
-  irr::scene::ISceneNode *node;
-  bool button_pressed;
-  int old_x, old_y;
-  std::vector<irr::video::ITexture *> textures;
-  int current_texture;
-
   bool keyboard(const irr::SEvent &event);
   bool mouse(const irr::SEvent &event);
 
 public:
   EventReceiver();
   bool OnEvent(const irr::SEvent &event);
-  void setNode(is::ISceneNode *node);
   enum key_id
   {
     KEY_UP,
