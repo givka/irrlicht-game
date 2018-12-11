@@ -84,8 +84,6 @@ int main()
             device->setWindowCaption(str.c_str());
             lastFPS = fps;
         }
-
-        driver->endScene();
     }
     device->drop();
 
