@@ -13,30 +13,39 @@ namespace iv = irr::video;
 
 class Enemy
 {
-  int id;
-  bool isAllowedToMove(std::vector<Enemy> enemies);
-  void updateRotation(Player player);
-  void updatePosition(Player player, std::vector<Enemy> enemies);
-  void updateDeath();
-
 public:
-  Enemy();
-  is::IAnimatedMeshSceneNode *node;
-  void setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int const id);
-  void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
-  void update(Player player, std::vector<Enemy> enemies);
 
-  bool isDead = false;
-  ic::vector3df whereToDie;
-  ic::vector3df lastPosition;
+    Enemy();
+    bool isDead();
+    void setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int const id);
+    is::IAnimatedMeshSceneNode *getNode();
+    void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
+    void update(Player player, std::vector<Enemy> enemies);
+    void kill(ic::vector3df);
 
-  enum key_id
-  {
-    IS_ALIVE,
-    IS_DYING,
-    IS_DEAD,
-  };
-  bool state = IS_ALIVE;
+private:
+
+    int m_id;
+    int m_health;
+    int m_damage;
+    bool m_dead = false;
+    ic::vector3df m_death_dir;
+    ic::vector3df m_last_position;
+    is::IAnimatedMeshSceneNode *m_node;
+
+    bool isAllowedToMove(std::vector<Enemy> enemies);
+    void updateRotation(Player player);
+    void updatePosition(Player player, std::vector<Enemy> enemies);
+    void updateDeath();
+
+
+    enum enemy_state //wtf
+    {
+        IS_ALIVE,
+        IS_DYING,
+        IS_DEAD,
+    };
+    enemy_state state = IS_ALIVE;
 };
 
 #endif

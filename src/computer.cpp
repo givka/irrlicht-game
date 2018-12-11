@@ -35,13 +35,12 @@ void Computer::checkAttack(Player player, EventReceiver *receiver)
   {
 
     ic::vector3df positionPlayer = player.node->getPosition();
-    ic::vector3df positionEnemy = enemies[index].node->getPosition();
+    ic::vector3df positionEnemy = enemies[index].getNode()->getPosition();
     float const distance = positionEnemy.getDistanceFrom(positionPlayer);
 
     if (distance < 50.0)
     {
-      enemies[index].whereToDie = positionEnemy - positionPlayer;
-      enemies[index].state = Enemy::IS_DYING;
+      enemies[index].kill(positionEnemy - positionPlayer);
     }
   }
 }
@@ -51,7 +50,7 @@ void Computer::updatePosition(Player player)
   for (size_t index = 0; index < enemies.size();)
   {
     enemies[index].update(player, enemies);
-    if (enemies[index].isDead)
+    if (enemies[index].isDead())
     {
       enemies.erase(enemies.begin() + index);
       std::cout << "enemies remaining: " << enemies.size() << std::endl;
