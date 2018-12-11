@@ -6,6 +6,7 @@
 #include "enemy.hpp"
 #include "camera.hpp"
 #include "computer.hpp"
+#include "level.hpp"
 
 #define DEBUG_INFO
 
@@ -30,16 +31,13 @@ int main()
   iv::IVideoDriver *driver = device->getVideoDriver();
   is::ISceneManager *smgr = device->getSceneManager();
 
-  // add map
-  device->getFileSystem()->addFileArchive("data/map-20kdm2.pk3");
-  is::IAnimatedMesh *meshMap = smgr->getMesh("20kdm2.bsp");
-  is::IMeshSceneNode *nodeMap = smgr->addOctreeSceneNode(meshMap->getMesh(0));
-  nodeMap->setPosition(core::vector3df(-1300, -104, -1249));
+  Level level;
+  level.loadFromJSON("data/level.json", device, driver, smgr);
 
   // add collision map selector
   is::ITriangleSelector *selector;
-  selector = smgr->createOctreeTriangleSelector(nodeMap->getMesh(), nodeMap);
-  nodeMap->setTriangleSelector(selector);
+  selector = smgr->createOctreeTriangleSelector(level.getMapNode()->getMesh(), level.getMapNode());
+  level.getMapNode()->setTriangleSelector(selector);
 
   is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
 
@@ -89,7 +87,7 @@ int main()
       device->setWindowCaption(str.c_str());
       lastFPS = fps;
     }
-    
+
     #ifdef DEBUG_INFO
       auto node = player.getNode();
       auto pos = node->getPosition();

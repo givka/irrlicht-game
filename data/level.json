@@ -1,0 +1,31 @@
+{
+	"map" : {
+		"archive_path" : "data/map-20kdm2.pk3",
+		"mesh_path" : "20kdm2.bsp",
+		"position" : [-1300, -104, -1249]
+	},
+	"spawn_points" : [
+		{
+			"position" : [-80, 20, 260],
+			"orientation" : [0, 0, 0],
+			"id" : 0
+		},
+		{
+			"position" : [-560, 20, 200],
+			"orientation" : [0, 0, 0],
+			"id" : 1
+		},
+		{
+			"position" : [-560, 20, -10],
+			"orientation" : [0, 0, 0],
+			"id" : 2
+		},
+		{
+			"position" : [-560, 20, 90],
+			"orientation" : [0, 0, 0],
+			"id" : 3
+		}				
+	],
+	"lights" : [
+	]
+}

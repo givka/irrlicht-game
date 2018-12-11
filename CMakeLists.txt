@@ -9,13 +9,14 @@ SET(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
 #set irrlicht location variables
 set(IRRLICHT_INCLUDE_DIR "/usr/include/irrlicht" CACHE FILEPATH "Path to Irrlicht include")
 set(IRRLICHT_LIB_DIR "/usr/lib" CACHE FILEPATH "Path to Irrlicht lib")
+set(RAPIDJSON_INCLUDE_DIR "rapidjson" CACHE FILEPATH "Path to rapidjson includes")
 
 #set source and header files
 FILE(GLOB SOURCES src/*.cpp)
 FILE(GLOB HEADERS src/*.hpp)
 
 #set build and link
-INCLUDE_DIRECTORIES(${IRRLICHT_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${IRRLICHT_INCLUDE_DIR} ${RAPIDJSON_INCLUDE_DIR})
 ADD_EXECUTABLE(irrlicht-game ${SOURCES} ${HEADERS})
 TARGET_LINK_LIBRARIES(irrlicht-game	libIrrlicht.so)
 
