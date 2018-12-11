@@ -90,7 +90,6 @@ int main()
             std::cout << "spawning wave 0" << std::endl;
             waveMgr.spawnWave(level, 0, computer, driver, smgr, meshSkeleton, selector);
         }
-        driver->endScene();
     }
     device->drop();
 
