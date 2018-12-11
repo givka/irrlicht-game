@@ -59,4 +59,10 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, iv::I
 
         computer.addEnemy(&enemy, pos, rot, driver, smgr, meshSkeleton, selector);
     }
+
+    m_current_wave = wave_id;
+}
+
+unsigned long WaveManager::getLastWaveId() {
+    return m_waves.size()-1;
 }

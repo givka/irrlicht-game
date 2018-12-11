@@ -70,3 +70,7 @@ void Computer::updatePosition(Player player)
             index++;
     }
 }
+
+bool Computer::isWaveFinished() {
+    return m_enemies.size() == 0;
+}

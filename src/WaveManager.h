@@ -36,8 +36,8 @@ public:
     WaveManager();
     void loadJSON(std::string path_to_json);
     int getCurrentWave();
+    unsigned long getLastWaveId();
     void spawnWave(Level &level, int wave_id, Computer &computer, iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector); //todo:: model mgt system
-
 private:
     int m_current_wave;
     std::vector<Wave> m_waves;

@@ -22,13 +22,12 @@ public:
     void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
     void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector); //todo: obviously needs to be changed
     void update(Player player, EventReceiver *receiver);
-
+    bool isWaveFinished();
 private:
     std::vector<Enemy> m_enemies;
-
+    int nbrEnemiesAdded;
     void updatePosition(Player player);
     void checkAttack(Player player, EventReceiver *receiver);
-    int nbrEnemiesAdded = 0;
 };
 
 #endif
