@@ -4,7 +4,6 @@
 #include "events.hpp"
 #include "player.hpp"
 #include "enemy.hpp"
-#include "camera.hpp"
 #include "computer.hpp"
 #include "level.hpp"
 
@@ -18,14 +17,16 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 20;
+int const NBR_ENEMIES = 100;
+int const WIDTH = 1400;
+int const HEIGHT = 900;
 
 int main()
 {
   EventReceiver receiver;
 
   IrrlichtDevice *device = createDevice(iv::EDT_OPENGL,
-                                        ic::dimension2d<u32>(1366, 768),
+                                        ic::dimension2d<u32>(WIDTH, HEIGHT),
                                         16, false, false, false, &receiver);
 
   iv::IVideoDriver *driver = device->getVideoDriver();
@@ -38,12 +39,12 @@ int main()
   is::ITriangleSelector *selector;
   selector = smgr->createOctreeTriangleSelector(level.getMapNode()->getMesh(), level.getMapNode());
   level.getMapNode()->setTriangleSelector(selector);
-
+  level.getMapNode()->setMaterialType(iv::EMT_SOLID);
+  level.getMapNode()->setMaterialFlag(iv::EMF_LIGHTING, true);
   is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
 
   Player player;
-  player.setNode(driver, smgr, meshSkeleton);
-  player.addCollisionMap(smgr, selector);
+  player.initialise(device, selector);
 
   // add enemy
   Computer computer;
@@ -56,24 +57,17 @@ int main()
   // remove collision selector
   selector->drop();
 
-  // add camera
-  Camera camera;
-  camera.setNode(device, smgr);
-
-  // add events
-  receiver.setNode(player.node);
-
   // infinite loop
   int lastFPS = -1;
   while (device->run())
   {
-    driver->beginScene(true, true, iv::SColor(100, 150, 200, 255));
+    driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
 
     player.updatePosition(&receiver);
-    camera.updatePosition(player);
     computer.update(player, &receiver);
 
     smgr->drawAll();
+
     driver->endScene();
 
     int fps = driver->getFPS();
@@ -87,12 +81,6 @@ int main()
       device->setWindowCaption(str.c_str());
       lastFPS = fps;
     }
-
-    #ifdef DEBUG_INFO
-      auto node = player.getNode();
-      auto pos = node->getPosition();
-      std::cout << pos.X << " " << pos.Y << " " << pos.Z << std::endl;
-    #endif
 
     driver->endScene();
   }

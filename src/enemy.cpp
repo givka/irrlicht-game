@@ -21,7 +21,7 @@ void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnim
   float const Z = rand() % 200;
   id = enemy_id;
   node = smgr->addAnimatedMeshSceneNode(mesh);
-  node->setMaterialFlag(iv::EMF_LIGHTING, false);
+  node->setMaterialFlag(iv::EMF_LIGHTING, true);
   node->setMD2Animation(is::EMAT_RUN);
   node->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
   node->setPosition(core::vector3df(X, 0, Z));
@@ -132,9 +132,10 @@ bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
 void Enemy::updateDeath()
 {
 
-  float speedDying = 0.5f;
+  float speedDying = 0.1f;
 
   ic::vector3df position = node->getPosition();
+  ic::vector3df rotation = node->getRotation();
 
   // blocked by wall
   if ((int)lastPosition.X == (int)position.X && (int)lastPosition.Z == (int)position.Z)
@@ -150,5 +151,10 @@ void Enemy::updateDeath()
   position.Y += speedDying * whereToDie.Y + 5.0;
   position.Z += speedDying * whereToDie.Z;
 
+  rotation.X += speedDying * whereToDie.X;
+  rotation.Y += speedDying * whereToDie.Y;
+  rotation.Z += speedDying * whereToDie.Z;
+
   node->setPosition(position);
+  node->setRotation(rotation);
 }
