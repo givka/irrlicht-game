@@ -1,0 +1,53 @@
+{
+	"waves":[
+		{
+			"spawns" : [
+				{
+					"spawn_point_id" : 0,
+					"health" : 100,
+					"damage" : 10,
+					"scale" : 1.0,
+					"speed" : 1.0,
+
+					"model_path" : "/random/path",
+					"texture_path" : "/random/path"
+				},
+				{
+					"spawn_point_id" : 1,
+					"health" : 100,
+					"damage" : 10,
+					"scale" : 1.5,
+					"speed" : 1.0,
+
+					"model_path" : "/random/path",
+					"texture_path" : "/random/path"
+				}
+			]
+		}, 
+		{
+			"spawns" : [
+				{
+					"spawn_point_id" : 2,
+					"health" : 100,
+					"damage" : 10,
+					"scale" : 1.0,
+					"speed" : 1.0,
+
+					"model_path" : "/random/path",
+					"texture_path" : "/random/path"
+				},
+				{
+					"spawn_point_id" : 3,
+					"health" : 100,
+					"damage" : 10,
+					"scale" : 1.5,
+					"speed" : 1.0,
+
+					"model_path" : "/random/path",
+					"texture_path" : "/random/path"
+				}
+			]
+		}
+	]
+		
+}

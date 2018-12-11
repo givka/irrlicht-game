@@ -6,6 +6,7 @@
 #include "enemy.hpp"
 #include "computer.hpp"
 #include "level.hpp"
+#include "WaveManager.h"
 
 #define DEBUG_INFO
 
@@ -17,7 +18,7 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 100;
+int const NBR_ENEMIES = 40;
 int const WIDTH = 1400;
 int const HEIGHT = 900;
 
@@ -46,12 +47,14 @@ int main()
     Player player;
     player.initialise(device, selector);
 
+    WaveManager waveMgr;
+    waveMgr.loadJSON("data/waves.json");
+
     // add enemy
     Computer computer;
-
     for (size_t i = 0; i < NBR_ENEMIES; i++)
     {
-        computer.addEnemy(driver, smgr, meshSkeleton, selector);
+        //computer.addEnemy(driver, smgr, meshSkeleton, selector);
     }
 
     // remove collision selector
