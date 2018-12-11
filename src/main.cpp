@@ -7,6 +7,8 @@
 #include "camera.hpp"
 #include "computer.hpp"
 
+#define DEBUG_INFO
+
 using namespace irr;
 
 namespace ic = irr::core;
@@ -15,7 +17,7 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 200;
+int const NBR_ENEMIES = 20;
 
 int main()
 {
@@ -87,6 +89,14 @@ int main()
       device->setWindowCaption(str.c_str());
       lastFPS = fps;
     }
+    
+    #ifdef DEBUG_INFO
+      auto node = player.getNode();
+      auto pos = node->getPosition();
+      std::cout << pos.X << " " << pos.Y << " " << pos.Z << std::endl;
+    #endif
+
+    driver->endScene();
   }
   device->drop();
 
