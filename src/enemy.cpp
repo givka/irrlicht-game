@@ -54,7 +54,7 @@ void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *rec
         updatePosition(enemies);
 }
 
-bool Enemy::isAttacking(Player player)
+bool Enemy::isAttacking(Player &player)
 {
     if (m_state == IS_ATTACKING)
     {
@@ -99,7 +99,7 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
 }
 
 // Enemy will always face player
-void Enemy::updateRotation(Player player)
+void Enemy::updateRotation(Player &player)
 {
     core::vector3df position_player = player.node->getPosition();
     core::vector3df position_enemy = m_node->getPosition();
@@ -207,7 +207,7 @@ void Enemy::setOrientation(ic::vector3df ori)
     m_node->setRotation(ori);
 }
 
-bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
+bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
 {
     if(!isAlive()) return false;
     if (receiver->states[receiver->KEY_ATTACK])

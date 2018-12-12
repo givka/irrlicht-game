@@ -40,11 +40,11 @@ class Enemy
     is::IAnimatedMeshSceneNode *m_node;
 
     bool isAllowedToMove(std::vector<Enemy> enemies);
-    void updateRotation(Player player);
+    void updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath();
-    bool isBeingAttacked(Player player, EventReceiver *receiver);
-    bool isAttacking(Player player);
+    bool isBeingAttacked(Player &player, EventReceiver *receiver);
+    bool isAttacking(Player &player);
 
     enum enemy_state
     {
