@@ -13,6 +13,10 @@ Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f)
 {
 }
 
+Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale)
+{
+}
+
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
 {
 
@@ -56,7 +60,7 @@ bool Enemy::isAttacking(Player player)
     {
         if (m_node->getEndFrame() - m_node->getFrameNr() <= 1)
         {
-            m_state = IS_ALIVE;
+            m_state = IS_RUNNING;
             m_node->setMD2Animation(is::EMAT_RUN);
             return false;
         }
@@ -193,18 +197,6 @@ is::IAnimatedMeshSceneNode *Enemy::getNode()
     return m_node;
 }
 
-void Enemy::die(core::vector3df df)
-{
-    m_death_dir = df;
-    m_state = IS_DYING;
-    m_death_time = m_device->getTimer()->getTime();
-    m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
-}
-
-Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale)
-{
-}
-
 void Enemy::setPosition(ic::vector3df pos)
 {
     m_node->setPosition(pos);
@@ -230,8 +222,10 @@ bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
         // cone from -0.8 -> -1 <- -0.8
         if (distance < 50.0 && angle <= -0.80f)
         {
-            ic::vector3df death_direction = position_enemy - position_player;
-            die(death_direction);
+            m_death_dir = position_enemy - position_player;
+            m_state = IS_DYING;
+            m_death_time = m_device->getTimer()->getTime();
+            m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
             return true;
         }
     }
