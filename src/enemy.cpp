@@ -40,10 +40,10 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
 
 void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *receiver)
 {
-    if (state == IS_DYING)
+    if (m_state == IS_DYING)
         return updateDeath();
 
-    checkAttack(player, receiver);
+    isBeingAttacked(player, receiver);
     updateRotation(player);
     updatePosition(player, enemies);
 }
@@ -53,15 +53,14 @@ void Enemy::updatePosition(Player player, std::vector<Enemy> enemies)
     if (!isAllowedToMove(enemies))
         return;
 
+    float speed_rotation = 2.5f;
+
     ic::vector3df position_player = player.node->getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
-    float speed_enemy = 0.05f;
+    ic::vector3df rotation_enemy = m_node->getRotation();
 
-    if (fabs(position_enemy.X - position_player.X) > 20)
-        position_enemy.X += speed_enemy * (position_player.X - position_enemy.X);
-
-    if (fabs(position_enemy.Z - position_player.Z) > 20)
-        position_enemy.Z += speed_enemy * (position_player.Z - position_enemy.Z);
+    position_enemy.X += speed_rotation * cos((rotation_enemy.Y) * M_PI / 180.0);
+    position_enemy.Z -= speed_rotation * sin((rotation_enemy.Y) * M_PI / 180.0);
 
     m_node->setPosition(position_enemy);
     m_last_position = position_enemy;
@@ -138,7 +137,7 @@ void Enemy::updateDeath()
     // blocked by wall or by 2s timeout
     if ((int)m_last_position.X == (int)position.X && (int)m_last_position.Z == (int)position.Z || time_dying >= 2000) //todo: timer till despawn instead ?
     {
-        m_dead = true;
+        m_state = IS_DEAD;
         m_node->remove();
         m_node = 0;
         return;
@@ -159,7 +158,7 @@ void Enemy::updateDeath()
 
 bool Enemy::isDead()
 {
-    return m_dead;
+    return m_state == IS_DEAD;
 }
 
 is::IAnimatedMeshSceneNode *Enemy::getNode()
@@ -167,10 +166,10 @@ is::IAnimatedMeshSceneNode *Enemy::getNode()
     return m_node;
 }
 
-void Enemy::kill(core::vector3df df)
+void Enemy::die(core::vector3df df)
 {
     m_death_dir = df;
-    state = IS_DYING;
+    m_state = IS_DYING;
     m_death_time = m_device->getTimer()->getTime();
     m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
 }
@@ -189,7 +188,7 @@ void Enemy::setOrientation(ic::vector3df ori)
     m_node->setRotation(ori);
 }
 
-void Enemy::checkAttack(Player player, EventReceiver *receiver)
+void Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
 {
     if (receiver->states[receiver->KEY_ATTACK] == false)
         return;
@@ -199,7 +198,5 @@ void Enemy::checkAttack(Player player, EventReceiver *receiver)
     float const distance = positionEnemy.getDistanceFrom(positionPlayer);
 
     if (distance < 50.0)
-    {
-        kill(positionEnemy - positionPlayer);
-    }
+        die(positionEnemy - positionPlayer);
 }
