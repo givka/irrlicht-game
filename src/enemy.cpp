@@ -166,7 +166,7 @@ void Enemy::updateDeath()
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    if (time_dying >= 1500)
+    if (time_dying >= 1500 || m_node->getFrameNr() == m_node->getEndFrame())
     {
         m_state = IS_DEAD;
         m_node->remove();
@@ -183,8 +183,8 @@ void Enemy::updateDeath()
     rotation.Y += speedDying * m_death_dir.Y;
     rotation.Z += speedDying * m_death_dir.Z;
 
-    m_node->setPosition(position);
-    m_node->setRotation(rotation);
+//    m_node->setPosition(position);
+//    m_node->setRotation(rotation);
 }
 
 bool Enemy::isDead()
@@ -226,6 +226,7 @@ bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
             m_state = IS_DYING;
             m_death_time = m_device->getTimer()->getTime();
             m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
+            m_node->setLoopMode(false);
             return true;
         }
     }
