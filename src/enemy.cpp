@@ -43,19 +43,47 @@ void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *rec
     if (m_state == IS_DYING)
         return updateDeath();
 
-    isBeingAttacked(player, receiver);
+    if (isBeingAttacked(player, receiver))
+        return;
     updateRotation(player);
-    updatePosition(player, enemies);
+    if (!isAttacking(player))
+        updatePosition(enemies);
 }
 
-void Enemy::updatePosition(Player player, std::vector<Enemy> enemies)
+bool Enemy::isAttacking(Player player)
+{
+    if (m_state == IS_ATTACKING)
+    {
+        if (m_node->getEndFrame() - m_node->getFrameNr() <= 1)
+        {
+            m_state = IS_ALIVE;
+            m_node->setMD2Animation(is::EMAT_RUN);
+            return false;
+        }
+        return true;
+    }
+
+    ic::vector3df position_player = player.node->getPosition();
+    ic::vector3df position_enemy = m_node->getPosition();
+    const float distance = position_player.getDistanceFrom(position_enemy);
+
+    if (distance < 50)
+    {
+        m_state = IS_ATTACKING;
+        m_node->setMD2Animation(is::EMAT_ATTACK);
+        return true;
+    }
+
+    return false;
+}
+
+void Enemy::updatePosition(std::vector<Enemy> enemies)
 {
     if (!isAllowedToMove(enemies))
         return;
 
     float speed_rotation = 2.5f;
 
-    ic::vector3df position_player = player.node->getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
     ic::vector3df rotation_enemy = m_node->getRotation();
 
@@ -188,15 +216,19 @@ void Enemy::setOrientation(ic::vector3df ori)
     m_node->setRotation(ori);
 }
 
-void Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
+bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
 {
-    if (receiver->states[receiver->KEY_ATTACK] == false)
-        return;
+    if (receiver->states[receiver->KEY_ATTACK])
+    {
+        ic::vector3df positionPlayer = player.node->getPosition();
+        ic::vector3df positionEnemy = m_node->getPosition();
+        float const distance = positionEnemy.getDistanceFrom(positionPlayer);
 
-    ic::vector3df positionPlayer = player.node->getPosition();
-    ic::vector3df positionEnemy = m_node->getPosition();
-    float const distance = positionEnemy.getDistanceFrom(positionPlayer);
-
-    if (distance < 50.0)
-        die(positionEnemy - positionPlayer);
+        if (distance < 50.0)
+        {
+            die(positionEnemy - positionPlayer);
+            return true;
+        }
+    }
+    return false;
 }

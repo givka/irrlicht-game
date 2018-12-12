@@ -41,9 +41,10 @@ class Enemy
 
     bool isAllowedToMove(std::vector<Enemy> enemies);
     void updateRotation(Player player);
-    void updatePosition(Player player, std::vector<Enemy> enemies);
+    void updatePosition(std::vector<Enemy> enemies);
     void updateDeath();
-    void isBeingAttacked(Player player, EventReceiver *receiver);
+    bool isBeingAttacked(Player player, EventReceiver *receiver);
+    bool isAttacking(Player player);
 
     enum enemy_state
     {
