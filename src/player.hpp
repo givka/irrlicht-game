@@ -15,19 +15,22 @@ namespace iv = irr::video;
 
 class Player
 {
-    float speedPosition = 5.0;
-    float speedRotation = 5.0;
-    Sword sword;
-
-    void setNode(iv::IVideoDriver *driver);
-    void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
-
 public:
     Player();
-    is::ILightSceneNode *nodeLight;
-    is::ICameraSceneNode *node;
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
     void updatePosition(EventReceiver *receiver);
+    ic::vector3df getPosition();
+    ic::vector3df getRotation();
+
+private:
+
+    float m_speedPosition = 5.0;
+    float m_speedRotation = 5.0;
+    Sword m_sword;
+    is::ILightSceneNode *m_nodeLight;
+    is::ICameraSceneNode *m_node;
+
+
 };
 
 #endif

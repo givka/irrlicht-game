@@ -60,6 +60,7 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies, EventReceiver *re
 
 bool Enemy::isAttacking(Player &player)
 {
+    if(!isAlive()) return false;
     if (m_state == IS_ATTACKING)
     {
         if (m_node->getEndFrame() - m_node->getFrameNr() <= 1)
@@ -72,7 +73,7 @@ bool Enemy::isAttacking(Player &player)
         return true;
     }
 
-    ic::vector3df position_player = player.node->getPosition();
+    ic::vector3df position_player = player.getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
     const float distance = position_player.getDistanceFrom(position_enemy);
 
@@ -105,7 +106,7 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
 // Enemy will always face player
 void Enemy::updateRotation(Player &player)
 {
-    core::vector3df position_player = player.node->getPosition();
+    core::vector3df position_player = player.getPosition();
     core::vector3df position_enemy = m_node->getPosition();
     core::vector3df rotation_enemy = m_node->getRotation();
 
@@ -216,9 +217,9 @@ bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
     if(!isAlive()) return false;
     if (receiver->states[receiver->KEY_ATTACK])
     {
-        ic::vector3df position_player = player.node->getPosition();
+        ic::vector3df position_player = player.getPosition();
         ic::vector3df position_enemy = m_node->getPosition();
-        ic::vector3df rotation_player = player.node->getRotation();
+        ic::vector3df rotation_player = player.getRotation();
         ic::vector3df rotation_enemy = m_node->getRotation();
         float const distance = position_player.getDistanceFrom(position_enemy);
         float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
@@ -243,10 +244,10 @@ bool Enemy::isAlive() {
 }
 
 void Enemy::attackPlayer(Player &player) {
-    if (m_already_hit_player || m_node->getFrameNr() <= m_node->getFrameNr() / 3.0) //only attack by end of swing to let player avoid/parry
+    if (m_already_hit_player || m_node->getFrameNr() <= 3 * m_node->getEndFrame() / 4.0) //only attack by end of swing to let player avoid/parry
         return;
 
-    ic::vector3df position_player = player.node->getPosition();
+    ic::vector3df position_player = player.getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
     const float distance = position_player.getDistanceFrom(position_enemy);
 

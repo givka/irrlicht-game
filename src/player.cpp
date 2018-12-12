@@ -18,58 +18,66 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     is::ISceneManager *smgr = device->getSceneManager();
 
     smgr->addCameraSceneNodeFPS();
-    node = smgr->getActiveCamera();
+    m_node = smgr->getActiveCamera();
     device->getCursorControl()->setVisible(false);
-    node->setFOV(2.0);
+    m_node->setFOV(2.0);
 
-    node->setPosition(core::vector3df(100, 30, 100));
+    m_node->setPosition(core::vector3df(100, 30, 100));
 
-    nodeLight = smgr->addLightSceneNode(node, core::vector3df(0, 0, 0),
-                                        video::SColorf(1.0f, 0.5f, 0.5f, 0.0f), 300.0f);
-    nodeLight->setPosition(ic::vector3df(0, 20, -20));
+    m_nodeLight = smgr->addLightSceneNode(m_node, core::vector3df(0, 0, 0),
+                                          video::SColorf(1.0f, 0.5f, 0.5f, 0.0f), 300.0f);
+    m_nodeLight->setPosition(ic::vector3df(0, 20, -20));
 
-    sword.initialise(device, node);
+    m_sword.initialise(device, m_node);
 
     is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(
-        selector, node, core::vector3df(30, 30, 30),
+        selector, m_node, core::vector3df(30, 30, 30),
         core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
-    node->addAnimator(collision);
+    m_node->addAnimator(collision);
     collision->drop();
 }
 
 void Player::updatePosition(EventReceiver *receiver)
 {
     auto states = receiver->states;
-    ic::vector3df position = node->getPosition();
-    ic::vector3df rotation = node->getRotation();
+    ic::vector3df position = m_node->getPosition();
+    ic::vector3df rotation = m_node->getRotation();
 
     if (states[receiver->KEY_UP])
     {
-        position.X += -speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
-        position.Z += speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
+        position.X += -m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
+        position.Z += m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
     }
     if (states[receiver->KEY_DOWN])
     {
-        position.X += speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
-        position.Z += -speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
+        position.X += m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
+        position.Z += -m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
     }
 
     if (states[receiver->KEY_STRAFE_LEFT])
     {
-        position.X += -speedPosition * cos(rotation.Y * M_PI / 180.0);
-        position.Z += speedPosition * sin(rotation.Y * M_PI / 180.0);
+        position.X += -m_speedPosition * cos(rotation.Y * M_PI / 180.0);
+        position.Z += m_speedPosition * sin(rotation.Y * M_PI / 180.0);
     }
     if (states[receiver->KEY_STRAFE_RIGHT])
     {
-        position.X += speedPosition * cos(rotation.Y * M_PI / 180.0);
-        position.Z += -speedPosition * sin(rotation.Y * M_PI / 180.0);
+        position.X += m_speedPosition * cos(rotation.Y * M_PI / 180.0);
+        position.Z += -m_speedPosition * sin(rotation.Y * M_PI / 180.0);
     }
 
     if (states[receiver->KEY_ATTACK])
     {
-        sword.setAttack();
+        m_sword.setAttack();
     }
 
-    node->setPosition(position);
-    sword.updatePosition();
+    m_node->setPosition(position);
+    m_sword.updatePosition();
+}
+
+ic::vector3df Player::getPosition() {
+    return m_node->getPosition();
+}
+
+ic::vector3df Player::getRotation() {
+    return m_node->getRotation();
 }
