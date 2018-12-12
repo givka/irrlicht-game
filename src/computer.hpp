@@ -27,8 +27,7 @@ class Computer
   private:
     std::vector<Enemy> m_enemies;
     int nbrEnemiesAdded;
-    void updatePosition(Player player);
-    void checkAttack(Player player, EventReceiver *receiver);
+    void updatePosition(Player player, EventReceiver *receiver);
 };
 
 #endif

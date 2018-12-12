@@ -38,11 +38,12 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
     collision->drop();
 }
 
-void Enemy::update(Player player, std::vector<Enemy> enemies)
+void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *receiver)
 {
     if (state == IS_DYING)
         return updateDeath();
 
+    checkAttack(player, receiver);
     updateRotation(player);
     updatePosition(player, enemies);
 }
@@ -186,4 +187,19 @@ void Enemy::setPosition(ic::vector3df pos)
 void Enemy::setOrientation(ic::vector3df ori)
 {
     m_node->setRotation(ori);
+}
+
+void Enemy::checkAttack(Player player, EventReceiver *receiver)
+{
+    if (receiver->states[receiver->KEY_ATTACK] == false)
+        return;
+
+    ic::vector3df positionPlayer = player.node->getPosition();
+    ic::vector3df positionEnemy = m_node->getPosition();
+    float const distance = positionEnemy.getDistanceFrom(positionPlayer);
+
+    if (distance < 50.0)
+    {
+        kill(positionEnemy - positionPlayer);
+    }
 }
