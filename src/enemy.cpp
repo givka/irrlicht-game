@@ -209,6 +209,7 @@ void Enemy::setOrientation(ic::vector3df ori)
 
 bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
 {
+    if(!isAlive()) return false;
     if (receiver->states[receiver->KEY_ATTACK])
     {
         ic::vector3df position_player = player.node->getPosition();
@@ -231,4 +232,8 @@ bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
         }
     }
     return false;
+}
+
+bool Enemy::isAlive() {
+    return m_state != IS_DYING && m_state != IS_DEAD;
 }

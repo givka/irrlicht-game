@@ -18,6 +18,7 @@ class Enemy
     Enemy();
     Enemy(int health, int damage, float scale);
     bool isDead();
+    bool isAlive();
     void update(Player player, std::vector<Enemy> enemies, EventReceiver *receiver);
     void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id);
     void setPosition(ic::vector3df pos);
