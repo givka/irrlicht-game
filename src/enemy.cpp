@@ -134,7 +134,7 @@ void Enemy::updateDeath()
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    // blocked by wall
+    // blocked by wall or by 2s timeout
     if ((int)m_last_position.X == (int)position.X && (int)m_last_position.Z == (int)position.Z || time_dying >= 2000) //todo: timer till despawn instead ?
     {
         m_dead = true;
@@ -171,6 +171,7 @@ void Enemy::kill(core::vector3df df)
     m_death_dir = df;
     state = IS_DYING;
     m_death_time = m_device->getTimer()->getTime();
+    m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
 }
 
 Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale)
