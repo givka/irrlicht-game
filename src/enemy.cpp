@@ -244,9 +244,8 @@ bool Enemy::isAlive() {
 }
 
 void Enemy::attackPlayer(Player &player) {
-    if (m_already_hit_player || m_node->getFrameNr() <= 3 * m_node->getEndFrame() / 4.0) //only attack by end of swing to let player avoid/parry
+    if (m_already_hit_player || m_node->getFrameNr() - m_node->getStartFrame() <= (m_node->getEndFrame() - m_node->getStartFrame()) / 4.0) //only attack by end of swing to let player avoid/parry
         return;
-
     ic::vector3df position_player = player.getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
     const float distance = position_player.getDistanceFrom(position_enemy);
