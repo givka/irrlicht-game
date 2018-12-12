@@ -9,11 +9,11 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f)
+Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false)
 {
 }
 
-Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale)
+Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false)
 {
 }
 
@@ -42,7 +42,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
     collision->drop();
 }
 
-void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *receiver)
+void Enemy::update(Player &player, std::vector<Enemy> enemies, EventReceiver *receiver)
 {
     if (m_state == IS_DYING)
         return updateDeath();
@@ -52,6 +52,10 @@ void Enemy::update(Player player, std::vector<Enemy> enemies, EventReceiver *rec
     updateRotation(player);
     if (!isAttacking(player))
         updatePosition(enemies);
+    if(m_state == IS_ATTACKING)
+        attackPlayer(player);
+
+
 }
 
 bool Enemy::isAttacking(Player &player)
@@ -62,6 +66,7 @@ bool Enemy::isAttacking(Player &player)
         {
             m_state = IS_RUNNING;
             m_node->setMD2Animation(is::EMAT_RUN);
+            m_already_hit_player = false;
             return false;
         }
         return true;
@@ -71,13 +76,12 @@ bool Enemy::isAttacking(Player &player)
     ic::vector3df position_enemy = m_node->getPosition();
     const float distance = position_player.getDistanceFrom(position_enemy);
 
-    if (distance < 50)
+    if (distance < 40)
     {
         m_state = IS_ATTACKING;
         m_node->setMD2Animation(is::EMAT_ATTACK);
         return true;
     }
-
     return false;
 }
 
@@ -236,4 +240,20 @@ bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
 
 bool Enemy::isAlive() {
     return m_state != IS_DYING && m_state != IS_DEAD;
+}
+
+void Enemy::attackPlayer(Player &player) {
+    if (m_already_hit_player || m_node->getFrameNr() <= m_node->getFrameNr() / 3.0) //only attack by end of swing to let player avoid/parry
+        return;
+
+    ic::vector3df position_player = player.node->getPosition();
+    ic::vector3df position_enemy = m_node->getPosition();
+    const float distance = position_player.getDistanceFrom(position_enemy);
+
+    if (distance < 40)
+    {
+        //player was hit
+        m_already_hit_player = true;
+        std::cout << "Player got hit" << std::endl;
+    }
 }

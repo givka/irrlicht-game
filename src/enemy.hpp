@@ -19,7 +19,7 @@ class Enemy
     Enemy(int health, int damage, float scale);
     bool isDead();
     bool isAlive();
-    void update(Player player, std::vector<Enemy> enemies, EventReceiver *receiver);
+    void update(Player &player, std::vector<Enemy> enemies, EventReceiver *receiver);
     void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id);
     void setPosition(ic::vector3df pos);
     void setOrientation(ic::vector3df ori);
@@ -31,7 +31,7 @@ class Enemy
     int m_damage;
     float m_scale;
     int m_death_time;
-
+    bool m_already_hit_player;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
 
@@ -45,6 +45,7 @@ class Enemy
     void updateDeath();
     bool isBeingAttacked(Player &player, EventReceiver *receiver);
     bool isAttacking(Player &player);
+    void attackPlayer(Player &player);
 
     enum enemy_state
     {
