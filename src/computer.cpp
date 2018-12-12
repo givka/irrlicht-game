@@ -12,19 +12,16 @@ Computer::Computer()
 {
 }
 
-void Computer::addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector)
+void Computer::addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector)
 {
     Enemy enemy;
-    enemy.setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
-    enemy.addCollisionMap(smgr, selector);
+    enemy.initialise(device, mesh, selector, nbrEnemiesAdded++);
     m_enemies.push_back(enemy);
 }
 
-
-void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, iv::IVideoDriver *driver, is::ISceneManager *smgr,
-                        is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector) {
-    enemy->setNode(driver, smgr, meshSkeleton, nbrEnemiesAdded++);
-    enemy->addCollisionMap(smgr, selector);
+void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector)
+{
+    enemy->initialise(device, mesh, selector, nbrEnemiesAdded++);
     Enemy e = *enemy;
     e.setPosition(pos);
     e.setOrientation(ori);
@@ -71,6 +68,7 @@ void Computer::updatePosition(Player player)
     }
 }
 
-bool Computer::isWaveFinished() {
+bool Computer::isWaveFinished()
+{
     return m_enemies.size() == 0;
 }

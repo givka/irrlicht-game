@@ -64,20 +64,22 @@ int main()
     int lastFPS = -1;
 
     //spawn first wave
-    waveMgr.spawnWave(level, 0, computer, driver, smgr, meshSkeleton, selector);
+    waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
 
     while (device->run())
     {
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
-        if(computer.isWaveFinished())
+        if (computer.isWaveFinished())
         {
-            if(waveMgr.getCurrentWave() == waveMgr.getLastWaveId()) //last wave finished, game over
+            if (waveMgr.getCurrentWave() == waveMgr.getLastWaveId()) //last wave finished, game over
             {
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, driver, smgr, meshSkeleton, selector); //but for now we debug
-            }else{
+                waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, meshSkeleton, selector); //but for now we debug
+            }
+            else
+            {
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave() + 1, computer, driver, smgr, meshSkeleton, selector); //spawn next wave
+                waveMgr.spawnWave(level, waveMgr.getCurrentWave() + 1, computer, device, meshSkeleton, selector); //spawn next wave
             }
         }
 
@@ -102,10 +104,10 @@ int main()
             lastFPS = fps;
         }
 
-        if(receiver.states[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+        if (receiver.states[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
         {
             std::cout << "spawning wave 0" << std::endl;
-            waveMgr.spawnWave(level, 0, computer, driver, smgr, meshSkeleton, selector);
+            waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
         }
     }
     device->drop();

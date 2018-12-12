@@ -9,27 +9,26 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-Enemy::Enemy(): m_health(100), m_damage(15), m_scale(1.0f)
+Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f)
 {
 }
 
-void Enemy::setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int enemy_id)
+void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
 {
-    // float const scale = ((float)((rand() % 200) + 100)) / 100.0f;
+
+    auto smgr = device->getSceneManager();
+    auto driver = device->getVideoDriver();
     float const X = rand() % 200;
     float const Z = rand() % 200;
+    m_device = device;
     m_id = enemy_id;
     m_node = smgr->addAnimatedMeshSceneNode(mesh);
-    //node->setMaterialFlag(iv::EMF_LIGHTING, true);
-    m_node->setMaterialFlag(iv::EMF_LIGHTING, false);
+    m_node->setMaterialFlag(iv::EMF_LIGHTING, true);
     m_node->setMD2Animation(is::EMAT_RUN);
     m_node->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
     m_node->setPosition(core::vector3df(X, 0, Z));
     m_node->setScale(core::vector3df(m_scale, m_scale, m_scale));
-}
 
-void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector)
-{
     ic::vector3df boxMaxEdge = m_node->getTransformedBoundingBox().MaxEdge;
     ic::vector3df boxCenter = m_node->getTransformedBoundingBox().getCenter();
     ic::vector3df ellipseRadius = boxMaxEdge - boxCenter;
@@ -42,10 +41,7 @@ void Enemy::addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *sele
 void Enemy::update(Player player, std::vector<Enemy> enemies)
 {
     if (state == IS_DYING)
-    {
-        updateDeath();
-        return;
-    }
+        return updateDeath();
 
     updateRotation(player);
     updatePosition(player, enemies);
@@ -132,13 +128,14 @@ bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
 void Enemy::updateDeath()
 {
 
+    int time_dying = m_device->getTimer()->getTime() - m_death_time;
     float speedDying = 0.1f;
 
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
     // blocked by wall
-    if ((int) m_last_position.X == (int)position.X && (int) m_last_position.Z == (int)position.Z) //todo: timer till despawn instead ?
+    if ((int)m_last_position.X == (int)position.X && (int)m_last_position.Z == (int)position.Z || time_dying >= 2000) //todo: timer till despawn instead ?
     {
         m_dead = true;
         m_node->remove();
@@ -164,24 +161,28 @@ bool Enemy::isDead()
     return m_dead;
 }
 
-is::IAnimatedMeshSceneNode *Enemy::getNode() {
+is::IAnimatedMeshSceneNode *Enemy::getNode()
+{
     return m_node;
 }
 
-void Enemy::kill(core::vector3df df) {
+void Enemy::kill(core::vector3df df)
+{
     m_death_dir = df;
     state = IS_DYING;
+    m_death_time = m_device->getTimer()->getTime();
 }
 
-Enemy::Enemy(int health, int damage, float scale) :m_health(health), m_damage(damage), m_scale(scale)
+Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale)
 {
-
 }
 
-void Enemy::setPosition(ic::vector3df pos) {
+void Enemy::setPosition(ic::vector3df pos)
+{
     m_node->setPosition(pos);
 }
 
-void Enemy::setOrientation(ic::vector3df ori) {
+void Enemy::setOrientation(ic::vector3df ori)
+{
     m_node->setRotation(ori);
 }

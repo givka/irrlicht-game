@@ -13,26 +13,26 @@ namespace iv = irr::video;
 
 class Enemy
 {
-public:
-
+  public:
     Enemy();
     Enemy(int health, int damage, float scale);
     bool isDead();
-    void setNode(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *mesh, int const id);
-    is::IAnimatedMeshSceneNode *getNode();
-    void addCollisionMap(is::ISceneManager *smgr, is::ITriangleSelector *selector);
     void update(Player player, std::vector<Enemy> enemies);
     void kill(ic::vector3df);
-
+    void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id);
     void setPosition(ic::vector3df pos);
     void setOrientation(ic::vector3df ori);
+    is::IAnimatedMeshSceneNode *getNode();
 
-private:
-
+  private:
     int m_id;
     int m_health;
     int m_damage;
     float m_scale;
+    int m_death_time;
+
+    //TODO: other way to access it globaly ??
+    irr::IrrlichtDevice *m_device;
 
     bool m_dead = false;
     ic::vector3df m_death_dir;

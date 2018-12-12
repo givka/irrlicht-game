@@ -31,8 +31,8 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     sword.initialise(device, node);
 
     is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(
-            selector, node, core::vector3df(30, 30, 30),
-            core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
+        selector, node, core::vector3df(30, 30, 30),
+        core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
     node->addAnimator(collision);
     collision->drop();
 }

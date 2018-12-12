@@ -23,25 +23,25 @@ typedef struct Spawn
     float scale;
     //float speed;
     //todo: model id/pointer, same for tex
-}Spawn;
+} Spawn;
 
 typedef struct Wave
 {
     int id;
     std::vector<Spawn> spawns;
-}Wave;
+} Wave;
 
-class WaveManager {
-public:
+class WaveManager
+{
+  public:
     WaveManager();
     void loadJSON(std::string path_to_json);
     int getCurrentWave();
     unsigned long getLastWaveId();
-    void spawnWave(Level &level, int wave_id, Computer &computer, iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector); //todo:: model mgt system
-private:
+    void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector); //todo:: model mgt system
+  private:
     int m_current_wave;
     std::vector<Wave> m_waves;
 };
-
 
 #endif //IRRLICHT_GAME_WAVEMANAGER_H

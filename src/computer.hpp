@@ -17,13 +17,14 @@ namespace iv = irr::video;
 
 class Computer
 {
-public:
+  public:
     Computer();
-    void addEnemy(iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
-    void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, iv::IVideoDriver *driver, is::ISceneManager *smgr, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector); //todo: obviously needs to be changed
+    void addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
+    void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector); //todo: obviously needs to be changed
     void update(Player player, EventReceiver *receiver);
     bool isWaveFinished();
-private:
+
+  private:
     std::vector<Enemy> m_enemies;
     int nbrEnemiesAdded;
     void updatePosition(Player player);

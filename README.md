@@ -1,5 +1,5 @@
 # irrlicht-game
 
 ```bash
-clear; cd build; cmake ..; make; cd ..; ./build/irrlicht-game 
+mkdir build; clear; cd build; cmake ..; make; cd ..; ./build/irrlicht-game 
 ```
