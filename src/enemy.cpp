@@ -162,8 +162,7 @@ void Enemy::updateDeath()
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    // blocked by wall or by 2s timeout
-    if ((int)m_last_position.X == (int)position.X && (int)m_last_position.Z == (int)position.Z || time_dying >= 2000) //todo: timer till despawn instead ?
+    if (time_dying >= 1500)
     {
         m_state = IS_DEAD;
         m_node->remove();
@@ -220,13 +219,19 @@ bool Enemy::isBeingAttacked(Player player, EventReceiver *receiver)
 {
     if (receiver->states[receiver->KEY_ATTACK])
     {
-        ic::vector3df positionPlayer = player.node->getPosition();
-        ic::vector3df positionEnemy = m_node->getPosition();
-        float const distance = positionEnemy.getDistanceFrom(positionPlayer);
+        ic::vector3df position_player = player.node->getPosition();
+        ic::vector3df position_enemy = m_node->getPosition();
+        ic::vector3df rotation_player = player.node->getRotation();
+        ic::vector3df rotation_enemy = m_node->getRotation();
+        float const distance = position_player.getDistanceFrom(position_enemy);
+        float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
 
-        if (distance < 50.0)
+        // enemy in front of us => angle = -1
+        // cone from -0.8 -> -1 <- -0.8
+        if (distance < 50.0 && angle <= -0.80f)
         {
-            die(positionEnemy - positionPlayer);
+            ic::vector3df death_direction = position_enemy - position_player;
+            die(death_direction);
             return true;
         }
     }
