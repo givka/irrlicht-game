@@ -159,8 +159,8 @@ void Enemy::updateDeath()
     rotation.Y += speedDying * m_death_dir.Y;
     rotation.Z += speedDying * m_death_dir.Z;
 
-    m_node->setPosition(position);
-    m_node->setRotation(rotation);
+    // m_node->setPosition(position);
+    // m_node->setRotation(rotation);
 }
 
 bool Enemy::isDead()
