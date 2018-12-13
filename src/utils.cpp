@@ -18,4 +18,29 @@ void showPosition(const std::string &nodeName, ic::vector3df position)
               << std::endl;
 }
 
+is::IParticleSystemSceneNode *setParticuleSystem(irr::IrrlichtDevice *device,
+                                                 is::ISceneNode *node,
+                                                 ic::vector3df position,
+                                                 iv::SColor color)
+{
+    is::ISceneManager *smgr = device->getSceneManager();
+    iv::IVideoDriver *driver = device->getVideoDriver();
+    scene::IParticleSystemSceneNode *ps = smgr->addParticleSystemSceneNode(false, node);
+    scene::IParticleEmitter *em = ps->createBoxEmitter(core::aabbox3d<f32>(-1, -1, -1, 1, 1, 1),
+                                                       core::vector3df(0.0f, 0.1f, 0.0f),
+                                                       200, 200,
+                                                       iv::SColor(255, 0, 0, 0), color,
+                                                       0, 0,
+                                                       40,
+                                                       ic::dimension2d<f32>(10.0f, 10.0f), ic::dimension2d<f32>(10.0f, 10.0f));
+    ps->setEmitter(em);
+    em->drop();
+    ps->setMaterialFlag(video::EMF_LIGHTING, false);
+    ps->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+    ps->setMaterialTexture(0, driver->getTexture("data/smoke.jpg"));
+    ps->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+    ps->setPosition(position);
+    return ps;
+}
+
 } // namespace Utils

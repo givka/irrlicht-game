@@ -60,10 +60,14 @@ void Player::updatePosition(EventReceiver &receiver)
         position.X += m_speedPosition * cos(rotation.Y * M_PI / 180.0);
         position.Z += -m_speedPosition * sin(rotation.Y * M_PI / 180.0);
     }
-
     if (states[EventReceiver::KEY_ATTACK])
     {
         m_sword.setAttack();
+    }
+    if (states[EventReceiver::KEY_DEBUG_SWORD_EFFECT])
+    {
+        Sword::enchant m_current_enchant = static_cast<Sword::enchant>(rand() % Sword::ARRAY_END);
+        m_sword.setEnchantment(m_current_enchant);
     }
 
     m_node->setPosition(position);

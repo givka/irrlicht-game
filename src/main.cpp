@@ -19,8 +19,8 @@ namespace iv = irr::video;
 using namespace std;
 
 int const NBR_ENEMIES = 40;
-int const WIDTH = 1400;
-int const HEIGHT = 900;
+int const WIDTH = 1280;
+int const HEIGHT = 800;
 
 int main()
 {

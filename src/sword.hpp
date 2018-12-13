@@ -30,30 +30,33 @@ class Sword
     void updatePosition();
     void setAttack();
     bool getIsAttacking();
+    int getSwingNumber();
+    float getAttack();
     Sword::enchant getCurrentEnchant();
+    iv::SColor getCurrentEnchantColor(int alpha = 0);
+    void setEnchantment(enchant new_enchantment);
 
   private:
+    float m_attack;
     bool m_is_attacking = false;
     bool m_sword_going_down = true;
+    int m_swing_number = 0;
     ic::vector3df m_destination;
     irr::IrrlichtDevice *m_device;
     is::IMeshSceneNode *m_node;
     is::ILightSceneNode *m_node_light;
 
     iv::SColor m_enchant_colors[ARRAY_END] = {
-        iv::SColor(255, 0, 0, 0),      //transparent
-        iv::SColor(255, 255, 100, 50), //orange
-        iv::SColor(255, 50, 50, 255),  //blue
-        iv::SColor(255, 255, 50, 255), //purple
-        iv::SColor(255, 50, 255, 50),  //green
+        iv::SColor(255, 0, 0, 0),       //transparent
+        iv::SColor(255, 255, 123, 44),  //orange
+        iv::SColor(255, 123, 123, 255), //blue
+        iv::SColor(255, 255, 85, 255),  //purple
+        iv::SColor(255, 85, 255, 85),   //green
     };
 
     enchant m_current_enchant = NONE;
 
     std::vector<is::IParticleSystemSceneNode *> m_particles;
-
-    void setEnchantment(enchant new_enchantment);
-    is::IParticleSystemSceneNode *setParticuleSystem(ic::vector3df position);
 };
 
 #endif

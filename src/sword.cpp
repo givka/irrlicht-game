@@ -9,6 +9,7 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
+    : m_attack(50.0)
 {
 }
 
@@ -27,19 +28,20 @@ void Sword::initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePl
     m_node_light = smgr->addLightSceneNode(m_node,
                                            ic::vector3df(12.5, -10, -15),
                                            iv::SColorf(iv::SColor(255, 255, 255, 255)),
-                                           600.0f);
+                                           500.0f);
 
-    m_particles.push_back(setParticuleSystem(ic::vector3df(5, 0, 0)));
-    m_particles.push_back(setParticuleSystem(ic::vector3df(10, 0, 0)));
-    m_particles.push_back(setParticuleSystem(ic::vector3df(15, 0, 0)));
-    m_particles.push_back(setParticuleSystem(ic::vector3df(20, 0, 0)));
-    m_particles.push_back(setParticuleSystem(ic::vector3df(25, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(5, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(10, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(15, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(20, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(25, 0, 0)));
 }
 
 void Sword::setEnchantment(enchant new_enchantment)
 {
-    iv::SColor color = m_enchant_colors[new_enchantment];
-    color.setAlpha(255);
+    m_current_enchant = new_enchantment;
+
+    iv::SColor color = getCurrentEnchantColor(255);
     if (new_enchantment == NONE)
         color = iv::SColor(255, 255, 255, 255);
 
@@ -51,43 +53,14 @@ void Sword::setEnchantment(enchant new_enchantment)
     }
 }
 
-is::IParticleSystemSceneNode *Sword::setParticuleSystem(ic::vector3df position)
-{
-    is::ISceneManager *smgr = m_device->getSceneManager();
-    iv::IVideoDriver *driver = m_device->getVideoDriver();
-
-    scene::IParticleSystemSceneNode *ps = smgr->addParticleSystemSceneNode(false, m_node);
-
-    scene::IParticleEmitter *em = ps->createBoxEmitter(core::aabbox3d<f32>(-1, -1, -1, 1, 1, 1),
-                                                       core::vector3df(0.0f, 0.1f, 0.0f),
-                                                       200, 200,
-                                                       iv::SColor(255, 0, 0, 0), iv::SColor(255, 0, 0, 0),
-                                                       0, 0,
-                                                       40,
-                                                       ic::dimension2d<f32>(10.0f, 10.0f), ic::dimension2d<f32>(10.0f, 10.0f));
-
-    ps->setEmitter(em);
-    em->drop();
-    ps->setMaterialFlag(video::EMF_LIGHTING, true);
-    ps->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
-    ps->setMaterialTexture(0, driver->getTexture("data/smoke.jpg"));
-    ps->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
-    ps->setPosition(position);
-    return ps;
-}
-
 void Sword::setAttack()
 {
     if (m_is_attacking)
         return;
 
-    // for debug purposes
-    m_current_enchant = static_cast<enchant>(rand() % ARRAY_END);
-    setEnchantment(m_current_enchant);
-    //
-
     m_is_attacking = true;
     m_sword_going_down = true;
+    m_swing_number++;
     float X = 0;
     float Y = -100;
     float Z = std::rand() % 2 ? -5 : 5;
@@ -125,4 +98,21 @@ bool Sword::getIsAttacking()
 Sword::enchant Sword::getCurrentEnchant()
 {
     return m_current_enchant;
+}
+
+int Sword::getSwingNumber()
+{
+    return m_swing_number;
+}
+
+float Sword::getAttack()
+{
+    return m_attack;
+}
+
+iv::SColor Sword::getCurrentEnchantColor(int alpha)
+{
+    iv::SColor color = m_enchant_colors[m_current_enchant];
+    color.setAlpha(alpha);
+    return color;
 }

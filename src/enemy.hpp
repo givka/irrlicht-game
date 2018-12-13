@@ -32,6 +32,7 @@ class Enemy
     float m_scale;
     int m_death_time;
     bool m_already_hit_player;
+    int m_last_swing_number = 0;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
 
@@ -39,12 +40,17 @@ class Enemy
     ic::vector3df m_last_position;
     is::IAnimatedMeshSceneNode *m_node;
 
-    void updateRotation(Player &player);
+    is::IParticleSystemSceneNode *m_effect = 0;
+
+    void
+    updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath();
     bool isBeingAttacked(Player &player);
     bool isAttacking(Player &player);
     void attackPlayer(Player &player);
+    void checkEnchantment(Player &player);
+    void setEffect(Player &player, ic::vector3df direction);
 
     enum enemy_state
     {

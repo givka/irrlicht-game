@@ -35,6 +35,9 @@ bool EventReceiver::keyboard(const SEvent &event)
     case KEY_KEY_R:
         m_states[KEY_DEBUG_TRIGGER_SPAWN] = event.KeyInput.PressedDown;
         break;
+    case KEY_KEY_F:
+        m_states[KEY_DEBUG_SWORD_EFFECT] = event.KeyInput.PressedDown;
+        break;
     default:
         break;
     }

@@ -159,8 +159,8 @@ void Enemy::updateDeath()
     rotation.Y += speedDying * m_death_dir.Y;
     rotation.Z += speedDying * m_death_dir.Z;
 
-    //    m_node->setPosition(position);
-    //    m_node->setRotation(rotation);
+    m_node->setPosition(position);
+    m_node->setRotation(rotation);
 }
 
 bool Enemy::isDead()
@@ -188,32 +188,86 @@ bool Enemy::isBeingAttacked(Player &player)
     if (!isAlive())
         return false;
 
+    ic::vector3df position_player = player.getPosition();
+    ic::vector3df position_enemy = m_node->getPosition();
+    ic::vector3df rotation_player = player.getRotation();
+    ic::vector3df rotation_enemy = m_node->getRotation();
     Sword sword = player.getSword();
 
-    Sword::enchant test = sword.getCurrentEnchant();
-
-    if (sword.getIsAttacking())
+    if (sword.getIsAttacking() && m_last_swing_number != sword.getSwingNumber())
     {
-        ic::vector3df position_player = player.getPosition();
-        ic::vector3df position_enemy = m_node->getPosition();
-        ic::vector3df rotation_player = player.getRotation();
-        ic::vector3df rotation_enemy = m_node->getRotation();
         float const distance = position_player.getDistanceFrom(position_enemy);
         float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
+        bool is_attacked = distance < 50.0 && angle <= -0.80f;
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
-        if ((distance < 50.0 && angle <= -0.80f) || position_enemy.Y < -20)
+        if (is_attacked || position_enemy.Y < -20)
+        {
+            m_health -= sword.getAttack();
+            m_last_swing_number = sword.getSwingNumber();
+            checkEnchantment(player);
+        }
+        if (m_health <= 0)
         {
             m_death_dir = position_enemy - position_player;
             m_state = IS_DYING;
             m_death_time = m_device->getTimer()->getTime();
             m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
             m_node->setLoopMode(false);
-            return true;
         }
+        return true;
     }
+
     return false;
+}
+
+void Enemy::checkEnchantment(Player &player)
+{
+    Sword::enchant current_enchant = player.getSword().getCurrentEnchant();
+
+    switch (current_enchant)
+    {
+    case Sword::NONE:
+        return;
+        break;
+    case Sword::FIRE:
+        setEffect(player, ic::vector3df(0, 0.2f, 0));
+        break;
+    case Sword::ICE:
+        setEffect(player, ic::vector3df(0, 0.2f, 0));
+        break;
+    case Sword::VAMPIRIC:
+        setEffect(player, ic::vector3df(0, 0.2f, 0));
+        break;
+    case Sword::POISON:
+        setEffect(player, ic::vector3df(0, 0.2f, 0));
+        break;
+
+    default:
+        break;
+    }
+}
+
+void Enemy::setEffect(Player &player, ic::vector3df direction)
+{
+    Sword sword = player.getSword();
+    iv::SColor color = sword.getCurrentEnchantColor();
+
+    if (!m_effect)
+    {
+        m_effect = Utils::setParticuleSystem(m_device, m_node, ic::vector3df(0, -20, 0), color);
+        is::IParticleEmitter *emitter = m_effect->getEmitter();
+        emitter->setMaxLifeTime(200);
+        emitter->setMaxAngleDegrees(10);
+        emitter->setMaxStartSize(ic::dimension2df(40, 40));
+        emitter->setDirection(direction);
+    }
+    else
+    {
+        is::IParticleEmitter *emitter = m_effect->getEmitter();
+        emitter->setMaxStartColor(color);
+    }
 }
 
 bool Enemy::isAlive()
