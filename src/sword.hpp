@@ -16,20 +16,6 @@ class Sword
 {
 
   public:
-    Sword();
-    void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
-    void updatePosition();
-    void setAttack();
-    bool getIsAttacking();
-
-  private:
-    bool m_is_attacking = false;
-    bool m_sword_going_down = true;
-    ic::vector3df m_destination;
-    irr::IrrlichtDevice *m_device;
-    is::IMeshSceneNode *m_node;
-    is::ILightSceneNode *m_node_light;
-
     enum enchant
     {
         NONE,     //transparent
@@ -39,6 +25,20 @@ class Sword
         POISON,   //green
         ARRAY_END
     };
+    Sword();
+    void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
+    void updatePosition();
+    void setAttack();
+    bool getIsAttacking();
+    Sword::enchant getCurrentEnchant();
+
+  private:
+    bool m_is_attacking = false;
+    bool m_sword_going_down = true;
+    ic::vector3df m_destination;
+    irr::IrrlichtDevice *m_device;
+    is::IMeshSceneNode *m_node;
+    is::ILightSceneNode *m_node_light;
 
     iv::SColor m_enchant_colors[ARRAY_END] = {
         iv::SColor(255, 0, 0, 0),      //transparent

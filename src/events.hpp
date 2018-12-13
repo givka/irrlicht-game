@@ -14,13 +14,10 @@ namespace iv = irr::video;
 
 class EventReceiver : public irr::IEventReceiver
 {
-    bool keyboard(const irr::SEvent &event);
-    bool mouse(const irr::SEvent &event);
 
-public:
+  public:
     EventReceiver();
-    bool OnEvent(const irr::SEvent &event);
-    enum key_id
+    enum enum_state
     {
         KEY_UP,
         KEY_DOWN,
@@ -34,7 +31,14 @@ public:
         STATE_ATTACKING,
         END_ARRAY
     };
-    int states[END_ARRAY] = {false};
+
+    bool *getStates();
+
+  private:
+    bool OnEvent(const irr::SEvent &event);
+    bool keyboard(const irr::SEvent &event);
+    bool mouse(const irr::SEvent &event);
+    bool m_states[END_ARRAY] = {false};
 };
 
 #endif

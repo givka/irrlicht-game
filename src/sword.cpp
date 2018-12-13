@@ -121,3 +121,8 @@ bool Sword::getIsAttacking()
 {
     return m_is_attacking;
 }
+
+Sword::enchant Sword::getCurrentEnchant()
+{
+    return m_current_enchant;
+}

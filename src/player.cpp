@@ -35,33 +35,33 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 
 void Player::updatePosition(EventReceiver &receiver)
 {
-    auto states = receiver.states;
+    bool *states = receiver.getStates();
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    if (states[receiver.KEY_UP])
+    if (states[EventReceiver::KEY_UP])
     {
         position.X += -m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
         position.Z += m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
     }
-    if (states[receiver.KEY_DOWN])
+    if (states[EventReceiver::KEY_DOWN])
     {
         position.X += m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
         position.Z += -m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
     }
 
-    if (states[receiver.KEY_STRAFE_LEFT])
+    if (states[EventReceiver::KEY_STRAFE_LEFT])
     {
         position.X += -m_speedPosition * cos(rotation.Y * M_PI / 180.0);
         position.Z += m_speedPosition * sin(rotation.Y * M_PI / 180.0);
     }
-    if (states[receiver.KEY_STRAFE_RIGHT])
+    if (states[EventReceiver::KEY_STRAFE_RIGHT])
     {
         position.X += m_speedPosition * cos(rotation.Y * M_PI / 180.0);
         position.Z += -m_speedPosition * sin(rotation.Y * M_PI / 180.0);
     }
 
-    if (states[receiver.KEY_ATTACK])
+    if (states[EventReceiver::KEY_ATTACK])
     {
         m_sword.setAttack();
     }

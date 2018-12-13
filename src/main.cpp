@@ -104,7 +104,7 @@ int main()
             lastFPS = fps;
         }
 
-        if (receiver.states[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+        if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
         {
             std::cout << "spawning wave 0" << std::endl;
             waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);

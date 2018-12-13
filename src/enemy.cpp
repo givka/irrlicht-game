@@ -190,6 +190,8 @@ bool Enemy::isBeingAttacked(Player &player)
 
     Sword sword = player.getSword();
 
+    Sword::enchant test = sword.getCurrentEnchant();
+
     if (sword.getIsAttacking())
     {
         ic::vector3df position_player = player.getPosition();
