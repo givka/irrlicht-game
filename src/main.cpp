@@ -85,8 +85,8 @@ int main()
 
         driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
 
-        player.updatePosition(&receiver);
-        computer.update(player, &receiver);
+        player.updatePosition(receiver);
+        computer.update(player);
 
         smgr->drawAll();
 

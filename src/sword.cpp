@@ -78,11 +78,15 @@ is::IParticleSystemSceneNode *Sword::setParticuleSystem(ic::vector3df position)
 
 void Sword::setAttack()
 {
-    if (isAttacking)
+    if (m_is_attacking)
         return;
-    isAttacking = true;
+
+    // for debug purposes
     m_current_enchant = static_cast<enchant>(rand() % ARRAY_END);
     setEnchantment(m_current_enchant);
+    //
+
+    m_is_attacking = true;
     m_sword_going_down = true;
     float X = 0;
     float Y = -100;
@@ -93,14 +97,13 @@ void Sword::setAttack()
 void Sword::updatePosition()
 {
     float speed = 10.0;
-    if (!isAttacking)
+    if (!m_is_attacking)
         return;
 
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
     position.Z += m_sword_going_down ? 1 : -1;
-
     rotation.Y += m_sword_going_down ? -speed : speed;
     rotation.Z += m_sword_going_down ? -m_destination.Z : m_destination.Z;
 
@@ -108,8 +111,13 @@ void Sword::updatePosition()
         m_sword_going_down = false;
 
     if (!m_sword_going_down && rotation.Y >= -10)
-        isAttacking = false;
+        m_is_attacking = false;
 
     m_node->setPosition(position);
     m_node->setRotation(rotation);
+}
+
+bool Sword::getIsAttacking()
+{
+    return m_is_attacking;
 }

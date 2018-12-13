@@ -19,7 +19,7 @@ class Enemy
     Enemy(int health, int damage, float scale);
     bool isDead();
     bool isAlive();
-    void update(Player &player, std::vector<Enemy> enemies, EventReceiver *receiver);
+    void update(Player &player, std::vector<Enemy> enemies);
     void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id);
     void setPosition(ic::vector3df pos);
     void setOrientation(ic::vector3df ori);
@@ -42,7 +42,7 @@ class Enemy
     void updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath();
-    bool isBeingAttacked(Player &player, EventReceiver *receiver);
+    bool isBeingAttacked(Player &player);
     bool isAttacking(Player &player);
     void attackPlayer(Player &player);
 

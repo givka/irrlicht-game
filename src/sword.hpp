@@ -19,15 +19,15 @@ class Sword
     Sword();
     void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
     void updatePosition();
-    bool isAttacking = false;
     void setAttack();
+    bool getIsAttacking();
 
   private:
+    bool m_is_attacking = false;
     bool m_sword_going_down = true;
     ic::vector3df m_destination;
     irr::IrrlichtDevice *m_device;
     is::IMeshSceneNode *m_node;
-
     is::ILightSceneNode *m_node_light;
 
     enum enchant

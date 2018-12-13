@@ -42,12 +42,12 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
     collision->drop();
 }
 
-void Enemy::update(Player &player, std::vector<Enemy> enemies, EventReceiver *receiver)
+void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
     if (m_state == IS_DYING)
         return updateDeath();
 
-    if (isBeingAttacked(player, receiver))
+    if (isBeingAttacked(player))
         return;
     updateRotation(player);
     if (!isAttacking(player))
@@ -183,12 +183,14 @@ void Enemy::setOrientation(ic::vector3df ori)
     m_node->setRotation(ori);
 }
 
-bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
+bool Enemy::isBeingAttacked(Player &player)
 {
-
     if (!isAlive())
         return false;
-    if (receiver->states[receiver->KEY_ATTACK])
+
+    Sword sword = player.getSword();
+
+    if (sword.getIsAttacking())
     {
         ic::vector3df position_player = player.getPosition();
         ic::vector3df position_enemy = m_node->getPosition();

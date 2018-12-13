@@ -28,16 +28,16 @@ void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, ir
     m_enemies.push_back(e);
 }
 
-void Computer::update(Player player, EventReceiver *receiver)
+void Computer::update(Player player)
 {
-    updatePosition(player, receiver);
+    updatePosition(player);
 }
 
-void Computer::updatePosition(Player player, EventReceiver *receiver)
+void Computer::updatePosition(Player player)
 {
     for (size_t index = 0; index < m_enemies.size();)
     {
-        m_enemies[index].update(player, m_enemies, receiver);
+        m_enemies[index].update(player, m_enemies);
         if (m_enemies[index].isDead())
         {
             m_enemies.erase(m_enemies.begin() + index);

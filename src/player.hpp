@@ -18,9 +18,10 @@ class Player
   public:
     Player();
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
-    void updatePosition(EventReceiver *receiver);
+    void updatePosition(EventReceiver &receiver);
     ic::vector3df getPosition();
     ic::vector3df getRotation();
+    Sword getSword();
 
   private:
     float m_speedPosition = 5.0;
