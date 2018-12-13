@@ -24,10 +24,6 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 
     m_node->setPosition(core::vector3df(100, 30, 100));
 
-    m_nodeLight = smgr->addLightSceneNode(m_node, core::vector3df(0, 0, 0),
-                                          video::SColorf(1.0f, 0.5f, 0.5f, 0.0f), 300.0f);
-    m_nodeLight->setPosition(ic::vector3df(0, 20, -20));
-
     m_sword.initialise(device, m_node);
 
     is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(

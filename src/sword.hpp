@@ -5,6 +5,7 @@
 
 #include <irrlicht.h>
 #include <iostream>
+#include <vector>
 #include "utils.hpp"
 
 namespace ic = irr::core;
@@ -27,19 +28,32 @@ class Sword
     irr::IrrlichtDevice *m_device;
     is::IMeshSceneNode *m_node;
 
+    is::ILightSceneNode *m_node_light;
+
     enum enchant
     {
-        NONE,     //white
-        FIRE,     //red
+        NONE,     //transparent
+        FIRE,     //orange
         ICE,      //blue
         VAMPIRIC, //purple
         POISON,   //green
+        ARRAY_END
+    };
+
+    iv::SColor m_enchant_colors[ARRAY_END] = {
+        iv::SColor(255, 0, 0, 0),      //transparent
+        iv::SColor(255, 255, 100, 50), //orange
+        iv::SColor(255, 50, 50, 255),  //blue
+        iv::SColor(255, 255, 50, 255), //purple
+        iv::SColor(255, 50, 255, 50),  //green
     };
 
     enchant m_current_enchant = NONE;
 
+    std::vector<is::IParticleSystemSceneNode *> m_particles;
+
     void setEnchantment(enchant new_enchantment);
-    is::IParticleSystemSceneNode *setParticuleSystem(enchant new_enchantment, ic::vector3df position);
+    is::IParticleSystemSceneNode *setParticuleSystem(ic::vector3df position);
 };
 
 #endif

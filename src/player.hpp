@@ -15,22 +15,18 @@ namespace iv = irr::video;
 
 class Player
 {
-public:
+  public:
     Player();
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
     void updatePosition(EventReceiver *receiver);
     ic::vector3df getPosition();
     ic::vector3df getRotation();
 
-private:
-
+  private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
     Sword m_sword;
-    is::ILightSceneNode *m_nodeLight;
     is::ICameraSceneNode *m_node;
-
-
 };
 
 #endif
