@@ -39,7 +39,6 @@ class Enemy
     ic::vector3df m_last_position;
     is::IAnimatedMeshSceneNode *m_node;
 
-    bool isAllowedToMove(std::vector<Enemy> enemies);
     void updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath();

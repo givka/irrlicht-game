@@ -52,15 +52,14 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies, EventReceiver *re
     updateRotation(player);
     if (!isAttacking(player))
         updatePosition(enemies);
-    if(m_state == IS_ATTACKING)
+    if (m_state == IS_ATTACKING)
         attackPlayer(player);
-
-
 }
 
 bool Enemy::isAttacking(Player &player)
 {
-    if(!isAlive()) return false;
+    if (!isAlive())
+        return false;
     if (m_state == IS_ATTACKING)
     {
         if (m_node->getEndFrame() - m_node->getFrameNr() <= 1)
@@ -88,9 +87,6 @@ bool Enemy::isAttacking(Player &player)
 
 void Enemy::updatePosition(std::vector<Enemy> enemies)
 {
-    if (!isAllowedToMove(enemies))
-        return;
-
     float speed_rotation = 2.5f;
 
     ic::vector3df position_enemy = m_node->getPosition();
@@ -98,6 +94,19 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
 
     position_enemy.X += speed_rotation * cos((rotation_enemy.Y) * M_PI / 180.0);
     position_enemy.Z -= speed_rotation * sin((rotation_enemy.Y) * M_PI / 180.0);
+
+    for (size_t i = 0; i < enemies.size(); i++)
+    {
+        Enemy neighbour = enemies[i];
+        if (m_id != neighbour.m_id)
+        {
+            ic::vector3df position_neighbour = neighbour.getNode()->getPosition();
+            float distX = position_neighbour.X - position_enemy.X;
+            float distZ = position_neighbour.Z - position_enemy.Z;
+            if (abs(distX) < 10 && abs(distZ) < 10)
+                return;
+        }
+    }
 
     m_node->setPosition(position_enemy);
     m_last_position = position_enemy;
@@ -122,44 +131,6 @@ void Enemy::updateRotation(Player &player)
     }
     rotation_enemy.Y -= 90;
     m_node->setRotation(rotation_enemy);
-}
-
-bool Enemy::isAllowedToMove(std::vector<Enemy> enemies)
-{
-    ic::vector3df position_enemy = m_node->getPosition();
-
-    for (size_t i = 0; i < enemies.size(); i++)
-    {
-        Enemy neighbour = enemies[i];
-        if (m_id != neighbour.m_id)
-        {
-            ic::vector3df position_neighbour = neighbour.m_node->getPosition();
-            bool isAllowed = true;
-
-            float const distanceX = position_enemy.X - position_neighbour.X;
-            float const distanceZ = position_enemy.Z - position_neighbour.Z;
-
-            if (fabs(distanceX) < 5.0)
-            {
-                position_enemy.X += distanceX > 0 ? 1.0 : -1.0;
-                m_node->setPosition(position_enemy);
-                isAllowed = false;
-            }
-
-            if (fabs(distanceZ) < 5.0)
-            {
-                position_enemy.Z += distanceZ > 0 ? 1.0 : -1.0;
-                m_node->setPosition(position_enemy);
-                isAllowed = false;
-            }
-
-            if (!isAllowed)
-            {
-                return false;
-            }
-        }
-    }
-    return true;
 }
 
 void Enemy::updateDeath()
@@ -188,8 +159,8 @@ void Enemy::updateDeath()
     rotation.Y += speedDying * m_death_dir.Y;
     rotation.Z += speedDying * m_death_dir.Z;
 
-//    m_node->setPosition(position);
-//    m_node->setRotation(rotation);
+    //    m_node->setPosition(position);
+    //    m_node->setRotation(rotation);
 }
 
 bool Enemy::isDead()
@@ -214,7 +185,8 @@ void Enemy::setOrientation(ic::vector3df ori)
 
 bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
 {
-    if(!isAlive()) return false;
+    if (!isAlive())
+        return false;
     if (receiver->states[receiver->KEY_ATTACK])
     {
         ic::vector3df position_player = player.getPosition();
@@ -239,11 +211,13 @@ bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
     return false;
 }
 
-bool Enemy::isAlive() {
+bool Enemy::isAlive()
+{
     return m_state != IS_DYING && m_state != IS_DEAD;
 }
 
-void Enemy::attackPlayer(Player &player) {
+void Enemy::attackPlayer(Player &player)
+{
     if (m_already_hit_player || m_node->getFrameNr() - m_node->getStartFrame() <= (m_node->getEndFrame() - m_node->getStartFrame()) / 4.0) //only attack by end of swing to let player avoid/parry
         return;
     ic::vector3df position_player = player.getPosition();
