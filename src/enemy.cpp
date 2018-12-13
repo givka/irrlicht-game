@@ -199,7 +199,7 @@ bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
-        if (distance < 50.0 && angle <= -0.80f || position_enemy.Y < -20)
+        if ((distance < 50.0 && angle <= -0.80f) || position_enemy.Y < -20)
         {
             m_death_dir = position_enemy - position_player;
             m_state = IS_DYING;

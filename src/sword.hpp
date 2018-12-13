@@ -13,16 +13,33 @@ namespace iv = irr::video;
 
 class Sword
 {
-    bool swordGoingDown = true;
-    ic::vector3df destination;
 
-public:
+  public:
     Sword();
     void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
-    is::IMeshSceneNode *node;
     void updatePosition();
     bool isAttacking = false;
     void setAttack();
+
+  private:
+    bool m_sword_going_down = true;
+    ic::vector3df m_destination;
+    irr::IrrlichtDevice *m_device;
+    is::IMeshSceneNode *m_node;
+
+    enum enchant
+    {
+        NONE,     //white
+        FIRE,     //red
+        ICE,      //blue
+        VAMPIRIC, //purple
+        POISON,   //green
+    };
+
+    enchant m_current_enchant = NONE;
+
+    void setEnchantment(enchant new_enchantment);
+    is::IParticleSystemSceneNode *setParticuleSystem(enchant new_enchantment, ic::vector3df position);
 };
 
 #endif

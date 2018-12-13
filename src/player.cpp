@@ -74,10 +74,12 @@ void Player::updatePosition(EventReceiver *receiver)
     m_sword.updatePosition();
 }
 
-ic::vector3df Player::getPosition() {
+ic::vector3df Player::getPosition()
+{
     return m_node->getPosition();
 }
 
-ic::vector3df Player::getRotation() {
+ic::vector3df Player::getRotation()
+{
     return m_node->getRotation();
 }
