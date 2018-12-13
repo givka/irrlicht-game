@@ -185,6 +185,7 @@ void Enemy::setOrientation(ic::vector3df ori)
 
 bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
 {
+
     if (!isAlive())
         return false;
     if (receiver->states[receiver->KEY_ATTACK])
@@ -196,9 +197,9 @@ bool Enemy::isBeingAttacked(Player &player, EventReceiver *receiver)
         float const distance = position_player.getDistanceFrom(position_enemy);
         float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
 
-        // enemy in front of us => angle = -1
+        // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
-        if (distance < 50.0 && angle <= -0.80f)
+        if (distance < 50.0 && angle <= -0.80f || position_enemy.Y < -20)
         {
             m_death_dir = position_enemy - position_player;
             m_state = IS_DYING;
