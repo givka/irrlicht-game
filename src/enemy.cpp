@@ -40,6 +40,17 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
     is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(selector, m_node, ellipseRadius);
     m_node->addAnimator(collision);
     collision->drop();
+
+    m_health_bar_size = ellipseRadius.Y / 2.0;
+    m_health_bar = smgr->addBillboardSceneNode(m_node,
+                                               ic::dimension2d<irr::f32>(m_health_bar_size, 1),
+                                               ic::vector3df(10, 30, 0), -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
+    m_health_bar_bg = smgr->addBillboardSceneNode(m_node,
+                                                  ic::dimension2d<irr::f32>(m_health_bar_size, 1),
+                                                  ic::vector3df(9.99, 30, 0), -1, iv::SColor(123, 0, 0, 0), iv::SColor(123, 0, 0, 0));
+
+    m_health_bar->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
 }
 
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
@@ -207,6 +218,10 @@ bool Enemy::isBeingAttacked(Player &player)
             m_health -= sword.getAttack();
             m_last_swing_number = sword.getSwingNumber();
             checkEnchantment(player);
+            float health_bar_size = m_health_bar_size / 100.0 * m_health;
+            m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));
+            // can't manage to align health bar left...
+            // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));
         }
         if (m_health <= 0)
         {
@@ -215,6 +230,8 @@ bool Enemy::isBeingAttacked(Player &player)
             m_death_time = m_device->getTimer()->getTime();
             m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
             m_node->setLoopMode(false);
+            m_health_bar->remove();
+            m_health_bar_bg->remove();
         }
         return true;
     }

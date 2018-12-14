@@ -11,6 +11,7 @@
 namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
+namespace ig = irr::gui;
 
 class Enemy
 {
@@ -35,6 +36,10 @@ class Enemy
     int m_last_swing_number = 0;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
+
+    float m_health_bar_size;
+    is::IBillboardSceneNode *m_health_bar;
+    is::IBillboardSceneNode *m_health_bar_bg;
 
     ic::vector3df m_death_dir;
     ic::vector3df m_last_position;
