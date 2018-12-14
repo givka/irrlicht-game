@@ -13,8 +13,9 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-class Player {
-public:
+class Player
+{
+  public:
     Player();
 
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
@@ -30,7 +31,7 @@ public:
     bool isBlocking();
 
     void takeDamage(int damage);
-
+    
     int getHealth();
 
     int getStamina();
@@ -48,5 +49,9 @@ private:
     int m_max_health;
 
     bool m_waiting_for_unblock = false;
+
+    float m_health_bar_size;
+    is::IBillboardSceneNode *m_health_bar;
+    is::IBillboardSceneNode *m_health_bar_bg;
 };
 #endif
