@@ -29,12 +29,15 @@ public:
 
     bool isBlocking();
 
+    void takeDamage(int damage);
+
 private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
     Sword m_sword;
     is::ICameraSceneNode *m_node;
-
     bool m_blocking;
+
+    int m_health;
 };
 #endif

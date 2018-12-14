@@ -11,6 +11,8 @@ namespace iv = irr::video;
 
 Player::Player()
 {
+    m_health = 200;
+    std::cout << "constr " << std::endl;
 }
 
 void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector)
@@ -106,4 +108,11 @@ Sword Player::getSword()
 
 bool Player::isBlocking() {
     return m_blocking;
+}
+
+void Player::takeDamage(int damage) {
+    m_health -= damage;
+    if(m_health < 0)
+        m_health = 0;
+    std::cout << damage << " Player health " << m_health << std::endl;
 }

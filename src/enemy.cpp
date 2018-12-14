@@ -398,9 +398,9 @@ void Enemy::attackPlayer(Player &player)
         m_already_hit_player = true;
         if(player.isBlocking())
         {
-            std::cout << "blocked" << std::endl;
+            std::cout << "blocked" << std::endl; //todo: particle effect
         }else{
-            std::cout << "hit" << std::endl;
+            player.takeDamage(m_damage); //todo: screen flash / particle effect
         }
 
     }

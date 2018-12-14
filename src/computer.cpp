@@ -28,12 +28,12 @@ void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, ir
     m_enemies.push_back(e);
 }
 
-void Computer::update(Player player)
+void Computer::update(Player &player)
 {
     updatePosition(player);
 }
 
-void Computer::updatePosition(Player player)
+void Computer::updatePosition(Player &player)
 {
     for (size_t index = 0; index < m_enemies.size();)
     {
