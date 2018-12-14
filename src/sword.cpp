@@ -41,9 +41,7 @@ void Sword::setEnchantment(enchant new_enchantment)
 {
     m_current_enchant = new_enchantment;
 
-    iv::SColor color = getCurrentEnchantColor(255);
-    if (new_enchantment == NONE)
-        color = iv::SColor(255, 255, 255, 255);
+    iv::SColor color = getCurrentEnchantColor();
 
     m_node_light->getLightData().DiffuseColor = iv::SColorf(color);
 
@@ -113,6 +111,8 @@ float Sword::getAttack()
 iv::SColor Sword::getCurrentEnchantColor(int alpha)
 {
     iv::SColor color = m_enchant_colors[m_current_enchant];
+    if (m_current_enchant == Sword::NONE)
+        color = iv::SColor(255, 255, 255, 255);
     color.setAlpha(alpha);
     return color;
 }

@@ -55,6 +55,8 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
 
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
+    updateDamageText();
+
     if (m_state == IS_DYING)
         return updateDeath();
 
@@ -216,7 +218,7 @@ bool Enemy::isBeingAttacked(Player &player)
         // cone from -0.8 -> -1 <- -0.8
         if (is_attacked || position_enemy.Y < -20)
         {
-            removeHealth(sword.getAttack(), position_enemy - position_player);
+            removeHealth(player, sword.getAttack());
             if (isAlive())
             {
                 m_last_swing_number = sword.getSwingNumber();
@@ -286,29 +288,32 @@ void Enemy::checkDoT(Player &player)
     {
 
     case Sword::FIRE:
-        removeHealth(resistance_fire * DOT_DAMAGE, ic::vector3df(0, 0, 0));
+        removeHealth(player, resistance_fire * DOT_DAMAGE);
         break;
     case Sword::ICE:
         break;
     case Sword::VAMPIRIC:
         break;
     case Sword::POISON:
-        removeHealth(resistance_poison * DOT_DAMAGE, ic::vector3df(0, 0, 0));
+        removeHealth(player, resistance_poison * DOT_DAMAGE);
         break;
     }
 }
 
-void Enemy::removeHealth(const float damage, ic::vector3df death_dir)
+void Enemy::removeHealth(Player &player, const float damage)
 {
     m_health -= damage;
+
     float health_bar_size = m_health_bar_size / 100.0 * m_health;
     m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));
     // can't manage to align health bar left...
     // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));
 
+    addDamageText(player, damage);
+
     if (m_health <= 0)
     {
-        m_death_dir = death_dir;
+        m_death_dir = m_node->getPosition() - player.getPosition();
         m_state = IS_DYING;
         m_death_time = m_device->getTimer()->getTime();
         m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
@@ -317,6 +322,40 @@ void Enemy::removeHealth(const float damage, ic::vector3df death_dir)
         m_health_bar_bg->remove();
     }
     std::cout << std::to_string(m_id) << ": health remaining: " << m_health << std::endl;
+}
+
+void Enemy::addDamageText(Player &player, const float damage)
+{
+    iv::SColor text_color = player.getSword().getCurrentEnchantColor();
+
+    std::string damage_text = std::to_string((int)damage);
+    std::wstring damage_wtext = std::wstring(damage_text.begin(), damage_text.end());
+
+    irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(0, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((10.0F), (10.0F)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
+
+    const ic::vector3df direction = ic::vector3df(10, rand() % 10, -10 + rand() % 20);
+    m_damage_texts.push_back({node, m_device->getTimer()->getTime(), direction});
+}
+
+void Enemy::updateDamageText()
+{
+
+    for (size_t index = 0; index < m_damage_texts.size();)
+    {
+        ic::vector3df position = m_damage_texts[index].node->getPosition();
+        position.Y += m_damage_texts[index].direction.Y / 10.0;
+        position.Z += m_damage_texts[index].direction.Z / 10.0;
+        m_damage_texts[index].node->setPosition(position);
+
+        if (m_device->getTimer()->getTime() - m_damage_texts[index].creation_time > 1000)
+        {
+            m_damage_texts[index].node->remove();
+            m_damage_texts[index].node = 0;
+            m_damage_texts.erase(m_damage_texts.begin() + index);
+        }
+        else
+            index++;
+    }
 }
 
 void Enemy::setEffect(Player &player, ic::vector3df direction)

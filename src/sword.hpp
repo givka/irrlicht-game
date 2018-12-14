@@ -33,7 +33,7 @@ class Sword
     int getSwingNumber();
     float getAttack();
     Sword::enchant getCurrentEnchant();
-    iv::SColor getCurrentEnchantColor(int alpha = 0);
+    iv::SColor getCurrentEnchantColor(int alpha = 255);
     void setEnchantment(enchant new_enchantment);
 
   private:

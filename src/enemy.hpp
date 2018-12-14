@@ -66,7 +66,18 @@ class Enemy
     void checkEnchantment(Player &player);
     void setEffect(Player &player, ic::vector3df direction);
     void checkDoT(Player &player);
-    void removeHealth(const float damage, ic::vector3df death_dir);
+    void removeHealth(Player &player, const float damage);
+    void addDamageText(Player &player, const float damage);
+    void updateDamageText();
+
+    struct DamageText
+    {
+        is::IBillboardTextSceneNode *node;
+        int creation_time;
+        ic::vector3df direction;
+    };
+
+    std::vector<DamageText> m_damage_texts;
 
     enum enemy_state
     {
