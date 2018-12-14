@@ -398,9 +398,9 @@ void Enemy::attackPlayer(Player &player)
         m_already_hit_player = true;
         if(player.isBlocking())
         {
-            std::cout << "Player got hit" << std::endl;
+            std::cout << "blocked" << std::endl;
         }else{
-
+            std::cout << "hit" << std::endl;
         }
 
     }

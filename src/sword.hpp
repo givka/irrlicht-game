@@ -29,6 +29,8 @@ class Sword
     void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
     void updatePosition();
     void setAttack();
+    void startBlock();
+    void endBlock();
     bool getIsAttacking();
     int getSwingNumber();
     float getAttack();
@@ -39,6 +41,7 @@ class Sword
   private:
     float m_attack;
     bool m_is_attacking = false;
+    bool m_is_blocking = false;
     bool m_sword_going_down = true;
     int m_swing_number = 0;
     ic::vector3df m_destination;

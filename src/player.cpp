@@ -40,8 +40,19 @@ void Player::updatePosition(EventReceiver &receiver)
     ic::vector3df rotation = m_node->getRotation();
 
     if(states[EventReceiver::KEY_BLOCK])
-        m_blocking = true;
-    else m_blocking = false;
+    {
+        if(!m_blocking && !m_sword.getIsAttacking())
+        {
+            m_blocking = true;
+            m_sword.startBlock();
+        }
+
+    }
+    else if(m_blocking)
+    {
+        m_blocking = false;
+        m_sword.endBlock();
+    }
 
     if (states[EventReceiver::KEY_UP])
     {
