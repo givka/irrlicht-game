@@ -17,7 +17,7 @@ class Enemy
 {
   public:
     Enemy();
-    Enemy(int health, int damage, float scale);
+    Enemy(float health, int damage, float scale);
     bool isDead();
     bool isAlive();
     void update(Player &player, std::vector<Enemy> enemies);
@@ -28,7 +28,7 @@ class Enemy
 
   private:
     int m_id;
-    int m_health;
+    float m_health;
     int m_damage;
     float m_scale;
     int m_death_time;
@@ -37,6 +37,15 @@ class Enemy
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
 
+    // DoT
+    int m_last_dot_time = 0;
+    int m_dot_tick_number = 0;
+    Sword::enchant m_current_effect = Sword::NONE;
+    float resistance_fire = 0.5;
+    float resistance_poison = 0.3;
+    float DOT_DAMAGE = 20;
+
+    // health bar
     float m_health_bar_size;
     is::IBillboardSceneNode *m_health_bar;
     is::IBillboardSceneNode *m_health_bar_bg;
@@ -45,7 +54,7 @@ class Enemy
     ic::vector3df m_last_position;
     is::IAnimatedMeshSceneNode *m_node;
 
-    is::IParticleSystemSceneNode *m_effect = 0;
+    is::IParticleSystemSceneNode *m_effect_node = 0;
 
     void
     updateRotation(Player &player);
@@ -56,6 +65,8 @@ class Enemy
     void attackPlayer(Player &player);
     void checkEnchantment(Player &player);
     void setEffect(Player &player, ic::vector3df direction);
+    void checkDoT(Player &player);
+    void removeHealth(const float damage, ic::vector3df death_dir);
 
     enum enemy_state
     {

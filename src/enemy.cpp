@@ -13,7 +13,7 @@ Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_playe
 {
 }
 
-Enemy::Enemy(int health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false)
+Enemy::Enemy(float health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false)
 {
 }
 
@@ -58,6 +58,7 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies)
     if (m_state == IS_DYING)
         return updateDeath();
 
+    checkDoT(player);
     if (isBeingAttacked(player))
         return;
     updateRotation(player);
@@ -215,23 +216,12 @@ bool Enemy::isBeingAttacked(Player &player)
         // cone from -0.8 -> -1 <- -0.8
         if (is_attacked || position_enemy.Y < -20)
         {
-            m_health -= sword.getAttack();
-            m_last_swing_number = sword.getSwingNumber();
-            checkEnchantment(player);
-            float health_bar_size = m_health_bar_size / 100.0 * m_health;
-            m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));
-            // can't manage to align health bar left...
-            // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));
-        }
-        if (m_health <= 0)
-        {
-            m_death_dir = position_enemy - position_player;
-            m_state = IS_DYING;
-            m_death_time = m_device->getTimer()->getTime();
-            m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
-            m_node->setLoopMode(false);
-            m_health_bar->remove();
-            m_health_bar_bg->remove();
+            removeHealth(sword.getAttack(), position_enemy - position_player);
+            if (isAlive())
+            {
+                m_last_swing_number = sword.getSwingNumber();
+                checkEnchantment(player);
+            }
         }
         return true;
     }
@@ -243,11 +233,13 @@ void Enemy::checkEnchantment(Player &player)
 {
     Sword::enchant current_enchant = player.getSword().getCurrentEnchant();
 
+    if (current_enchant == Sword::NONE)
+        return;
+
+    m_current_effect = current_enchant;
+
     switch (current_enchant)
     {
-    case Sword::NONE:
-        return;
-        break;
     case Sword::FIRE:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
@@ -266,15 +258,76 @@ void Enemy::checkEnchantment(Player &player)
     }
 }
 
+void Enemy::checkDoT(Player &player)
+{
+    if (m_current_effect == Sword::NONE)
+        return;
+
+    if (m_dot_tick_number > 3)
+    {
+        m_current_effect = Sword::NONE;
+        m_dot_tick_number = 0;
+        m_last_dot_time = 0;
+        m_effect_node->remove();
+        m_effect_node = 0;
+        return;
+    }
+
+    const int time = m_device->getTimer()->getTime();
+
+    // DoT every second
+    if (time - m_last_dot_time < 1000)
+        return;
+
+    m_last_dot_time = time;
+    m_dot_tick_number++;
+
+    switch (m_current_effect)
+    {
+
+    case Sword::FIRE:
+        removeHealth(resistance_fire * DOT_DAMAGE, ic::vector3df(0, 0, 0));
+        break;
+    case Sword::ICE:
+        break;
+    case Sword::VAMPIRIC:
+        break;
+    case Sword::POISON:
+        removeHealth(resistance_poison * DOT_DAMAGE, ic::vector3df(0, 0, 0));
+        break;
+    }
+}
+
+void Enemy::removeHealth(const float damage, ic::vector3df death_dir)
+{
+    m_health -= damage;
+    float health_bar_size = m_health_bar_size / 100.0 * m_health;
+    m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));
+    // can't manage to align health bar left...
+    // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));
+
+    if (m_health <= 0)
+    {
+        m_death_dir = death_dir;
+        m_state = IS_DYING;
+        m_death_time = m_device->getTimer()->getTime();
+        m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
+        m_node->setLoopMode(false);
+        m_health_bar->remove();
+        m_health_bar_bg->remove();
+    }
+    std::cout << std::to_string(m_id) << ": health remaining: " << m_health << std::endl;
+}
+
 void Enemy::setEffect(Player &player, ic::vector3df direction)
 {
     Sword sword = player.getSword();
     iv::SColor color = sword.getCurrentEnchantColor();
 
-    if (!m_effect)
+    if (!m_effect_node)
     {
-        m_effect = Utils::setParticuleSystem(m_device, m_node, ic::vector3df(0, -20, 0), color);
-        is::IParticleEmitter *emitter = m_effect->getEmitter();
+        m_effect_node = Utils::setParticuleSystem(m_device, m_node, ic::vector3df(0, -20, 0), color);
+        is::IParticleEmitter *emitter = m_effect_node->getEmitter();
         emitter->setMaxLifeTime(200);
         emitter->setMaxAngleDegrees(10);
         emitter->setMaxStartSize(ic::dimension2df(40, 40));
@@ -282,7 +335,7 @@ void Enemy::setEffect(Player &player, ic::vector3df direction)
     }
     else
     {
-        is::IParticleEmitter *emitter = m_effect->getEmitter();
+        is::IParticleEmitter *emitter = m_effect_node->getEmitter();
         emitter->setMaxStartColor(color);
     }
 }

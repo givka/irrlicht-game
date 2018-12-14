@@ -9,7 +9,7 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
-    : m_attack(50.0)
+    : m_attack(20.0)
 {
 }
 
