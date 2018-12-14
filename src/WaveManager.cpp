@@ -38,7 +38,7 @@ void WaveManager::loadJSON(std::string path_to_json)
             spawn.health = (*spawn_it)["health"].GetInt();
             spawn.damage = (*spawn_it)["damage"].GetInt();
             spawn.scale = (*spawn_it)["scale"].GetFloat();
-
+            spawn.swing_timer = (*spawn_it)["swing_timer"].GetInt();
             wave.spawns.push_back(spawn);
         }
         m_waves.push_back(wave);
@@ -55,7 +55,7 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 {
     for (auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
     {
-        Enemy enemy(spawn.health, spawn.damage, spawn.scale);
+        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.swing_timer);
         auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
         auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
 

@@ -17,7 +17,7 @@ class Enemy
 {
   public:
     Enemy();
-    Enemy(float health, int damage, float scale);
+    Enemy(float health, int damage, float scale, int swing_timer);
     bool isDead();
     bool isAlive();
     void update(Player &player, std::vector<Enemy> enemies);
@@ -34,6 +34,8 @@ class Enemy
     int m_death_time;
     bool m_already_hit_player;
     int m_last_swing_number = 0;
+    int m_swing_timer;
+    int m_last_swing_time;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
 
@@ -89,6 +91,7 @@ class Enemy
         IS_DYING,
         IS_DEAD,
         IS_ATTACKING,
+        IS_STOPPED
     };
     enemy_state m_state = IS_RUNNING;
 };

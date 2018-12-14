@@ -9,12 +9,14 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false)
+Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false), m_swing_timer(1000)
 {
+    m_last_swing_time = 0;
 }
 
-Enemy::Enemy(float health, int damage, float scale) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false)
+Enemy::Enemy(float health, int damage, float scale, int swing_timer) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false), m_swing_timer(swing_timer)
 {
+    m_last_swing_time = 0;
 }
 
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
@@ -108,9 +110,23 @@ bool Enemy::isAttacking(Player &player)
 
     if (distance < 40)
     {
-        m_state = IS_ATTACKING;
-        m_node->setMD2Animation(is::EMAT_ATTACK);
+        if( m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()){
+            m_state = IS_ATTACKING;
+            m_node->setMD2Animation(is::EMAT_ATTACK);
+            m_last_swing_time = m_device->getTimer()->getTime();
+        }
+        else if(m_state != IS_STOPPED)
+        {
+            m_state = IS_STOPPED;
+            m_node->setMD2Animation(is::EMAT_STAND);
+        }
+
         return true;
+    }
+    else if(m_state == IS_STOPPED)
+    {
+        m_state = IS_RUNNING;
+        m_node->setMD2Animation(is::EMAT_RUN);
     }
     return false;
 }

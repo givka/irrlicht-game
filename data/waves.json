@@ -9,6 +9,7 @@
 					"damage" : 10,
 					"scale" : 1.0,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -19,6 +20,7 @@
 					"damage" : 10,
 					"scale" : 1.5,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -34,6 +36,7 @@
 					"damage" : 10,
 					"scale" : 1.0,
 					"speed" : 1.0,
+					"swing_timer" : 1000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -44,6 +47,7 @@
 					"damage" : 10,
 					"scale" : 1.5,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -59,6 +63,7 @@
 					"damage" : 10,
 					"scale" : 1.0,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -69,6 +74,7 @@
 					"damage" : 10,
 					"scale" : 0.5,
 					"speed" : 1.0,
+					"swing_timer" : 800,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -79,6 +85,7 @@
 					"damage" : 10,
 					"scale" : 1.0,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
@@ -89,6 +96,7 @@
 					"damage" : 10,
 					"scale" : 0.5,
 					"speed" : 1.0,
+					"swing_timer" : 2000,
 
 					"model_path" : "/random/path",
 					"texture_path" : "/random/path"
