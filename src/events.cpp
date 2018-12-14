@@ -54,6 +54,12 @@ bool EventReceiver::mouse(const SEvent &event)
     case EMIE_LMOUSE_LEFT_UP:
         m_states[KEY_ATTACK] = false;
         break;
+    case EMIE_RMOUSE_PRESSED_DOWN:
+        m_states[KEY_BLOCK] = true;
+        break;
+    case EMIE_RMOUSE_LEFT_UP:
+        m_states[KEY_BLOCK] = false;
+        break;
     default:;
     }
 

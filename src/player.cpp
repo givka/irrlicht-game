@@ -39,6 +39,10 @@ void Player::updatePosition(EventReceiver &receiver)
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
+    if(states[EventReceiver::KEY_BLOCK])
+        m_blocking = true;
+    else m_blocking = false;
+
     if (states[EventReceiver::KEY_UP])
     {
         position.X += -m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
@@ -87,4 +91,8 @@ ic::vector3df Player::getRotation()
 Sword Player::getSword()
 {
     return m_sword;
+}
+
+bool Player::isBlocking() {
+    return m_blocking;
 }
