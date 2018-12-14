@@ -31,6 +31,8 @@ public:
 
     void takeDamage(int damage);
 
+    int getHealth();
+
 private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;

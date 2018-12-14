@@ -7,6 +7,7 @@
 #include "computer.hpp"
 #include "level.hpp"
 #include "WaveManager.h"
+#include "playerbar.hpp"
 
 #define DEBUG_INFO
 
@@ -65,6 +66,10 @@ int main()
 
     //spawn first wave
     waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
+    PlayerBar healthBar(ic::rect<s32>(10, HEIGHT - 40, 250, HEIGHT - 10), 200);
+    PlayerBar staminaBar(ic::rect<s32>(10, HEIGHT - 75, 250, HEIGHT - 45), 200);
+    staminaBar.setFGColor(iv::SColorf(0.0, 0.5, 0.0, 0.7));
+    staminaBar.updateVal(180);
 
     while (device->run())
     {
@@ -88,8 +93,11 @@ int main()
         player.updatePosition(receiver);
         computer.update(player);
 
-        smgr->drawAll();
 
+        smgr->drawAll();
+        healthBar.updateVal(player.getHealth());
+        healthBar.draw(driver);
+        staminaBar.draw(driver);
         driver->endScene();
 
         int fps = driver->getFPS();

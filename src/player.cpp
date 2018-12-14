@@ -114,5 +114,8 @@ void Player::takeDamage(int damage) {
     m_health -= damage;
     if(m_health < 0)
         m_health = 0;
-    std::cout << damage << " Player health " << m_health << std::endl;
+}
+
+int Player::getHealth() {
+    return m_health;
 }
