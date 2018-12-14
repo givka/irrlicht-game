@@ -11,7 +11,7 @@ namespace iv = irr::video;
 
 Player::Player()
 {
-    m_health = 200;
+    m_health = 100;
     std::cout << "constr " << std::endl;
 }
 
@@ -33,6 +33,21 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
         core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
     m_node->addAnimator(collision);
     collision->drop();
+
+    m_health_bar_size = 5;
+    ic::vector3df position = ic::vector3df(0, -5, 4);
+
+    m_health_bar = smgr->addBillboardSceneNode(m_node,
+                                               ic::dimension2d<irr::f32>(m_health_bar_size, 0.1),
+                                               position, -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
+    m_health_bar_bg = smgr->addBillboardSceneNode(m_node,
+                                                  ic::dimension2d<irr::f32>(m_health_bar_size, 0.1),
+                                                  position, -1, iv::SColor(123, 0, 0, 0), iv::SColor(123, 0, 0, 0));
+
+    m_health_bar->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
+    m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
 }
 
 void Player::updatePosition(EventReceiver &receiver)
@@ -41,16 +56,15 @@ void Player::updatePosition(EventReceiver &receiver)
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    if(states[EventReceiver::KEY_BLOCK])
+    if (states[EventReceiver::KEY_BLOCK])
     {
-        if(!m_blocking && !m_sword.getIsAttacking())
+        if (!m_blocking && !m_sword.getIsAttacking())
         {
             m_blocking = true;
             m_sword.startBlock();
         }
-
     }
-    else if(m_blocking)
+    else if (m_blocking)
     {
         m_blocking = false;
         m_sword.endBlock();
@@ -106,13 +120,21 @@ Sword Player::getSword()
     return m_sword;
 }
 
-bool Player::isBlocking() {
+bool Player::isBlocking()
+{
     return m_blocking;
 }
 
-void Player::takeDamage(int damage) {
+void Player::takeDamage(int damage)
+{
     m_health -= damage;
-    if(m_health < 0)
+    if (m_health < 0)
+    {
         m_health = 0;
-    std::cout << damage << " Player health " << m_health << std::endl;
+    }
+
+    float health_bar_size = m_health_bar_size / 100.0 * m_health;
+
+    m_health_bar->setSize(ic::dimension2df(health_bar_size, 0.1));
+    std::cout << damage << " Player health " << health_bar_size << std::endl;
 }

@@ -50,7 +50,9 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
                                                   ic::vector3df(9.99, 30, 0), -1, iv::SColor(123, 0, 0, 0), iv::SColor(123, 0, 0, 0));
 
     m_health_bar->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
     m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
 }
 
 void Enemy::update(Player &player, std::vector<Enemy> enemies)

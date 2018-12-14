@@ -13,8 +13,9 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-class Player {
-public:
+class Player
+{
+  public:
     Player();
 
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
@@ -31,7 +32,7 @@ public:
 
     void takeDamage(int damage);
 
-private:
+  private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
     Sword m_sword;
@@ -39,5 +40,9 @@ private:
     bool m_blocking;
 
     int m_health;
+
+    float m_health_bar_size;
+    is::IBillboardSceneNode *m_health_bar;
+    is::IBillboardSceneNode *m_health_bar_bg;
 };
 #endif
