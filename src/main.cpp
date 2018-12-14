@@ -28,7 +28,7 @@ int main()
 
     IrrlichtDevice *device = createDevice(iv::EDT_OPENGL,
                                           ic::dimension2d<u32>(WIDTH, HEIGHT),
-                                          16, false, false, false, &receiver);
+                                          16, false, false, true, &receiver);
 
     iv::IVideoDriver *driver = device->getVideoDriver();
     is::ISceneManager *smgr = device->getSceneManager();
