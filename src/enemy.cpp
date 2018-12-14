@@ -56,6 +56,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
     updateDamageText();
+    checkBloodTimer();
 
     if (m_state == IS_DYING)
         return updateDeath();
@@ -68,6 +69,19 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies)
         updatePosition(enemies);
     if (m_state == IS_ATTACKING)
         attackPlayer(player);
+}
+
+void Enemy::checkBloodTimer()
+{
+    if (!m_blood_node)
+        return;
+
+    if (m_device->getTimer()->getTime() - m_blood_timer > 300)
+    {
+        m_blood_node->remove();
+        m_blood_node = 0;
+        m_blood_timer = 0;
+    }
 }
 
 bool Enemy::isAttacking(Player &player)
@@ -219,6 +233,7 @@ bool Enemy::isBeingAttacked(Player &player)
         if (is_attacked || position_enemy.Y < -20)
         {
             removeHealth(player, sword.getAttack());
+            addBloodEffect();
             if (isAlive())
             {
                 m_last_swing_number = sword.getSwingNumber();
@@ -286,7 +301,8 @@ void Enemy::checkDoT(Player &player)
 
     switch (m_current_effect)
     {
-
+    case Sword::NONE:
+        break;
     case Sword::FIRE:
         removeHealth(player, resistance_fire * DOT_DAMAGE);
         break;
@@ -334,7 +350,7 @@ void Enemy::addDamageText(Player &player, const float damage)
     irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(0, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((10.0F), (10.0F)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
 
     const ic::vector3df direction = ic::vector3df(10, rand() % 10, -10 + rand() % 20);
-    m_damage_texts.push_back({node, m_device->getTimer()->getTime(), direction});
+    m_damage_texts.push_back({node, (int)m_device->getTimer()->getTime(), direction});
 }
 
 void Enemy::updateDamageText()
@@ -396,12 +412,37 @@ void Enemy::attackPlayer(Player &player)
     {
         //player was hit
         m_already_hit_player = true;
-        if(player.isBlocking())
+        if (player.isBlocking())
         {
             std::cout << "blocked" << std::endl; //todo: particle effect
-        }else{
+        }
+        else
+        {
             player.takeDamage(m_damage); //todo: screen flash / particle effect
         }
-
     }
+}
+
+void Enemy::addBloodEffect()
+{
+
+    if (!m_blood_node)
+    {
+        m_blood_node = Utils::setParticuleSystem(m_device, m_node, ic::vector3df(10, 0, 0), iv::SColor(255, 255, 0, 0));
+        is::IParticleEmitter *emitter = m_blood_node->getEmitter();
+        emitter->setMaxLifeTime(300);
+        emitter->setMaxAngleDegrees(40);
+
+        std::string blood_texture = "data/blood" + std::to_string(rand() % 5 + 1) + ".png";
+        std::wstring path = std::wstring(blood_texture.begin(), blood_texture.end());
+        m_blood_node->setMaterialTexture(0, m_device->getVideoDriver()->getTexture(path.c_str()));
+        m_blood_node->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
+    }
+    else
+    {
+        is::IParticleEmitter *emitter = m_blood_node->getEmitter();
+        emitter->setDirection(ic::vector3df(((float)(rand() % 2)) / 10.0, ((float)(rand() % 2)) / 10.0, ((float)(rand() % 2)) / 10.0));
+    }
+
+    m_blood_timer = m_device->getTimer()->getTime();
 }

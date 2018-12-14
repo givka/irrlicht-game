@@ -55,6 +55,8 @@ class Enemy
     is::IAnimatedMeshSceneNode *m_node;
 
     is::IParticleSystemSceneNode *m_effect_node = 0;
+    is::IParticleSystemSceneNode *m_blood_node = 0;
+    int m_blood_timer;
 
     void
     updateRotation(Player &player);
@@ -69,6 +71,8 @@ class Enemy
     void removeHealth(Player &player, const float damage);
     void addDamageText(Player &player, const float damage);
     void updateDamageText();
+    void addBloodEffect();
+    void checkBloodTimer();
 
     struct DamageText
     {
