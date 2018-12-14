@@ -11,7 +11,11 @@ namespace iv = irr::video;
 
 Player::Player()
 {
-    m_health = 200;
+    m_max_health = 200;
+    m_max_stamina = 200;
+    m_health = m_max_health;
+    m_stamina = m_max_stamina;
+
     std::cout << "constr " << std::endl;
 }
 
@@ -43,7 +47,7 @@ void Player::updatePosition(EventReceiver &receiver)
 
     if(states[EventReceiver::KEY_BLOCK])
     {
-        if(!m_blocking && !m_sword.getIsAttacking())
+        if(!m_blocking && !m_sword.getIsAttacking() &&  m_stamina >= 10 && !m_waiting_for_unblock)
         {
             m_blocking = true;
             m_sword.startBlock();
@@ -52,9 +56,11 @@ void Player::updatePosition(EventReceiver &receiver)
     }
     else if(m_blocking)
     {
+        m_waiting_for_unblock = false;
         m_blocking = false;
         m_sword.endBlock();
     }
+    else m_waiting_for_unblock = false;
 
     if (states[EventReceiver::KEY_UP])
     {
@@ -89,6 +95,19 @@ void Player::updatePosition(EventReceiver &receiver)
 
     m_node->setPosition(position);
     m_sword.updatePosition();
+
+    if(m_blocking)
+        m_stamina -= 2;
+    else m_stamina += 1;
+
+    if(m_stamina <= 0)
+    {
+        m_waiting_for_unblock = true;
+        m_stamina = 0;
+        m_blocking = false;
+        m_sword.endBlock();
+    }
+    if(m_stamina > m_max_stamina) m_stamina = m_max_stamina;
 }
 
 ic::vector3df Player::getPosition()
@@ -118,4 +137,8 @@ void Player::takeDamage(int damage) {
 
 int Player::getHealth() {
     return m_health;
+}
+
+int Player::getStamina() {
+    return m_stamina;
 }

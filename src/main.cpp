@@ -69,7 +69,6 @@ int main()
     PlayerBar healthBar(ic::rect<s32>(10, HEIGHT - 40, 250, HEIGHT - 10), 200);
     PlayerBar staminaBar(ic::rect<s32>(10, HEIGHT - 75, 250, HEIGHT - 45), 200);
     staminaBar.setFGColor(iv::SColorf(0.0, 0.5, 0.0, 0.7));
-    staminaBar.updateVal(180);
 
     while (device->run())
     {
@@ -96,6 +95,7 @@ int main()
 
         smgr->drawAll();
         healthBar.updateVal(player.getHealth());
+        staminaBar.updateVal(player.getStamina());
         healthBar.draw(driver);
         staminaBar.draw(driver);
         driver->endScene();

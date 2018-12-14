@@ -33,6 +33,8 @@ public:
 
     int getHealth();
 
+    int getStamina();
+
 private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
@@ -41,5 +43,10 @@ private:
     bool m_blocking;
 
     int m_health;
+    int m_stamina;
+    int m_max_stamina;
+    int m_max_health;
+
+    bool m_waiting_for_unblock = false;
 };
 #endif
