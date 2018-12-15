@@ -39,7 +39,8 @@ class Sword
     void setEnchantment(enchant new_enchantment);
 
   private:
-    float m_attack;
+    int m_damage_min;
+    int m_damage_max;
     bool m_is_attacking = false;
     bool m_is_blocking = false;
     bool m_sword_going_down = true;

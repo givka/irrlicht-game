@@ -9,7 +9,7 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
-    : m_attack(20.0)
+    : m_damage_min(14), m_damage_max(25)
 {
 }
 
@@ -68,18 +68,18 @@ void Sword::setAttack()
 void Sword::updatePosition()
 {
     float speed = 10.0;
-    if(!m_is_blocking && !m_is_attacking)
+    if (!m_is_blocking && !m_is_attacking)
         return;
 
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
 
-    if(m_is_blocking)
+    if (m_is_blocking)
     {
         rotation.Z = 160;
     }
 
-    if(m_is_attacking)
+    if (m_is_attacking)
     {
         position.Z += m_sword_going_down ? 1 : -1;
         rotation.Y += m_sword_going_down ? -speed : speed;
@@ -91,8 +91,6 @@ void Sword::updatePosition()
         if (!m_sword_going_down && rotation.Y >= -10)
             m_is_attacking = false;
     }
-
-
 
     m_node->setPosition(position);
     m_node->setRotation(rotation);
@@ -115,7 +113,8 @@ int Sword::getSwingNumber()
 
 float Sword::getAttack()
 {
-    return m_attack;
+    const int damage_diff = m_damage_max - m_damage_min;
+    return rand() % (damage_diff + 1) + m_damage_min;
 }
 
 iv::SColor Sword::getCurrentEnchantColor(int alpha)
@@ -127,13 +126,15 @@ iv::SColor Sword::getCurrentEnchantColor(int alpha)
     return color;
 }
 
-void Sword::startBlock() {
+void Sword::startBlock()
+{
     m_is_attacking = false;
     m_is_blocking = true;
     m_sword_going_down = false;
 }
 
-void Sword::endBlock() {
+void Sword::endBlock()
+{
     m_is_blocking = false;
     m_is_attacking = false;
     m_sword_going_down = false;
