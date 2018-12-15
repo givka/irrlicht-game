@@ -9,14 +9,18 @@ namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
 
-Enemy::Enemy() : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false), m_swing_timer(1000)
+Enemy::Enemy()
+    : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false), m_swing_timer(1000)
 {
     m_last_swing_time = 0;
+    m_max_health = m_health;
 }
 
-Enemy::Enemy(float health, int damage, float scale, int swing_timer) : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false), m_swing_timer(swing_timer)
+Enemy::Enemy(float health, int damage, float scale, int swing_timer)
+    : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false), m_swing_timer(swing_timer)
 {
     m_last_swing_time = 0;
+    m_max_health = m_health;
 }
 
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
@@ -344,10 +348,10 @@ void Enemy::checkDoT(Player &player)
 
 void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 {
-    m_last_hit_type = dt;
     m_health -= damage;
+    m_last_hit_type = dt;
 
-    float health_bar_size = m_health_bar_size / 100.0 * m_health;
+    float health_bar_size = m_health_bar_size * m_health / m_max_health;
     m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));
     // can't manage to align health bar left...
     // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));

@@ -36,6 +36,7 @@ class Enemy
 
     int m_id;
     float m_health;
+    float m_max_health;
     int m_damage;
     float m_scale;
     int m_death_time;
