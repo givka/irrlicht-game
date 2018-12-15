@@ -156,7 +156,6 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
     }
 
     m_node->setPosition(position_enemy);
-    m_last_position = position_enemy;
 }
 
 // Enemy will always face player
@@ -197,7 +196,9 @@ void Enemy::updateDeath()
         return;
     }
 
-    m_last_position = position;
+    if (m_last_hit_type == DT_DOT)
+        return;
+
     position.X += speedDying * m_death_dir.X;
     position.Y += speedDying * m_death_dir.Y + 5.0;
     position.Z += speedDying * m_death_dir.Z;
@@ -343,6 +344,7 @@ void Enemy::checkDoT(Player &player)
 
 void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 {
+    m_last_hit_type = dt;
     m_health -= damage;
 
     float health_bar_size = m_health_bar_size / 100.0 * m_health;
@@ -362,7 +364,6 @@ void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
         m_health_bar->remove();
         m_health_bar_bg->remove();
     }
-    std::cout << std::to_string(m_id) << ": health remaining: " << m_health << std::endl;
 }
 
 void Enemy::addDamageText(Player &player, const float damage, damage_type dt)

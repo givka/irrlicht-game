@@ -45,6 +45,7 @@ class Enemy
     int m_last_swing_time;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
+    damage_type m_last_hit_type;
 
     // DoT
     int m_last_dot_time = 0;
