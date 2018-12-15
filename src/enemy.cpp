@@ -110,12 +110,13 @@ bool Enemy::isAttacking(Player &player)
 
     if (distance < 40)
     {
-        if( m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()){
+        if (m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime())
+        {
             m_state = IS_ATTACKING;
             m_node->setMD2Animation(is::EMAT_ATTACK);
             m_last_swing_time = m_device->getTimer()->getTime();
         }
-        else if(m_state != IS_STOPPED)
+        else if (m_state != IS_STOPPED)
         {
             m_state = IS_STOPPED;
             m_node->setMD2Animation(is::EMAT_STAND);
@@ -123,7 +124,7 @@ bool Enemy::isAttacking(Player &player)
 
         return true;
     }
-    else if(m_state == IS_STOPPED)
+    else if (m_state == IS_STOPPED)
     {
         m_state = IS_RUNNING;
         m_node->setMD2Animation(is::EMAT_RUN);
@@ -183,7 +184,7 @@ void Enemy::updateDeath()
 {
 
     int time_dying = m_device->getTimer()->getTime() - m_death_time;
-    float speedDying = 0.1f;
+    float speedDying = 0.05f / m_scale;
 
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
@@ -205,8 +206,8 @@ void Enemy::updateDeath()
     rotation.Y += speedDying * m_death_dir.Y;
     rotation.Z += speedDying * m_death_dir.Z;
 
-    // m_node->setPosition(position);
-    // m_node->setRotation(rotation);
+    m_node->setPosition(position);
+    m_node->setRotation(rotation);
 }
 
 bool Enemy::isDead()
@@ -256,6 +257,10 @@ bool Enemy::isBeingAttacked(Player &player)
             {
                 m_last_swing_number = sword.getSwingNumber();
                 checkEnchantment(player);
+                position_enemy.X -= 25.0 * cos((rotation_enemy.Y) * M_PI / 180.0);
+                position_enemy.Y += 20;
+                position_enemy.Z += 25.0 * sin((rotation_enemy.Y) * M_PI / 180.0);
+                m_node->setPosition(position_enemy);
             }
         }
         return true;
