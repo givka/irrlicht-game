@@ -26,13 +26,8 @@ is::IParticleSystemSceneNode *setParticuleSystem(irr::IrrlichtDevice *device,
     is::ISceneManager *smgr = device->getSceneManager();
     iv::IVideoDriver *driver = device->getVideoDriver();
     scene::IParticleSystemSceneNode *ps = smgr->addParticleSystemSceneNode(false, node);
-    scene::IParticleEmitter *em = ps->createBoxEmitter(core::aabbox3d<f32>(-1, -1, -1, 1, 1, 1),
-                                                       core::vector3df(0.0f, 0.1f, 0.0f),
-                                                       200, 200,
-                                                       iv::SColor(255, 0, 0, 0), color,
-                                                       0, 0,
-                                                       40,
-                                                       ic::dimension2d<f32>(10.0f, 10.0f), ic::dimension2d<f32>(10.0f, 10.0f));
+    scene::IParticleEmitter *em = ps->createBoxEmitter(
+        core::aabbox3d<f32>(-1, -1, -1, 1, 1, 1), core::vector3df(0.0f, 0.1f, 0.0f), 200, 200, iv::SColor(255, 0, 0, 0), color, 0, 0, 40, ic::dimension2d<f32>(10.0f, 10.0f), ic::dimension2d<f32>(10.0f, 10.0f));
     ps->setEmitter(em);
     em->drop();
     ps->setMaterialFlag(video::EMF_LIGHTING, false);

@@ -9,7 +9,7 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
-    : m_damage_min(14), m_damage_max(25)
+    : m_damage_min(20), m_damage_max(m_damage_min * 1.2), m_crit_percent(20)
 {
 }
 
@@ -117,13 +117,16 @@ float Sword::getAttack()
     return rand() % (damage_diff + 1) + m_damage_min;
 }
 
-iv::SColor Sword::getCurrentEnchantColor(int alpha)
+iv::SColor Sword::getCurrentEnchantColor()
 {
-    iv::SColor color = m_enchant_colors[m_current_enchant];
-    if (m_current_enchant == Sword::NONE)
-        color = iv::SColor(255, 255, 255, 255);
-    color.setAlpha(alpha);
-    return color;
+    return getEnchantColor(m_current_enchant);
+}
+
+iv::SColor Sword::getEnchantColor(enchant ench)
+{
+    return ench == Sword::NONE
+               ? iv::SColor(255, 255, 255, 255)
+               : m_enchant_colors[ench];
 }
 
 void Sword::startBlock()
@@ -140,4 +143,9 @@ void Sword::endBlock()
     m_sword_going_down = false;
     m_node->setPosition(core::vector3df(15, -10, 10));
     m_node->setRotation(core::vector3df(90, -10, 90));
+}
+
+float Sword::getCritPercent()
+{
+    return m_crit_percent;
 }

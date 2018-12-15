@@ -251,8 +251,10 @@ bool Enemy::isBeingAttacked(Player &player)
         // cone from -0.8 -> -1 <- -0.8
         if (is_attacked || position_enemy.Y < -20)
         {
-            removeHealth(player, sword.getAttack());
-            addBloodEffect();
+            const bool is_crit = rand() % 101 <= sword.getCritPercent();
+            const float damage = is_crit ? 2 * sword.getAttack() : sword.getAttack();
+            removeHealth(player, damage, is_crit ? DT_CRIT : DT_NORMAL);
+            addBloodEffect(is_crit ? DT_CRIT : DT_NORMAL);
             if (isAlive())
             {
                 m_last_swing_number = sword.getSwingNumber();
@@ -327,19 +329,19 @@ void Enemy::checkDoT(Player &player)
     case Sword::NONE:
         break;
     case Sword::FIRE:
-        removeHealth(player, resistance_fire * DOT_DAMAGE);
+        removeHealth(player, resistance_fire * DOT_DAMAGE, DT_DOT);
         break;
     case Sword::ICE:
         break;
     case Sword::VAMPIRIC:
         break;
     case Sword::POISON:
-        removeHealth(player, resistance_poison * DOT_DAMAGE);
+        removeHealth(player, resistance_poison * DOT_DAMAGE, DT_DOT);
         break;
     }
 }
 
-void Enemy::removeHealth(Player &player, const float damage)
+void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 {
     m_health -= damage;
 
@@ -348,7 +350,7 @@ void Enemy::removeHealth(Player &player, const float damage)
     // can't manage to align health bar left...
     // m_health_bar->setPosition(ic::vector3df(10, 30, -health_bar_size / 2.0));
 
-    addDamageText(player, damage);
+    addDamageText(player, damage, dt);
 
     if (m_health <= 0)
     {
@@ -363,14 +365,17 @@ void Enemy::removeHealth(Player &player, const float damage)
     std::cout << std::to_string(m_id) << ": health remaining: " << m_health << std::endl;
 }
 
-void Enemy::addDamageText(Player &player, const float damage)
+void Enemy::addDamageText(Player &player, const float damage, damage_type dt)
 {
-    iv::SColor text_color = player.getSword().getCurrentEnchantColor();
+    int size = dt == DT_CRIT ? 30 : 10;
+    iv::SColor text_color = dt == DT_DOT
+                                ? player.getSword().getEnchantColor(m_current_effect)
+                                : iv::SColor(255, 255, 255, 255);
 
     std::string damage_text = std::to_string((int)damage);
     std::wstring damage_wtext = std::wstring(damage_text.begin(), damage_text.end());
 
-    irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(0, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((10.0F), (10.0F)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
+    irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(0, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((size), (size)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
 
     const ic::vector3df direction = ic::vector3df(10, rand() % 10, -10 + rand() % 20);
     m_damage_texts.push_back({node, (int)m_device->getTimer()->getTime(), direction});
@@ -446,15 +451,17 @@ void Enemy::attackPlayer(Player &player)
     }
 }
 
-void Enemy::addBloodEffect()
+void Enemy::addBloodEffect(damage_type dt)
 {
+    const int size = dt == DT_CRIT ? 20 : 10;
 
     if (!m_blood_node)
     {
         m_blood_node = Utils::setParticuleSystem(m_device, m_node, ic::vector3df(10, 0, 0), iv::SColor(255, 255, 0, 0));
         is::IParticleEmitter *emitter = m_blood_node->getEmitter();
         emitter->setMaxLifeTime(300);
-        emitter->setMaxAngleDegrees(40);
+        emitter->setMaxAngleDegrees(360);
+        emitter->setMaxStartSize(ic::dimension2df(size, size));
 
         std::string blood_texture = "data/blood" + std::to_string(rand() % 5 + 1) + ".png";
         std::wstring path = std::wstring(blood_texture.begin(), blood_texture.end());

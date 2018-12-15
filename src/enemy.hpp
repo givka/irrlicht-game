@@ -27,6 +27,13 @@ class Enemy
     is::IAnimatedMeshSceneNode *getNode();
 
   private:
+    enum damage_type
+    {
+        DT_NORMAL,
+        DT_DOT,
+        DT_CRIT
+    };
+
     int m_id;
     float m_health;
     int m_damage;
@@ -70,11 +77,12 @@ class Enemy
     void checkEnchantment(Player &player);
     void setEffect(Player &player, ic::vector3df direction);
     void checkDoT(Player &player);
-    void removeHealth(Player &player, const float damage);
-    void addDamageText(Player &player, const float damage);
     void updateDamageText();
-    void addBloodEffect();
+    void addBloodEffect(damage_type dt);
     void checkBloodTimer();
+
+    void removeHealth(Player &player, const float damage, damage_type dt);
+    void addDamageText(Player &player, const float damage, damage_type dt);
 
     struct DamageText
     {

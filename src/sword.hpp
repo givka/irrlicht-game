@@ -35,12 +35,15 @@ class Sword
     int getSwingNumber();
     float getAttack();
     Sword::enchant getCurrentEnchant();
-    iv::SColor getCurrentEnchantColor(int alpha = 255);
+    iv::SColor getCurrentEnchantColor();
+    iv::SColor getEnchantColor(enchant ench);
     void setEnchantment(enchant new_enchantment);
+    float getCritPercent();
 
   private:
-    int m_damage_min;
-    int m_damage_max;
+    float m_damage_min;
+    float m_damage_max;
+    float m_crit_percent;
     bool m_is_attacking = false;
     bool m_is_blocking = false;
     bool m_sword_going_down = true;
