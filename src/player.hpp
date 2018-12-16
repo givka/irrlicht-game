@@ -31,12 +31,14 @@ class Player
     bool isBlocking();
 
     void takeDamage(int damage);
-    
+
     int getHealth();
 
     int getStamina();
 
-private:
+    is::ICameraSceneNode *getNode();
+
+  private:
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
     Sword m_sword;

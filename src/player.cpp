@@ -60,7 +60,7 @@ void Player::updatePosition(EventReceiver &receiver)
 
     if (states[EventReceiver::KEY_BLOCK])
     {
-        if(!m_blocking && !m_sword.getIsAttacking() &&  m_stamina >= 10 && !m_waiting_for_unblock)
+        if (!m_blocking && !m_sword.getIsAttacking() && m_stamina >= 10 && !m_waiting_for_unblock)
         {
             m_blocking = true;
             m_sword.startBlock();
@@ -72,12 +72,20 @@ void Player::updatePosition(EventReceiver &receiver)
         m_blocking = false;
         m_sword.endBlock();
     }
-    else m_waiting_for_unblock = false;
+    else
+        m_waiting_for_unblock = false;
 
     if (states[EventReceiver::KEY_UP])
     {
+        if (m_node->getFOV() < 2.2)
+            m_node->setFOV(m_node->getFOV() + 0.02);
         position.X += -m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
         position.Z += m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
+    }
+    else
+    {
+        if (m_node->getFOV() > 2.0)
+            m_node->setFOV(m_node->getFOV() - 0.02);
     }
     if (states[EventReceiver::KEY_DOWN])
     {
@@ -108,18 +116,20 @@ void Player::updatePosition(EventReceiver &receiver)
     m_node->setPosition(position);
     m_sword.updatePosition();
 
-    if(m_blocking)
+    if (m_blocking)
         m_stamina -= 2;
-    else m_stamina += 1;
+    else
+        m_stamina += 1;
 
-    if(m_stamina <= 0)
+    if (m_stamina <= 0)
     {
         m_waiting_for_unblock = true;
         m_stamina = 0;
         m_blocking = false;
         m_sword.endBlock();
     }
-    if(m_stamina > m_max_stamina) m_stamina = m_max_stamina;
+    if (m_stamina > m_max_stamina)
+        m_stamina = m_max_stamina;
 }
 
 ic::vector3df Player::getPosition()
@@ -156,10 +166,17 @@ void Player::takeDamage(int damage)
     std::cout << damage << " Player health " << health_bar_size << std::endl;
 }
 
-int Player::getHealth() {
+int Player::getHealth()
+{
     return m_health;
 }
 
-int Player::getStamina() {
+int Player::getStamina()
+{
     return m_stamina;
+}
+
+is::ICameraSceneNode *Player::getNode()
+{
+    return m_node;
 }

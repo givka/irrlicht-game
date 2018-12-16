@@ -48,6 +48,9 @@ int main()
     Player player;
     player.initialise(device, selector);
 
+    // auto size = device->getGUIEnvironment()->getBuiltInFont()->getDimension(L"TEST");
+    // is::IBillboardTextSceneNode *waveText = smgr->addBillboardTextSceneNode(0, L"TEST", player.getNode(), ic::dimension2d<irr::f32>(size.Width / 10, size.Height / 10), ic::vector3df(0, 0, 5), -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
+
     WaveManager waveMgr;
     waveMgr.loadJSON("data/waves.json");
 
@@ -91,7 +94,6 @@ int main()
 
         player.updatePosition(receiver);
         computer.update(player);
-
 
         smgr->drawAll();
         healthBar.updateVal(player.getHealth());
