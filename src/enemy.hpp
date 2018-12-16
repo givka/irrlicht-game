@@ -69,10 +69,12 @@ class Enemy
     is::IParticleSystemSceneNode *m_blood_node = 0;
     int m_blood_timer;
 
+    int m_souls;
+
     void
     updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
-    void updateDeath();
+    void updateDeath(Player &player);
     bool isBeingAttacked(Player &player);
     bool isAttacking(Player &player);
     void attackPlayer(Player &player);
@@ -82,9 +84,9 @@ class Enemy
     void updateDamageText();
     void addBloodEffect(damage_type dt);
     void checkBloodTimer();
-
     void removeHealth(Player &player, const float damage, damage_type dt);
     void addDamageText(Player &player, const float damage, damage_type dt);
+    void die(Player &player);
 
     struct DamageText
     {

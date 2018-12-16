@@ -180,3 +180,13 @@ is::ICameraSceneNode *Player::getNode()
 {
     return m_node;
 }
+
+int Player::getSouls()
+{
+    return m_souls;
+}
+void Player::addSouls(int souls)
+{
+    m_souls += souls;
+    std::cout << "current souls: " << m_souls << std::endl;
+}

@@ -14,6 +14,7 @@ Enemy::Enemy()
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
+    m_souls = m_scale * (20 + rand() % 20);
 }
 
 Enemy::Enemy(float health, int damage, float scale, int swing_timer)
@@ -21,6 +22,7 @@ Enemy::Enemy(float health, int damage, float scale, int swing_timer)
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
+    m_souls = m_scale * (20 + rand() % 20);
 }
 
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
@@ -67,7 +69,7 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies)
     checkBloodTimer();
 
     if (m_state == IS_DYING)
-        return updateDeath();
+        return updateDeath(player);
 
     checkDoT(player);
     if (isBeingAttacked(player))
@@ -183,7 +185,7 @@ void Enemy::updateRotation(Player &player)
     m_node->setRotation(rotation_enemy);
 }
 
-void Enemy::updateDeath()
+void Enemy::updateDeath(Player &player)
 {
 
     int time_dying = m_device->getTimer()->getTime() - m_death_time;
@@ -193,12 +195,7 @@ void Enemy::updateDeath()
     ic::vector3df rotation = m_node->getRotation();
 
     if (time_dying >= 1500 || m_node->getFrameNr() == m_node->getEndFrame())
-    {
-        m_state = IS_DEAD;
-        m_node->remove();
-        m_node = 0;
-        return;
-    }
+        return die(player);
 
     if (m_last_hit_type == DT_DOT)
         return;
@@ -480,4 +477,13 @@ void Enemy::addBloodEffect(damage_type dt)
     }
 
     m_blood_timer = m_device->getTimer()->getTime();
+}
+
+void Enemy::die(Player &player)
+{
+    m_state = IS_DEAD;
+    m_node->remove();
+    m_node = 0;
+    player.addSouls(m_souls);
+    return;
 }

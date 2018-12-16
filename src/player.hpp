@@ -19,24 +19,17 @@ class Player
     Player();
 
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
-
     void updatePosition(EventReceiver &receiver);
-
     ic::vector3df getPosition();
-
     ic::vector3df getRotation();
-
     Sword getSword();
-
     bool isBlocking();
-
     void takeDamage(int damage);
-
     int getHealth();
-
     int getStamina();
-
     is::ICameraSceneNode *getNode();
+    int getSouls();
+    void addSouls(int souls);
 
   private:
     float m_speedPosition = 5.0;
@@ -44,6 +37,7 @@ class Player
     Sword m_sword;
     is::ICameraSceneNode *m_node;
     bool m_blocking;
+    int m_souls = 0;
 
     int m_health;
     int m_stamina;
