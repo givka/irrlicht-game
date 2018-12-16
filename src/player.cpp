@@ -37,21 +37,6 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
         core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
     m_node->addAnimator(collision);
     collision->drop();
-
-    m_health_bar_size = 5;
-    ic::vector3df position = ic::vector3df(0, -5, 4);
-
-    m_health_bar = smgr->addBillboardSceneNode(m_node,
-                                               ic::dimension2d<irr::f32>(m_health_bar_size, 0.1),
-                                               position, -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
-    m_health_bar_bg = smgr->addBillboardSceneNode(m_node,
-                                                  ic::dimension2d<irr::f32>(m_health_bar_size, 0.1),
-                                                  position, -1, iv::SColor(123, 0, 0, 0), iv::SColor(123, 0, 0, 0));
-
-    m_health_bar->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
-    m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
-    m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
-    m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
 }
 
 void Player::update(EventReceiver &receiver)
@@ -168,10 +153,7 @@ void Player::takeDamage(int damage)
         m_health = 0;
     }
 
-    float health_bar_size = m_health_bar_size / 100.0 * m_health;
-
-    m_health_bar->setSize(ic::dimension2df(health_bar_size, 0.1));
-    std::cout << damage << " Player health " << health_bar_size << std::endl;
+    std::cout << "player took " << damage << " damage, current health: " << m_health << std::endl;
 }
 
 int Player::getHealth()

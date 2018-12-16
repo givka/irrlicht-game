@@ -48,10 +48,6 @@ class Player
 
     bool m_waiting_for_unblock = false;
 
-    float m_health_bar_size;
-    is::IBillboardSceneNode *m_health_bar;
-    is::IBillboardSceneNode *m_health_bar_bg;
-
     irr::IrrlichtDevice *m_device;
     std::vector<is::IParticleSystemSceneNode *> m_souls_effects;
     void updatePosition(EventReceiver &receiver);
