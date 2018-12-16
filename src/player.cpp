@@ -21,6 +21,8 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 {
     is::ISceneManager *smgr = device->getSceneManager();
 
+    m_device = device;
+
     smgr->addCameraSceneNodeFPS();
     m_node = smgr->getActiveCamera();
     device->getCursorControl()->setVisible(false);
@@ -50,6 +52,12 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
     m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
     m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
+}
+
+void Player::update(EventReceiver &receiver)
+{
+    updateSoulsEffects();
+    updatePosition(receiver);
 }
 
 void Player::updatePosition(EventReceiver &receiver)
@@ -189,4 +197,56 @@ void Player::addSouls(int souls)
 {
     m_souls += souls;
     std::cout << "current souls: " << m_souls << std::endl;
+}
+
+void Player::addSoulsEffect(ic::vector3df enemy_position)
+{
+    irr::scene::IParticleSystemSceneNode *souls_effect = Utils::setParticuleSystem(
+        m_device, 0, enemy_position, iv::SColor(255, 255, 255, 255));
+
+    is::IParticleEmitter *emitter = souls_effect->getEmitter();
+    emitter->setMaxLifeTime(800);
+    emitter->setMaxAngleDegrees(90);
+    emitter->setMaxStartSize(ic::dimension2df(5, 5));
+    m_souls_effects.push_back(souls_effect);
+}
+
+void Player::updateSoulsEffects()
+{
+
+    for (size_t index = 0; index < m_souls_effects.size();)
+    {
+        float speed_rotation = 5.0f;
+        ic::vector3df position_effect = m_souls_effects[index]->getPosition();
+        ic::vector3df rotation_effect = m_souls_effects[index]->getRotation();
+        ic::vector3df position_player = m_node->getPosition();
+
+        ic::vector3df position_diff = position_player - position_effect;
+        rotation_effect.Y = atan(position_diff.Z / position_diff.X) * (180.0f / irr::core::PI);
+        if ((position_player.X - position_effect.X) > 0)
+        {
+            rotation_effect.Y = 90 - rotation_effect.Y;
+        }
+        else if ((position_player.X - position_effect.X) < 0)
+        {
+            rotation_effect.Y = -90 - rotation_effect.Y;
+        }
+        rotation_effect.Y -= 90;
+
+        position_effect.X += speed_rotation * cos((rotation_effect.Y) * M_PI / 180.0);
+        position_effect.Y += 0.1 * position_diff.Y;
+        position_effect.Z -= speed_rotation * sin((rotation_effect.Y) * M_PI / 180.0);
+
+        m_souls_effects[index]->setRotation(rotation_effect);
+        m_souls_effects[index]->setPosition(position_effect);
+
+        if (position_player.getDistanceFrom(position_effect) < 10)
+        {
+            m_souls_effects[index]->remove();
+            m_souls_effects[index] = 0;
+            m_souls_effects.erase(m_souls_effects.begin() + index);
+        }
+        else
+            index++;
+    }
 }

@@ -5,6 +5,7 @@
 
 #include <irrlicht.h>
 #include <iostream>
+#include <vector>
 #include "events.hpp"
 #include "utils.hpp"
 #include "sword.hpp"
@@ -19,9 +20,9 @@ class Player
     Player();
 
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
-    void updatePosition(EventReceiver &receiver);
     ic::vector3df getPosition();
     ic::vector3df getRotation();
+    void update(EventReceiver &receiver);
     Sword getSword();
     bool isBlocking();
     void takeDamage(int damage);
@@ -30,6 +31,7 @@ class Player
     is::ICameraSceneNode *getNode();
     int getSouls();
     void addSouls(int souls);
+    void addSoulsEffect(ic::vector3df enemy_position);
 
   private:
     float m_speedPosition = 5.0;
@@ -49,5 +51,10 @@ class Player
     float m_health_bar_size;
     is::IBillboardSceneNode *m_health_bar;
     is::IBillboardSceneNode *m_health_bar_bg;
+
+    irr::IrrlichtDevice *m_device;
+    std::vector<is::IParticleSystemSceneNode *> m_souls_effects;
+    void updatePosition(EventReceiver &receiver);
+    void updateSoulsEffects();
 };
 #endif

@@ -482,8 +482,9 @@ void Enemy::addBloodEffect(damage_type dt)
 void Enemy::die(Player &player)
 {
     m_state = IS_DEAD;
+    player.addSouls(m_souls);
+    player.addSoulsEffect(m_node->getPosition());
     m_node->remove();
     m_node = 0;
-    player.addSouls(m_souls);
     return;
 }
