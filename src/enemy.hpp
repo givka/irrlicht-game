@@ -44,6 +44,7 @@ class Enemy
     int m_last_swing_number = 0;
     int m_swing_timer;
     int m_last_swing_time;
+    float m_speed = 1.0;
     //TODO: other way to access it globaly ??
     irr::IrrlichtDevice *m_device;
     damage_type m_last_hit_type;
@@ -55,6 +56,8 @@ class Enemy
     float resistance_fire = 0.5;
     float resistance_poison = 0.3;
     float DOT_DAMAGE = 20;
+    float VAMPIRIC_HEAL = 5;
+    float FROST_SPEED = 0.25;
 
     // health bar
     float m_health_bar_size;

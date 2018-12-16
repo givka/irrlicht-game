@@ -140,7 +140,7 @@ bool Enemy::isAttacking(Player &player)
 
 void Enemy::updatePosition(std::vector<Enemy> enemies)
 {
-    float speed_rotation = 2.5f;
+    float speed_rotation = 2.5f * m_speed;
 
     ic::vector3df position_enemy = m_node->getPosition();
     ic::vector3df rotation_enemy = m_node->getRotation();
@@ -287,11 +287,12 @@ void Enemy::checkEnchantment(Player &player)
     case Sword::FIRE:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
-    case Sword::ICE:
+    case Sword::FROST:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
     case Sword::VAMPIRIC:
-        setEffect(player, ic::vector3df(0, 0.2f, 0));
+        player.addSoulsEffect(m_node->getPosition(), player.getSword().getEnchantColor(Sword::VAMPIRIC));
+        player.heal(VAMPIRIC_HEAL);
         break;
     case Sword::POISON:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
@@ -304,7 +305,7 @@ void Enemy::checkEnchantment(Player &player)
 
 void Enemy::checkDoT(Player &player)
 {
-    if (m_current_effect == Sword::NONE)
+    if (m_current_effect == Sword::NONE || m_current_effect == Sword::VAMPIRIC)
         return;
 
     if (m_dot_tick_number > 3)
@@ -314,6 +315,7 @@ void Enemy::checkDoT(Player &player)
         m_last_dot_time = 0;
         m_effect_node->remove();
         m_effect_node = 0;
+        m_speed = 1.0;
         return;
     }
 
@@ -326,21 +328,12 @@ void Enemy::checkDoT(Player &player)
     m_last_dot_time = time;
     m_dot_tick_number++;
 
-    switch (m_current_effect)
-    {
-    case Sword::NONE:
-        break;
-    case Sword::FIRE:
+    if (m_current_effect == Sword::FIRE)
         removeHealth(player, resistance_fire * DOT_DAMAGE, DT_DOT);
-        break;
-    case Sword::ICE:
-        break;
-    case Sword::VAMPIRIC:
-        break;
-    case Sword::POISON:
+    else if (m_current_effect == Sword::POISON)
         removeHealth(player, resistance_poison * DOT_DAMAGE, DT_DOT);
-        break;
-    }
+    else if (m_current_effect == Sword::FROST)
+        m_speed = FROST_SPEED;
 }
 
 void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
@@ -483,7 +476,7 @@ void Enemy::die(Player &player)
 {
     m_state = IS_DEAD;
     player.addSouls(m_souls);
-    player.addSoulsEffect(m_node->getPosition());
+    player.addSoulsEffect(m_node->getPosition(), iv::SColor(255, 255, 255, 255));
     m_node->remove();
     m_node = 0;
     return;

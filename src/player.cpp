@@ -178,10 +178,10 @@ void Player::addSouls(int souls)
     std::cout << "current souls: " << m_souls << std::endl;
 }
 
-void Player::addSoulsEffect(ic::vector3df enemy_position)
+void Player::addSoulsEffect(ic::vector3df enemy_position, iv::SColor color)
 {
     irr::scene::IParticleSystemSceneNode *souls_effect = Utils::setParticuleSystem(
-        m_device, 0, enemy_position, iv::SColor(255, 255, 255, 255));
+        m_device, 0, enemy_position, color);
 
     is::IParticleEmitter *emitter = souls_effect->getEmitter();
     emitter->setMaxLifeTime(800);
@@ -233,4 +233,13 @@ void Player::updateSoulsEffects()
 void Player::setSword(Sword sword)
 {
     m_sword.switchStats(sword, m_node);
+}
+
+void Player::heal(int health)
+{
+    m_health += health;
+    if (m_health > m_max_health)
+        m_health = m_max_health;
+
+    std::cout << "player got heal for: " << health << ", current health: " << m_health << std::endl;
 }

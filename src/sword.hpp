@@ -20,7 +20,7 @@ class Sword
     {
         NONE,     //transparent
         FIRE,     //orange
-        ICE,      //blue
+        FROST,    //blue
         VAMPIRIC, //purple
         POISON,   //green
         ARRAY_END
@@ -74,7 +74,7 @@ class Sword
     std::string m_enchant_names[ARRAY_END] = {
         "NONE",
         "FIRE",
-        "ICE",
+        "FROST",
         "VAMPIRIC",
         "POISON",
     };

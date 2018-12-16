@@ -26,12 +26,13 @@ class Player
     Sword getSword();
     bool isBlocking();
     void takeDamage(int damage);
+    void heal(int health);
     int getHealth();
     int getStamina();
     is::ICameraSceneNode *getNode();
     int getSouls();
     void addSouls(int souls);
-    void addSoulsEffect(ic::vector3df enemy_position);
+    void addSoulsEffect(ic::vector3df enemy_position, iv::SColor color);
     void setSword(Sword sword);
 
   private:
