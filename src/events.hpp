@@ -27,6 +27,7 @@ class EventReceiver : public irr::IEventReceiver
         KEY_STRAFE_RIGHT,
         KEY_ATTACK,
         KEY_BLOCK,
+        KEY_SWITCH_WEAPON,
         KEY_DEBUG_TRIGGER_SPAWN,
         KEY_DEBUG_SWORD_EFFECT,
         STATE_MOVING,

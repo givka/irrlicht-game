@@ -18,7 +18,7 @@ Sword::Sword(int damage, int crit_percent, enchant ench)
 {
     std::cout << ench << std::endl;
 }
-void Sword::initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer)
+void Sword::initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer)
 {
     m_device = device;
     is::ISceneManager *smgr = device->getSceneManager();
@@ -163,4 +163,18 @@ float Sword::getCritPercent()
 is::IMeshSceneNode *Sword::getNode()
 {
     return m_node;
+}
+
+void Sword::switchStats(Sword sword, is::ISceneNode *node)
+{
+    m_node->remove();
+    m_node = 0;
+
+    m_current_enchant = sword.m_current_enchant;
+    m_damage_min = sword.m_damage_min;
+    m_damage_max = sword.m_damage_max;
+    m_crit_percent = sword.m_crit_percent;
+
+    std::cout << "sword switched" << std::endl;
+    initialise(m_device, node);
 }

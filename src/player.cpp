@@ -229,3 +229,8 @@ void Player::updateSoulsEffects()
             index++;
     }
 }
+
+void Player::setSword(Sword sword)
+{
+    m_sword.switchStats(sword, m_node);
+}

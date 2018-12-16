@@ -27,7 +27,7 @@ class Sword
     };
     Sword();
     Sword(int damage, int crit_percent, enchant ench);
-    void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
+    void initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer);
     void updatePosition();
     void setAttack();
     void startBlock();
@@ -41,6 +41,8 @@ class Sword
     void setEnchantment(enchant new_enchantment);
     float getCritPercent();
     is::IMeshSceneNode *getNode();
+
+    void switchStats(Sword sword, is::ISceneNode *node);
 
   private:
     float m_damage_min;

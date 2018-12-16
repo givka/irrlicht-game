@@ -105,7 +105,7 @@ int main()
         staminaBar.updateVal(player.getStamina());
         healthBar.draw(driver);
         staminaBar.draw(driver);
-        loot.update();
+        loot.update(player, receiver);
         driver->endScene();
 
         int fps = driver->getFPS();

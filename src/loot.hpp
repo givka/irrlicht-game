@@ -5,6 +5,8 @@
 #include <vector>
 #include "irrlicht.h"
 #include "sword.hpp"
+#include "player.hpp"
+#include "events.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;
@@ -14,12 +16,13 @@ class Loot
 {
   public:
     Loot(irr::IrrlichtDevice *device);
-    void update();
+    void update(Player &player, EventReceiver &receiver);
 
   private:
     Sword m_sword;
     int m_cost;
     irr::IrrlichtDevice *m_device = m_device;
+    void switchSword(Player &player);
 };
 
 #endif

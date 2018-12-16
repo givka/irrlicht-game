@@ -32,6 +32,7 @@ class Player
     int getSouls();
     void addSouls(int souls);
     void addSoulsEffect(ic::vector3df enemy_position);
+    void setSword(Sword sword);
 
   private:
     float m_speedPosition = 5.0;
