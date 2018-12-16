@@ -149,10 +149,7 @@ void Player::takeDamage(int damage)
 {
     m_health -= damage;
     if (m_health < 0)
-    {
         m_health = 0;
-    }
-
     std::cout << "player took " << damage << " damage, current health: " << m_health << std::endl;
 }
 

@@ -9,10 +9,15 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
-    : m_damage_min(20), m_damage_max(m_damage_min * 1.2), m_crit_percent(20)
+    : m_damage_min(20), m_damage_max(m_damage_min * 1.2), m_crit_percent(20), m_current_enchant(NONE)
 {
 }
 
+Sword::Sword(int damage, int crit_percent, enchant ench)
+    : m_damage_min(damage), m_damage_max(damage * 1.2), m_crit_percent(crit_percent), m_current_enchant(ench)
+{
+    std::cout << ench << std::endl;
+}
 void Sword::initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer)
 {
     m_device = device;
@@ -30,11 +35,16 @@ void Sword::initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePl
                                            iv::SColorf(iv::SColor(255, 255, 255, 255)),
                                            500.0f);
 
-    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(5, 0, 0)));
-    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(10, 0, 0)));
-    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(15, 0, 0)));
-    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(20, 0, 0)));
-    m_particles.push_back(Utils::setParticuleSystem(device, m_node, ic::vector3df(25, 0, 0)));
+    m_particles.push_back(Utils::setParticuleSystem(
+        device, m_node, ic::vector3df(5, 0, 0), m_enchant_colors[m_current_enchant]));
+    m_particles.push_back(Utils::setParticuleSystem(
+        device, m_node, ic::vector3df(10, 0, 0), m_enchant_colors[m_current_enchant]));
+    m_particles.push_back(Utils::setParticuleSystem(
+        device, m_node, ic::vector3df(15, 0, 0), m_enchant_colors[m_current_enchant]));
+    m_particles.push_back(Utils::setParticuleSystem(
+        device, m_node, ic::vector3df(20, 0, 0), m_enchant_colors[m_current_enchant]));
+    m_particles.push_back(Utils::setParticuleSystem(
+        device, m_node, ic::vector3df(25, 0, 0), m_enchant_colors[m_current_enchant]));
 }
 
 void Sword::setEnchantment(enchant new_enchantment)
@@ -148,4 +158,9 @@ void Sword::endBlock()
 float Sword::getCritPercent()
 {
     return m_crit_percent;
+}
+
+is::IMeshSceneNode *Sword::getNode()
+{
+    return m_node;
 }

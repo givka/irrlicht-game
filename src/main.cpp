@@ -8,6 +8,7 @@
 #include "level.hpp"
 #include "WaveManager.h"
 #include "playerbar.hpp"
+#include "loot.hpp"
 
 #define DEBUG_INFO
 
@@ -34,6 +35,8 @@ int main()
     iv::IVideoDriver *driver = device->getVideoDriver();
     is::ISceneManager *smgr = device->getSceneManager();
 
+    srand(time(NULL));
+
     Level level;
     level.loadFromJSON("data/level.json", device, driver, smgr);
 
@@ -53,6 +56,8 @@ int main()
 
     WaveManager waveMgr;
     waveMgr.loadJSON("data/waves.json");
+
+    Loot loot(device);
 
     // add enemy
     Computer computer;
@@ -100,6 +105,7 @@ int main()
         staminaBar.updateVal(player.getStamina());
         healthBar.draw(driver);
         staminaBar.draw(driver);
+        loot.update();
         driver->endScene();
 
         int fps = driver->getFPS();

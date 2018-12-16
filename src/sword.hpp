@@ -26,6 +26,7 @@ class Sword
         ARRAY_END
     };
     Sword();
+    Sword(int damage, int crit_percent, enchant ench);
     void initialise(irr::IrrlichtDevice *device, is::ICameraSceneNode *nodePlayer);
     void updatePosition();
     void setAttack();
@@ -39,6 +40,7 @@ class Sword
     iv::SColor getEnchantColor(enchant ench);
     void setEnchantment(enchant new_enchantment);
     float getCritPercent();
+    is::IMeshSceneNode *getNode();
 
   private:
     float m_damage_min;
@@ -61,7 +63,7 @@ class Sword
         iv::SColor(255, 85, 255, 85),   //green
     };
 
-    enchant m_current_enchant = NONE;
+    enchant m_current_enchant;
 
     std::vector<is::IParticleSystemSceneNode *> m_particles;
 };
