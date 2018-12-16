@@ -45,7 +45,10 @@ class Sword
     is::IMeshSceneNode *getNode();
 
     void switchStats(Sword sword, is::ISceneNode *node);
-    std::string getEnchantName(enchant ench);
+
+    std::string getDamageText(Sword sword);
+    std::string getCritChanceText(Sword sword);
+    std::string getEnchantText(Sword sword);
 
   private:
     int m_damage_min;

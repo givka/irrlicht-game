@@ -16,7 +16,6 @@ Sword::Sword()
 Sword::Sword(int damage, int crit_percent, enchant ench)
     : m_damage_min(damage), m_damage_max(damage * 1.2), m_crit_percent(crit_percent), m_current_enchant(ench)
 {
-    std::cout << ench << std::endl;
 }
 void Sword::initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer)
 {
@@ -32,8 +31,10 @@ void Sword::initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer)
 
     m_node_light = smgr->addLightSceneNode(m_node,
                                            ic::vector3df(12.5, -10, -15),
-                                           iv::SColorf(iv::SColor(255, 255, 255, 255)),
-                                           500.0f);
+                                           iv::SColorf(getCurrentEnchantColor()),
+                                           250.0f);
+
+    m_particles.clear();
 
     m_particles.push_back(Utils::setParticuleSystem(
         device, m_node, ic::vector3df(5, 0, 0), m_enchant_colors[m_current_enchant]));
@@ -50,15 +51,10 @@ void Sword::initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer)
 void Sword::setEnchantment(enchant new_enchantment)
 {
     m_current_enchant = new_enchantment;
-
     iv::SColor color = getCurrentEnchantColor();
-
     m_node_light->getLightData().DiffuseColor = iv::SColorf(color);
-
     for (size_t index = 0; index < m_particles.size(); index++)
-    {
         m_particles[index]->getEmitter()->setMaxStartColor(m_enchant_colors[new_enchantment]);
-    }
 }
 
 void Sword::setAttack()
@@ -175,7 +171,6 @@ void Sword::switchStats(Sword sword, is::ISceneNode *node)
     m_damage_max = sword.m_damage_max;
     m_crit_percent = sword.m_crit_percent;
 
-    std::cout << "sword switched" << std::endl;
     initialise(m_device, node);
 }
 
@@ -188,7 +183,20 @@ int Sword::getDamageMax()
     return m_damage_max;
 }
 
-std::string Sword::getEnchantName(enchant ench)
+std::string Sword::getDamageText(Sword sword)
 {
-    return m_enchant_names[ench];
+    return "Damage: " + std::to_string(m_damage_min) + " - " + std::to_string(m_damage_max) + " -> " +
+           std::to_string(sword.m_damage_min) + " - " + std::to_string(sword.m_damage_max);
+}
+
+std::string Sword::getCritChanceText(Sword sword)
+{
+    return "Crit Chance: " + std::to_string(m_crit_percent) + "% -> " +
+           std::to_string(sword.m_crit_percent) + "%";
+}
+
+std::string Sword::getEnchantText(Sword sword)
+{
+    return "Enchantment: " + m_enchant_names[m_current_enchant] + " -> " +
+           m_enchant_names[sword.m_current_enchant];
 }

@@ -15,18 +15,20 @@ namespace iv = irr::video;
 class Loot
 {
   public:
-    Loot(irr::IrrlichtDevice *device);
+    Loot(irr::IrrlichtDevice *device, Player &player);
     void update(Player &player, EventReceiver &receiver);
 
   private:
     Sword m_sword;
     int m_cost;
+    int m_timer;
     irr::IrrlichtDevice *m_device = m_device;
-    void switchSword(Player &player);
     irr::scene::IBillboardSceneNode *m_tootlip_bg;
-    irr::scene::IBillboardTextSceneNode *addTooltipText(std::string text, int y);
-    void addTooltip();
     std::vector<is::IBillboardTextSceneNode *> m_tooltip_texts;
+
+    void switchSword(Player &player);
+    irr::scene::IBillboardTextSceneNode *addTooltipText(std::string text, int y);
+    void addTooltip(Player &player);
 };
 
 #endif

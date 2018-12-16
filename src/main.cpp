@@ -57,7 +57,7 @@ int main()
     WaveManager waveMgr;
     waveMgr.loadJSON("data/waves.json");
 
-    Loot loot(device);
+    Loot loot(device, player);
 
     // add enemy
     Computer computer;
