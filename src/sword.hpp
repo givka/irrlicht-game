@@ -39,15 +39,18 @@ class Sword
     iv::SColor getCurrentEnchantColor();
     iv::SColor getEnchantColor(enchant ench);
     void setEnchantment(enchant new_enchantment);
-    float getCritPercent();
+    int getCritPercent();
+    int getDamageMin();
+    int getDamageMax();
     is::IMeshSceneNode *getNode();
 
     void switchStats(Sword sword, is::ISceneNode *node);
+    std::string getEnchantName(enchant ench);
 
   private:
-    float m_damage_min;
-    float m_damage_max;
-    float m_crit_percent;
+    int m_damage_min;
+    int m_damage_max;
+    int m_crit_percent;
     bool m_is_attacking = false;
     bool m_is_blocking = false;
     bool m_sword_going_down = true;
@@ -63,6 +66,14 @@ class Sword
         iv::SColor(255, 123, 123, 255), //blue
         iv::SColor(255, 255, 85, 255),  //purple
         iv::SColor(255, 85, 255, 85),   //green
+    };
+
+    std::string m_enchant_names[ARRAY_END] = {
+        "NONE",
+        "FIRE",
+        "ICE",
+        "VAMPIRIC",
+        "POISON",
     };
 
     enchant m_current_enchant;

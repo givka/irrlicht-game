@@ -155,7 +155,7 @@ void Sword::endBlock()
     m_node->setRotation(core::vector3df(90, -10, 90));
 }
 
-float Sword::getCritPercent()
+int Sword::getCritPercent()
 {
     return m_crit_percent;
 }
@@ -177,4 +177,18 @@ void Sword::switchStats(Sword sword, is::ISceneNode *node)
 
     std::cout << "sword switched" << std::endl;
     initialise(m_device, node);
+}
+
+int Sword::getDamageMin()
+{
+    return m_damage_min;
+}
+int Sword::getDamageMax()
+{
+    return m_damage_max;
+}
+
+std::string Sword::getEnchantName(enchant ench)
+{
+    return m_enchant_names[ench];
 }

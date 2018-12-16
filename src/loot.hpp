@@ -23,6 +23,10 @@ class Loot
     int m_cost;
     irr::IrrlichtDevice *m_device = m_device;
     void switchSword(Player &player);
+    irr::scene::IBillboardSceneNode *m_tootlip_bg;
+    irr::scene::IBillboardTextSceneNode *addTooltipText(std::string text, int y);
+    void addTooltip();
+    std::vector<is::IBillboardTextSceneNode *> m_tooltip_texts;
 };
 
 #endif
