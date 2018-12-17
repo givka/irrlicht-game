@@ -9,6 +9,7 @@
 #include "WaveManager.h"
 #include "playerbar.hpp"
 #include "loot.hpp"
+#include "score.hpp"
 
 #define DEBUG_INFO
 
@@ -34,6 +35,7 @@ int main()
 
     iv::IVideoDriver *driver = device->getVideoDriver();
     is::ISceneManager *smgr = device->getSceneManager();
+    ig::IGUIEnvironment *gui = device->getGUIEnvironment();
 
     srand(time(NULL));
 
@@ -50,6 +52,8 @@ int main()
 
     Player player;
     player.initialise(device, selector);
+
+    Score souls(device);
 
     // auto size = device->getGUIEnvironment()->getBuiltInFont()->getDimension(L"TEST");
     // is::IBillboardTextSceneNode *waveText = smgr->addBillboardTextSceneNode(0, L"TEST", player.getNode(), ic::dimension2d<irr::f32>(size.Width / 10, size.Height / 10), ic::vector3df(0, 0, 5), -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
@@ -103,6 +107,9 @@ int main()
         health_bar.update(player.getHealth());
         stamina_bar.update(player.getStamina());
         loot.update(player, receiver);
+        souls.update(player.getSouls());
+        gui->drawAll();
+
         driver->endScene();
 
         int fps = driver->getFPS();
