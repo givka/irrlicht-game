@@ -36,6 +36,9 @@ class Player
     void setSword(Sword sword);
 
   private:
+    const float MAX_FOV = 2.0;
+    const float MIN_FOV = 1.9;
+    const float STEP_FOV = 0.01;
     float m_speedPosition = 5.0;
     float m_speedRotation = 5.0;
     Sword m_sword;

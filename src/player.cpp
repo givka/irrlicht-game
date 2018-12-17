@@ -26,7 +26,7 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     smgr->addCameraSceneNodeFPS();
     m_node = smgr->getActiveCamera();
     device->getCursorControl()->setVisible(false);
-    m_node->setFOV(2.0);
+    m_node->setFOV(MIN_FOV);
 
     m_node->setPosition(core::vector3df(100, 30, 100));
 
@@ -70,15 +70,15 @@ void Player::updatePosition(EventReceiver &receiver)
 
     if (states[EventReceiver::KEY_UP])
     {
-        if (m_node->getFOV() < 2.2)
-            m_node->setFOV(m_node->getFOV() + 0.02);
+        if (m_node->getFOV() < MAX_FOV)
+            m_node->setFOV(m_node->getFOV() + STEP_FOV);
         position.X += -m_speedPosition * cos((90 + rotation.Y) * M_PI / 180.0);
         position.Z += m_speedPosition * sin((90 + rotation.Y) * M_PI / 180.0);
     }
     else
     {
-        if (m_node->getFOV() > 2.0)
-            m_node->setFOV(m_node->getFOV() - 0.02);
+        if (m_node->getFOV() > MIN_FOV)
+            m_node->setFOV(m_node->getFOV() - STEP_FOV);
     }
     if (states[EventReceiver::KEY_DOWN])
     {
