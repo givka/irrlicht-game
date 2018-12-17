@@ -12,16 +12,16 @@ Computer::Computer()
 {
 }
 
-void Computer::addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector)
+void Computer::addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector)
 {
     Enemy enemy;
-    enemy.initialise(device, mesh, selector, nbrEnemiesAdded++);
+    enemy.initialise(device, mesh, texture, selector, nbrEnemiesAdded++);
     m_enemies.push_back(enemy);
 }
 
-void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector)
+void Computer::addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector)
 {
-    enemy->initialise(device, mesh, selector, nbrEnemiesAdded++);
+    enemy->initialise(device, mesh, texture, selector, nbrEnemiesAdded++);
     Enemy e = *enemy;
     e.setPosition(pos);
     e.setOrientation(ori);

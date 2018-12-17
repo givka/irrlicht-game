@@ -51,15 +51,23 @@ int WaveManager::getCurrentWave()
     return m_current_wave;
 }
 
-void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector)
+void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector)
 {
     for (auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
     {
+        int rand_enemy = rand() % 7;
+        std::string path_text = "data/models/" + std::to_string(rand_enemy) + ".pcx";
+        std::string path_model = "data/models/" + std::to_string(rand_enemy) + ".md2";
+
+        is::IAnimatedMesh *mesh = device->getSceneManager()->getMesh(std::wstring(path_model.begin(), path_model.end()).c_str());
+
+        iv::ITexture *texture = device->getVideoDriver()->getTexture(std::wstring(path_text.begin(), path_text.end()).c_str());
+
         Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.swing_timer);
         auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
         auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
 
-        computer.addEnemy(&enemy, pos, rot, device, mesh, selector);
+        computer.addEnemy(&enemy, pos, rot, device, mesh, texture, selector);
     }
 
     m_current_wave = wave_id;

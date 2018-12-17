@@ -21,7 +21,6 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const NBR_ENEMIES = 40;
 int const HEIGHT = 800;
 int const WIDTH = HEIGHT * 16.0 / 9.0;
 
@@ -48,16 +47,12 @@ int main()
     level.getMapNode()->setTriangleSelector(selector);
     level.getMapNode()->setMaterialType(iv::EMT_SOLID);
     level.getMapNode()->setMaterialFlag(iv::EMF_LIGHTING, true);
-    is::IAnimatedMesh *meshSkeleton = smgr->getMesh("data/tris.md2");
 
     Player player;
     player.initialise(device, selector);
 
     Score souls(device, 0.90, 0.90, 1.0);
     Score waves(device, 0.090, 0.11, 1.5);
-
-    // auto size = device->getGUIEnvironment()->getBuiltInFont()->getDimension(L"TEST");
-    // is::IBillboardTextSceneNode *waveText = smgr->addBillboardTextSceneNode(0, L"TEST", player.getNode(), ic::dimension2d<irr::f32>(size.Width / 10, size.Height / 10), ic::vector3df(0, 0, 5), -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
 
     WaveManager waveMgr;
     waveMgr.loadJSON("data/waves.json");
@@ -66,10 +61,6 @@ int main()
 
     // add enemy
     Computer computer;
-    for (size_t i = 0; i < NBR_ENEMIES; i++)
-    {
-        //computer.addEnemy(driver, smgr, meshSkeleton, selector);
-    }
 
     // remove collision selector
     selector->drop();
@@ -78,7 +69,7 @@ int main()
     int lastFPS = -1;
 
     //spawn first wave
-    waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
+    waveMgr.spawnWave(level, 0, computer, device, selector);
 
     PlayerBar health_bar(device, 0.10, 0.10, 0.25, 0.11, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
     PlayerBar stamina_bar(device, 0.10, 0.115, 0.25, 0.125, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
@@ -91,12 +82,12 @@ int main()
             if (waveMgr.getCurrentWave() == waveMgr.getLastWaveId()) //last wave finished, game over
             {
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, meshSkeleton, selector); //but for now we debug
+                waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //but for now we debug
             }
             else
             {
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave() + 1, computer, device, meshSkeleton, selector); //spawn next wave
+                waveMgr.spawnWave(level, waveMgr.getCurrentWave() + 1, computer, device, selector); //spawn next wave
             }
         }
 
@@ -129,7 +120,7 @@ int main()
         if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
         {
             std::cout << "spawning wave 0" << std::endl;
-            waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
+            waveMgr.spawnWave(level, 0, computer, device, selector);
         }
     }
     device->drop();
