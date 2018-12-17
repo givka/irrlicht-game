@@ -184,8 +184,10 @@ void Player::addSoulsEffect(ic::vector3df enemy_position, iv::SColor color)
         m_device, 0, enemy_position, color);
 
     is::IParticleEmitter *emitter = souls_effect->getEmitter();
+    emitter->setDirection(ic::vector3df(0, 0, 0));
     emitter->setMaxLifeTime(800);
     emitter->setMaxAngleDegrees(90);
+    emitter->setMinStartSize(ic::dimension2df(5, 5));
     emitter->setMaxStartSize(ic::dimension2df(5, 5));
     m_souls_effects.push_back(souls_effect);
 }
