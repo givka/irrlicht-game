@@ -171,22 +171,18 @@ int Player::getSouls()
 {
     return m_souls;
 }
-void Player::addSouls(int souls)
-{
-    m_souls_to_add += souls;
-}
 
-void Player::addSoulsEffect(ic::vector3df enemy_position, iv::SColor color)
+void Player::addSoulsEffect(SoulsEffect souls_effect)
 {
-    irr::scene::IParticleSystemSceneNode *souls_effect = Utils::setParticuleSystem(
-        m_device, 0, enemy_position, color);
-
-    is::IParticleEmitter *emitter = souls_effect->getEmitter();
+    irr::scene::IParticleSystemSceneNode *souls_effect_node = Utils::setParticuleSystem(
+        m_device, 0, souls_effect.position, souls_effect.color);
+    is::IParticleEmitter *emitter = souls_effect_node->getEmitter();
     emitter->setDirection(ic::vector3df(0, 0, 0));
     emitter->setMaxLifeTime(800);
     emitter->setMaxAngleDegrees(90);
     emitter->setMinStartSize(ic::dimension2df(5, 5));
     emitter->setMaxStartSize(ic::dimension2df(5, 5));
+    souls_effect.node = souls_effect_node;
     m_souls_effects.push_back(souls_effect);
 }
 
@@ -203,8 +199,8 @@ void Player::updateSoulsEffects()
     for (size_t index = 0; index < m_souls_effects.size();)
     {
         float speed_rotation = 5.0f;
-        ic::vector3df position_effect = m_souls_effects[index]->getPosition();
-        ic::vector3df rotation_effect = m_souls_effects[index]->getRotation();
+        ic::vector3df position_effect = m_souls_effects[index].node->getPosition();
+        ic::vector3df rotation_effect = m_souls_effects[index].node->getRotation();
         ic::vector3df position_player = m_node->getPosition();
 
         ic::vector3df position_diff = position_player - position_effect;
@@ -223,13 +219,20 @@ void Player::updateSoulsEffects()
         position_effect.Y += 0.1 * position_diff.Y;
         position_effect.Z -= speed_rotation * sin((rotation_effect.Y) * M_PI / 180.0);
 
-        m_souls_effects[index]->setRotation(rotation_effect);
-        m_souls_effects[index]->setPosition(position_effect);
+        m_souls_effects[index].node->setRotation(rotation_effect);
+        m_souls_effects[index].node->setPosition(position_effect);
 
         if (position_player.getDistanceFrom(position_effect) < 10)
         {
-            m_souls_effects[index]->remove();
-            m_souls_effects[index] = 0;
+            m_souls_effects[index].node->remove();
+            m_souls_effects[index].node = 0;
+
+            if (m_souls_effects[index].type == ST_HEALTH)
+                heal(m_souls_effects[index].value);
+
+            if (m_souls_effects[index].type == ST_MONEY)
+                m_souls_to_add += m_souls_effects[index].value;
+
             m_souls_effects.erase(m_souls_effects.begin() + index);
         }
         else

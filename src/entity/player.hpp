@@ -19,6 +19,21 @@ class Player
   public:
     Player();
 
+    enum SOULS_TYPE
+    {
+        ST_MONEY,
+        ST_HEALTH
+    };
+
+    struct SoulsEffect
+    {
+        int value;
+        SOULS_TYPE type;
+        iv::SColor color;
+        ic::vector3df position;
+        is::IParticleSystemSceneNode *node;
+    };
+
     void initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *selector);
     ic::vector3df getPosition();
     ic::vector3df getRotation();
@@ -31,8 +46,7 @@ class Player
     int getStamina();
     is::ICameraSceneNode *getNode();
     int getSouls();
-    void addSouls(int souls);
-    void addSoulsEffect(ic::vector3df enemy_position, iv::SColor color);
+    void addSoulsEffect(SoulsEffect souls_effect);
     void setSword(Sword sword);
 
   private:
@@ -55,7 +69,7 @@ class Player
     bool m_waiting_for_unblock = false;
 
     irr::IrrlichtDevice *m_device;
-    std::vector<is::IParticleSystemSceneNode *> m_souls_effects;
+    std::vector<SoulsEffect> m_souls_effects;
     void updatePosition(EventReceiver &receiver);
     void updateSoulsEffects();
 };

@@ -291,8 +291,7 @@ void Enemy::checkEnchantment(Player &player)
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
     case Sword::VAMPIRIC:
-        player.addSoulsEffect(m_node->getPosition(), player.getSword().getEnchantColor(Sword::VAMPIRIC));
-        player.heal(VAMPIRIC_HEAL);
+        player.addSoulsEffect({VAMPIRIC_HEAL, Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
         break;
     case Sword::POISON:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
@@ -475,8 +474,7 @@ void Enemy::addBloodEffect(damage_type dt)
 void Enemy::die(Player &player)
 {
     m_state = IS_DEAD;
-    player.addSouls(m_souls);
-    player.addSoulsEffect(m_node->getPosition(), iv::SColor(255, 255, 255, 255));
+    player.addSoulsEffect({m_souls, Player::ST_MONEY, iv::SColor(255, 255, 255, 255), m_node->getPosition(), 0});
     m_node->remove();
     m_node = 0;
     return;
