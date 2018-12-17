@@ -44,7 +44,8 @@ class Player
     Sword m_sword;
     is::ICameraSceneNode *m_node;
     bool m_blocking;
-    int m_souls = 0;
+    float m_souls = 0;
+    float m_souls_to_add = 0;
 
     int m_health;
     int m_stamina;

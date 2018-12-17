@@ -174,8 +174,7 @@ int Player::getSouls()
 }
 void Player::addSouls(int souls)
 {
-    m_souls += souls;
-    std::cout << "current souls: " << m_souls << std::endl;
+    m_souls_to_add += souls;
 }
 
 void Player::addSoulsEffect(ic::vector3df enemy_position, iv::SColor color)
@@ -194,6 +193,13 @@ void Player::addSoulsEffect(ic::vector3df enemy_position, iv::SColor color)
 
 void Player::updateSoulsEffects()
 {
+
+    if (m_souls_to_add)
+    {
+        float speed = 0.1 * m_souls_to_add;
+        m_souls_to_add -= speed;
+        m_souls += speed;
+    }
 
     for (size_t index = 0; index < m_souls_effects.size();)
     {
