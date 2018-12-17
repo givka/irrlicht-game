@@ -20,7 +20,7 @@ class Enemy
     bool isDead();
     bool isAlive();
     void update(Player &player, std::vector<Enemy> enemies);
-    void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id);
+    void initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector, int enemy_id);
     void setPosition(ic::vector3df pos);
     void setOrientation(ic::vector3df ori);
     is::IAnimatedMeshSceneNode *getNode();
