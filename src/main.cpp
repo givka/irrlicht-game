@@ -74,9 +74,9 @@ int main()
 
     //spawn first wave
     waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
-    PlayerBar healthBar(ic::rect<s32>(10, HEIGHT - 40, 250, HEIGHT - 10), 200);
-    PlayerBar staminaBar(ic::rect<s32>(10, HEIGHT - 75, 250, HEIGHT - 45), 200);
-    staminaBar.setFGColor(iv::SColorf(0.0, 0.5, 0.0, 0.7));
+
+    PlayerBar health_bar(device, 10, -40, 250, -10, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
+    PlayerBar stamina_bar(device, 10, -75, 250, -45, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
 
     while (device->run())
     {
@@ -99,12 +99,9 @@ int main()
 
         player.update(receiver);
         computer.update(player);
-
         smgr->drawAll();
-        healthBar.updateVal(player.getHealth());
-        staminaBar.updateVal(player.getStamina());
-        healthBar.draw(driver);
-        staminaBar.draw(driver);
+        health_bar.update(player.getHealth());
+        stamina_bar.update(player.getStamina());
         loot.update(player, receiver);
         driver->endScene();
 
