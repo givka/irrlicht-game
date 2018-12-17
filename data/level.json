@@ -1,8 +1,8 @@
 {
 	"map" : {
-		"archive_path" : "data/map-20kdm2.pk3",
-		"mesh_path" : "20kdm2.bsp",
-		"position" : [-1300, -104, -1249]
+		"archive_path" : "data/base_textured.pk3",
+		"mesh_path" : "base_textured.bsp",
+		"position" : [-1300, -44, -1249]
 	},
 	"spawn_points" : [
 		{
