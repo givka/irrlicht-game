@@ -32,7 +32,7 @@ is::IParticleSystemSceneNode *setParticuleSystem(irr::IrrlichtDevice *device,
     em->drop();
     ps->setMaterialFlag(video::EMF_LIGHTING, false);
     ps->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
-    ps->setMaterialTexture(0, driver->getTexture("data/smoke.jpg"));
+    ps->setMaterialTexture(0, driver->getTexture("data/vfx/smoke.jpg"));
     ps->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
     ps->setPosition(position);
     return ps;

@@ -19,8 +19,8 @@ class Computer
 {
   public:
     Computer();
-    void addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *meshSkeleton, is::ITriangleSelector *selector);
-    void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector); //todo: obviously needs to be changed
+    void addEnemy(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector);
+    void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector); //todo: obviously needs to be changed
     void update(Player &player);
     bool isWaveFinished();
 

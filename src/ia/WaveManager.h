@@ -39,7 +39,7 @@ class WaveManager
     void loadJSON(std::string path_to_json);
     int getCurrentWave();
     unsigned long getLastWaveId();
-    void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector); //todo:: model mgt system
+    void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector); //todo:: model mgt system
   private:
     int m_current_wave;
     std::vector<Wave> m_waves;

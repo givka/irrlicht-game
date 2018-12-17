@@ -25,7 +25,7 @@ Enemy::Enemy(float health, int damage, float scale, int swing_timer)
     m_souls = m_scale * (20 + rand() % 20);
 }
 
-void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is::ITriangleSelector *selector, int enemy_id)
+void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector, int enemy_id)
 {
 
     auto smgr = device->getSceneManager();
@@ -37,7 +37,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, is:
     m_node = smgr->addAnimatedMeshSceneNode(mesh);
     m_node->setMaterialFlag(iv::EMF_LIGHTING, true);
     m_node->setMD2Animation(is::EMAT_RUN);
-    m_node->setMaterialTexture(0, driver->getTexture("data/red_texture.pcx"));
+    m_node->setMaterialTexture(0, texture);
     m_node->setPosition(core::vector3df(X, 0, Z));
     m_node->setScale(core::vector3df(m_scale, m_scale, m_scale));
 
@@ -457,7 +457,7 @@ void Enemy::addBloodEffect(damage_type dt)
         emitter->setMaxAngleDegrees(360);
         emitter->setMaxStartSize(ic::dimension2df(size, size));
 
-        std::string blood_texture = "data/blood" + std::to_string(rand() % 5 + 1) + ".png";
+        std::string blood_texture = "data/blood/" + std::to_string(rand() % 5 + 1) + ".png";
         std::wstring path = std::wstring(blood_texture.begin(), blood_texture.end());
         m_blood_node->setMaterialTexture(0, m_device->getVideoDriver()->getTexture(path.c_str()));
         m_blood_node->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
