@@ -253,3 +253,8 @@ void Player::heal(int health)
 
     std::cout << "player got heal for: " << health << ", current health: " << m_health << std::endl;
 }
+
+void Player::removeSouls(int cost)
+{
+    m_souls_to_add -= cost;
+}

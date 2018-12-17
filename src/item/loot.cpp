@@ -36,6 +36,9 @@ void Loot::addTooltip(Player &player)
     int y = 40;
     Sword player_sword = player.getSword();
 
+    int diff_damage = player_sword.getDamageMax() - m_sword.getDamageMax();
+    int diff_crit = player_sword.getCritPercent() - m_sword.getCritPercent();
+
     m_tooltip_texts.clear();
     m_tooltip_texts.push_back(addTooltipText("Press E to Buy", y));
     m_tooltip_texts.push_back(addTooltipText(player_sword.getDamageText(m_sword), y -= 10));
@@ -49,8 +52,10 @@ irr::scene::IBillboardTextSceneNode *Loot::addTooltipText(std::string text, int 
     std::wstring wtext = std::wstring(text.begin(), text.end());
     ic::dimension2du s = m_device->getGUIEnvironment()->getBuiltInFont()->getDimension(wtext.c_str());
 
-    return m_device->getSceneManager()->addBillboardTextSceneNode(
+    is::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(
         0, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), ic::vector3df(105, y, 100));
+    node->setColor(iv::SColor(255, 255, 0, 0));
+    return node;
 }
 
 void Loot::update(Player &player, EventReceiver &receiver)
@@ -64,7 +69,7 @@ void Loot::update(Player &player, EventReceiver &receiver)
         ic::vector3df position_loot = m_sword.getNode()->getPosition();
         ic::vector3df position_player = player.getNode()->getPosition();
 
-        if (position_player.getDistanceFrom(position_loot) < 50)
+        if (position_player.getDistanceFrom(position_loot) < 50 && player.getSouls() > m_cost)
             switchSword(player);
     }
 }
@@ -74,6 +79,7 @@ void Loot::switchSword(Player &player)
     if (m_device->getTimer()->getTime() - m_timer < 200)
         return;
 
+    player.removeSouls(m_cost);
     m_timer = m_device->getTimer()->getTime();
     Sword sword_buffer = player.getSword();
     player.setSword(m_sword);
