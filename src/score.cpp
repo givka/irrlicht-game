@@ -1,7 +1,7 @@
 #include "score.hpp"
 
-Score::Score(irr::IrrlichtDevice *device, float x, float y)
-    : m_device(device), m_x(x), m_y(y)
+Score::Score(irr::IrrlichtDevice *device, float x, float y, float scale)
+    : m_device(device), m_x(x), m_y(y), m_scale(scale)
 {
     iv::IVideoDriver *driver = device->getVideoDriver();
     ig::IGUIEnvironment *gui = device->getGUIEnvironment();
@@ -34,12 +34,12 @@ void Score::update(int score)
     ig::IGUIEnvironment *gui = m_device->getGUIEnvironment();
     irr::core::dimension2df size = (irr::core::dimension2df)m_device->getVideoDriver()->getScreenSize();
 
-    int number_width = 0.01 * size.Width;
-    int number_height = 0.025 * size.Height;
+    int number_width = m_scale * 0.01 * size.Width;
+    int number_height = m_scale * 0.025 * size.Height;
     bool stop_deleting = false;
 
     float offset_width = m_x * size.Width - MAX_NUMBER_OF_NUMBERS * number_width;
-    float offset_height = m_x * size.Height - number_height;
+    float offset_height = m_y * size.Height - number_height;
 
     for (size_t i = 0; i < MAX_NUMBER_OF_NUMBERS; i++)
     {
