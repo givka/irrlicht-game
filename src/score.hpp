@@ -16,7 +16,7 @@ namespace ig = irr::gui;
 class Score
 {
   public:
-    Score(irr::IrrlichtDevice *device);
+    Score(irr::IrrlichtDevice *device, float x, float y);
     void update(int score);
 
   private:
@@ -24,6 +24,9 @@ class Score
     int m_score;
     int MAX_NUMBER_OF_NUMBERS = 10;
     iv::ITexture *m_digits[10];
+
+    float m_x;
+    float m_y;
 
     std::vector<ig::IGUIImage *> m_images;
 };

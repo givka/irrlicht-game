@@ -1,7 +1,7 @@
 #include "score.hpp"
 
-Score::Score(irr::IrrlichtDevice *device)
-    : m_device(device)
+Score::Score(irr::IrrlichtDevice *device, float x, float y)
+    : m_device(device), m_x(x), m_y(y)
 {
     iv::IVideoDriver *driver = device->getVideoDriver();
     ig::IGUIEnvironment *gui = device->getGUIEnvironment();
@@ -34,10 +34,12 @@ void Score::update(int score)
     ig::IGUIEnvironment *gui = m_device->getGUIEnvironment();
     irr::core::dimension2df size = (irr::core::dimension2df)m_device->getVideoDriver()->getScreenSize();
 
-    int width = 0.01 * size.Width;
-    int height = 0.025 * size.Height;
-    bool delete_number = false;
+    int number_width = 0.01 * size.Width;
+    int number_height = 0.025 * size.Height;
     bool stop_deleting = false;
+
+    float offset_width = m_x * size.Width - MAX_NUMBER_OF_NUMBERS * number_width;
+    float offset_height = m_x * size.Height - number_height;
 
     for (size_t i = 0; i < MAX_NUMBER_OF_NUMBERS; i++)
     {
@@ -45,14 +47,17 @@ void Score::update(int score)
 
         if (!stop_deleting)
         {
-            delete_number = ((score / power_of_ten) % 10) == 0;
+            bool delete_number = ((score / power_of_ten) % 10) == 0;
             if (delete_number && i != MAX_NUMBER_OF_NUMBERS - 1)
                 continue;
         }
         stop_deleting = true;
 
         ig::IGUIImage *image = gui->addImage(
-            ic::rect<irr::s32>(10 + i * width, 10, 10 + i * width + width, 2 * height));
+            ic::rect<irr::s32>(offset_width + i * number_width,
+                               offset_height,
+                               offset_width + number_width * (1 + i),
+                               offset_height + 2 * number_height));
         image->setImage(m_digits[(score / power_of_ten) % 10]);
         image->setScaleImage(true);
         m_images.push_back(image);

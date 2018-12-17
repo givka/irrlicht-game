@@ -53,7 +53,7 @@ int main()
     Player player;
     player.initialise(device, selector);
 
-    Score souls(device);
+    Score souls(device, 0.90, 0.90);
 
     // auto size = device->getGUIEnvironment()->getBuiltInFont()->getDimension(L"TEST");
     // is::IBillboardTextSceneNode *waveText = smgr->addBillboardTextSceneNode(0, L"TEST", player.getNode(), ic::dimension2d<irr::f32>(size.Width / 10, size.Height / 10), ic::vector3df(0, 0, 5), -1, iv::SColor(100, 255, 0, 0), iv::SColor(123, 255, 0, 0));
