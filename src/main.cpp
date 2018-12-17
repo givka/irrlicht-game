@@ -21,8 +21,8 @@ namespace iv = irr::video;
 using namespace std;
 
 int const NBR_ENEMIES = 40;
-int const WIDTH = 1280;
 int const HEIGHT = 800;
+int const WIDTH = HEIGHT * 16.0 / 9.0;
 
 int main()
 {
@@ -75,8 +75,8 @@ int main()
     //spawn first wave
     waveMgr.spawnWave(level, 0, computer, device, meshSkeleton, selector);
 
-    PlayerBar health_bar(device, 10, -40, 250, -10, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
-    PlayerBar stamina_bar(device, 10, -75, 250, -45, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
+    PlayerBar health_bar(device, 0.10, 0.10, 0.25, 0.11, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
+    PlayerBar stamina_bar(device, 0.10, 0.115, 0.25, 0.125, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
 
     while (device->run())
     {

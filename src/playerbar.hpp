@@ -10,7 +10,7 @@ namespace iv = irr::video;
 class PlayerBar
 {
   public:
-    PlayerBar(irr::IrrlichtDevice *device, int x0, int y0, int x1, int y1, int max, iv::SColorf fg_color);
+    PlayerBar(irr::IrrlichtDevice *device, float x0, float y0, float x1, float y1, int max, iv::SColorf fg_color);
     void draw();
     void setMaxVal(int max_val);
     void update(int val);
@@ -18,10 +18,10 @@ class PlayerBar
     void setFGColor(iv::SColorf color);
 
   private:
-    int m_x0;
-    int m_y0;
-    int m_x1;
-    int m_y1;
+    float m_x0;
+    float m_y0;
+    float m_x1;
+    float m_y1;
     int m_max_val;
     irr::IrrlichtDevice *m_device;
     float m_percentage;
