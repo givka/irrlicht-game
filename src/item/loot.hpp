@@ -5,8 +5,8 @@
 #include <vector>
 #include "irrlicht.h"
 #include "sword.hpp"
-#include "player.hpp"
-#include "events.hpp"
+#include "../entity/player.hpp"
+#include "../events.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;

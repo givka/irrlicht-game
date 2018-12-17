@@ -8,8 +8,8 @@
 #include <algorithm>
 #include <irrlicht.h>
 #include "computer.hpp"
-#include "enemy.hpp"
-#include "player.hpp"
+#include "../entity/enemy.hpp"
+#include "../entity/player.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;

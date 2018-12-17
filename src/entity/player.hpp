@@ -6,9 +6,9 @@
 #include <irrlicht.h>
 #include <iostream>
 #include <vector>
-#include "events.hpp"
-#include "utils.hpp"
-#include "sword.hpp"
+#include "../events.hpp"
+#include "../utils.hpp"
+#include "../item/sword.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;

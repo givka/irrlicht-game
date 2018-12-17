@@ -1,7 +1,6 @@
 #include <irrlicht.h>
 
 #include "player.hpp"
-#include "events.hpp"
 
 using namespace irr;
 

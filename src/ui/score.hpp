@@ -4,9 +4,7 @@
 #include <irrlicht.h>
 #include <iostream>
 #include <vector>
-#include "events.hpp"
-#include "utils.hpp"
-#include "sword.hpp"
+#include "../utils.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;

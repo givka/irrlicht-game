@@ -6,7 +6,6 @@
 #include <irrlicht.h>
 #include <vector>
 #include "player.hpp"
-#include "events.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;

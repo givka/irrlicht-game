@@ -1,10 +1,10 @@
 #ifndef LEVEL_H
 #define LEVEL_H
 
-#include "spawnPoint.hpp"
 #include <string>
 #include <vector>
 #include "irrlicht.h"
+#include "spawnPoint.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;
@@ -12,7 +12,7 @@ namespace iv = irr::video;
 
 class Level
 {
-public:
+  public:
     Level();
 
     //sets up:
@@ -25,12 +25,9 @@ public:
     SpawnPoint getSpawnPoint(int id);
     is::IMeshSceneNode *getMapNode();
 
-private:
+  private:
     std::vector<SpawnPoint> m_spawnPoints;
     is::IMeshSceneNode *m_map_node;
-
 };
-
-
 
 #endif

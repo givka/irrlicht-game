@@ -2,14 +2,14 @@
 #include <iostream>
 
 #include "events.hpp"
-#include "player.hpp"
-#include "enemy.hpp"
-#include "computer.hpp"
-#include "level.hpp"
-#include "WaveManager.h"
-#include "playerbar.hpp"
-#include "loot.hpp"
-#include "score.hpp"
+#include "entity/player.hpp"
+#include "entity/enemy.hpp"
+#include "ia/computer.hpp"
+#include "ia/level.hpp"
+#include "ia/WaveManager.h"
+#include "ui/playerbar.hpp"
+#include "ui/score.hpp"
+#include "item/loot.hpp"
 
 #define DEBUG_INFO
 
