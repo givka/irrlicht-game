@@ -13,7 +13,7 @@
 namespace ic = irr::core;
 namespace is = irr::scene;
 namespace iv = irr::video;
-
+namespace ig = irr::gui;
 class Player
 {
   public:
@@ -69,11 +69,15 @@ class Player
     int m_max_stamina;
     int m_max_health;
 
+    float m_hit_alpha = 0;
+    ig::IGUIImage *m_hit_image = 0;
+
     bool m_waiting_for_unblock = false;
 
     irr::IrrlichtDevice *m_device;
     std::vector<SoulsEffect> m_souls_effects;
     void updatePosition(EventReceiver &receiver);
     void updateSoulsEffects();
+    void updateHitImage();
 };
 #endif

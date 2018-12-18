@@ -4,7 +4,6 @@ Score::Score(irr::IrrlichtDevice *device, float x, float y, float scale)
     : m_device(device), m_x(x), m_y(y), m_scale(scale)
 {
     iv::IVideoDriver *driver = device->getVideoDriver();
-    ig::IGUIEnvironment *gui = device->getGUIEnvironment();
 
     m_digits[0] = driver->getTexture("data/numbers/0.png");
     m_digits[1] = driver->getTexture("data/numbers/1.png");

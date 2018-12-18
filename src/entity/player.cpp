@@ -2,12 +2,6 @@
 
 #include "player.hpp"
 
-using namespace irr;
-
-namespace ic = irr::core;
-namespace is = irr::scene;
-namespace iv = irr::video;
-
 Player::Player()
 {
     m_max_health = 200;
@@ -27,21 +21,40 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     device->getCursorControl()->setVisible(false);
     m_node->setFOV(MIN_FOV);
 
-    m_node->setPosition(core::vector3df(100, 30, 100));
+    m_node->setPosition(ic::vector3df(100, 30, 100));
 
     m_sword.initialise(device, m_node);
 
     is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(
-        selector, m_node, core::vector3df(30, 30, 30),
-        core::vector3df(0, -10, 0), core::vector3df(0, 15, 0));
+        selector, m_node, ic::vector3df(30, 30, 30),
+        ic::vector3df(0, -10, 0), ic::vector3df(0, 15, 0));
     m_node->addAnimator(collision);
     collision->drop();
 }
 
 void Player::update(EventReceiver &receiver)
 {
+    updateHitImage();
     updateSoulsEffects();
     updatePosition(receiver);
+}
+
+void Player::updateHitImage()
+{
+    if (m_hit_alpha == 0)
+        return;
+
+    if (m_hit_image)
+        m_hit_image->remove();
+
+    m_hit_alpha -= 1;
+    const int width = m_device->getVideoDriver()->getScreenSize().Width;
+    const int height = m_device->getVideoDriver()->getScreenSize().Height;
+    m_hit_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+    m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/hit.png"));
+    m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
+    m_hit_image->setScaleImage(true);
+    std::cout << m_hit_alpha << std::endl;
 }
 
 void Player::addMaxHealth(int increment)
@@ -153,6 +166,7 @@ bool Player::isBlocking()
 void Player::takeDamage(int damage)
 {
     m_health -= damage;
+    m_hit_alpha = 255;
     if (m_health < 0)
         m_health = 0;
     std::cout << "player took " << damage << " damage, current health: " << m_health << std::endl;
@@ -191,6 +205,7 @@ void Player::addSoulsEffect(SoulsEffect souls_effect)
     souls_effect.node = souls_effect_node;
     m_souls_effects.push_back(souls_effect);
 }
+
 void Player::addMaxStam(int increment)
 {
     m_max_stamina += increment;
@@ -201,7 +216,7 @@ void Player::updateSoulsEffects()
 
     if (m_souls_to_add)
     {
-        float speed = 0.1 * m_souls_to_add;
+        float speed = 0.1f * m_souls_to_add;
         m_souls_to_add -= speed;
         m_souls += speed;
     }
@@ -260,6 +275,8 @@ void Player::heal(int health)
     m_health += health;
     if (m_health > m_max_health)
         m_health = m_max_health;
+
+    std::cout << "test" << std::endl;
 
     std::cout << "player got heal for: " << health << ", current health: " << m_health << std::endl;
 }
