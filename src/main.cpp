@@ -59,7 +59,8 @@ int main()
     waveMgr.loadJSON("data/waves.json");
 
     Loot loot(device, player);
-    Upgrade upgrade(device, player, HEALTH, ic::vector3df(40, 10, 0), 10, 50);
+    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(0, 10, 100), 10, 50);
+    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(50, 10, 100), 10, 50);
 
     // add enemy
     Computer computer;
@@ -101,7 +102,8 @@ int main()
         health_bar.update(player.getHealth());
         stamina_bar.update(player.getStamina());
         loot.update(player, receiver);
-        upgrade.update(player, receiver);
+        hp_upgrade.update(player, receiver);
+        stam_upgrade.update(player, receiver);
         souls.update(player.getSouls());
         waves.update(waveMgr.getCurrentWave());
         gui->drawAll();
