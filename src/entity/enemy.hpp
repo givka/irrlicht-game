@@ -64,6 +64,7 @@ class Enemy
     is::IBillboardSceneNode *m_health_bar_bg;
 
     ic::vector3df m_death_dir;
+    ic::vector3df m_knockback_dir;
     ic::vector3df m_last_position;
     is::IAnimatedMeshSceneNode *m_node;
 
@@ -98,6 +99,8 @@ class Enemy
     void addDamageText(Player &player, const float damage, damage_type dt);
     void switchToState(enemy_state state, Player &player);
     bool isAtRange(Player &player);
+    void updateKnockback(Player &player);
+
 
     struct DamageText
     {

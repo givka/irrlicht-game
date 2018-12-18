@@ -119,31 +119,35 @@ void Enemy::updateRotation(Player &player)
     m_node->setRotation(rotation_enemy);
 }
 
-void Enemy::updateDeath(Player &player)
+void Enemy::updateKnockback(Player &player)
 {
-
-    int time_dying = m_device->getTimer()->getTime() - m_death_time;
-    float speedDying = 0.05f / m_scale;
-
+    float speed = 0.05f / m_scale;
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
+
+    position.X += speed * m_knockback_dir.X;
+    position.Y += speed * m_knockback_dir.Y + 5.0;
+    position.Z += speed * m_knockback_dir.Z;
+
+    if(m_state == DYING)
+    {
+        rotation.X += speed * m_knockback_dir.X;
+        rotation.Y += speed * m_knockback_dir.Y;
+        rotation.Z += speed * m_knockback_dir.Z;
+    }
+    m_node->setPosition(position);
+    m_node->setRotation(rotation);
+}
+
+void Enemy::updateDeath(Player &player)
+{
+    int time_dying = m_device->getTimer()->getTime() - m_death_time;
 
     if (time_dying >= 1500 || m_node->getFrameNr() == m_node->getEndFrame())
         return switchToState(DEAD, player);
 
-    if (m_last_hit_type == DT_DOT)
-        return;
-
-    position.X += speedDying * m_death_dir.X;
-    position.Y += speedDying * m_death_dir.Y + 5.0;
-    position.Z += speedDying * m_death_dir.Z;
-
-    rotation.X += speedDying * m_death_dir.X;
-    rotation.Y += speedDying * m_death_dir.Y;
-    rotation.Z += speedDying * m_death_dir.Z;
-
-    m_node->setPosition(position);
-    m_node->setRotation(rotation);
+    if (m_last_hit_type != DT_DOT)
+        updateKnockback(player);
 }
 
 bool Enemy::isBeingAttacked(Player &player)
@@ -161,7 +165,7 @@ bool Enemy::isBeingAttacked(Player &player)
     {
         float const distance = position_player.getDistanceFrom(position_enemy);
         float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
-        bool is_attacked = distance < 50.0 && angle <= -0.80f;
+        bool is_attacked = distance < 60.0 && angle <= -0.80f;
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
@@ -390,11 +394,13 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
     case STAGGERED:
         m_node->setMD2Animation(is::EMAT_PAIN_A);
         m_node->setLoopMode(false);
+        m_knockback_dir = m_node->getPosition() - player.getPosition();
         break;
     case DYING:
         m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
         m_death_dir = m_node->getPosition() - player.getPosition();
-        m_death_time = m_device->getTimer()->getTime();
+        m_knockback_dir = m_node->getPosition() - player.getPosition();
+            m_death_time = m_device->getTimer()->getTime();
         m_node->setLoopMode(false);
         m_health_bar->remove();
         m_health_bar_bg->remove();
@@ -431,6 +437,7 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies)
     case STAGGERED:
         if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
             switchToState(IDLE, player);
+            updateKnockback(player);
         //update position //todo: knockback
         break;
     case DYING:
