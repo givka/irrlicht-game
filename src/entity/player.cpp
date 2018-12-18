@@ -41,20 +41,19 @@ void Player::update(EventReceiver &receiver)
 
 void Player::updateBloodScreen()
 {
-    if (m_hit_alpha == 0)
-        return;
+    if (m_hit_alpha != 0)
+    {
+        if (m_hit_image)
+            m_hit_image->remove();
 
-    if (m_hit_image)
-        m_hit_image->remove();
-
-    m_hit_alpha -= 1;
-    const int width = m_device->getVideoDriver()->getScreenSize().Width;
-    const int height = m_device->getVideoDriver()->getScreenSize().Height;
-    m_hit_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
-    m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/screen/hit.png"));
-    m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
-    m_hit_image->setScaleImage(true);
-
+        m_hit_alpha -= 1;
+        const int width = m_device->getVideoDriver()->getScreenSize().Width;
+        const int height = m_device->getVideoDriver()->getScreenSize().Height;
+        m_hit_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+        m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/screen/hit.png"));
+        m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
+        m_hit_image->setScaleImage(true);
+    }
     float screen_speed = 5;
     for (size_t i = 0; i < m_blood_screens.size();)
     {
