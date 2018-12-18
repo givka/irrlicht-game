@@ -44,6 +44,12 @@ void Player::update(EventReceiver &receiver)
     updatePosition(receiver);
 }
 
+void Player::addMaxHealth(int increment)
+{
+    m_max_health += increment;
+    m_health += increment;
+}
+
 void Player::updatePosition(EventReceiver &receiver)
 {
     bool *states = receiver.getStates();
@@ -169,7 +175,7 @@ is::ICameraSceneNode *Player::getNode()
 
 int Player::getSouls()
 {
-    return m_souls;
+    return m_souls + m_souls_to_add;
 }
 
 void Player::addSoulsEffect(SoulsEffect souls_effect)
@@ -184,6 +190,10 @@ void Player::addSoulsEffect(SoulsEffect souls_effect)
     emitter->setMaxStartSize(ic::dimension2df(5, 5));
     souls_effect.node = souls_effect_node;
     m_souls_effects.push_back(souls_effect);
+}
+void Player::addMaxStam(int increment)
+{
+    m_max_stamina += increment;
 }
 
 void Player::updateSoulsEffects()

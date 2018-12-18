@@ -39,6 +39,7 @@ void WaveManager::loadJSON(std::string path_to_json)
             spawn.damage = (*spawn_it)["damage"].GetInt();
             spawn.scale = (*spawn_it)["scale"].GetFloat();
             spawn.swing_timer = (*spawn_it)["swing_timer"].GetInt();
+            spawn.model_id = (*spawn_it)["model_id"].GetInt();
             wave.spawns.push_back(spawn);
         }
         m_waves.push_back(wave);
@@ -55,9 +56,11 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 {
     for (auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
     {
-        int rand_enemy = rand() % 7;
-        std::string path_text = "data/models/" + std::to_string(rand_enemy) + ".pcx";
-        std::string path_model = "data/models/" + std::to_string(rand_enemy) + ".md2";
+        int model_id = spawn.model_id;
+        if(model_id < 0)
+            model_id = rand() % 7;
+        std::string path_text = "data/models/" + std::to_string(model_id) + ".pcx";
+        std::string path_model = "data/models/" + std::to_string(model_id) + ".md2";
 
         is::IAnimatedMesh *mesh = device->getSceneManager()->getMesh(std::wstring(path_model.begin(), path_model.end()).c_str());
 

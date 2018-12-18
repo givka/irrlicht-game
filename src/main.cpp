@@ -10,6 +10,7 @@
 #include "ui/playerbar.hpp"
 #include "ui/score.hpp"
 #include "item/loot.hpp"
+#include "item/upgrade.hpp"
 
 #define DEBUG_INFO
 
@@ -58,6 +59,8 @@ int main()
     waveMgr.loadJSON("data/waves.json");
 
     Loot loot(device, player);
+    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(0, 10, 100), 10, 50);
+    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(50, 10, 100), 10, 50);
 
     // add enemy
     Computer computer;
@@ -99,6 +102,8 @@ int main()
         health_bar.update(player.getHealth());
         stamina_bar.update(player.getStamina());
         loot.update(player, receiver);
+        hp_upgrade.update(player, receiver);
+        stam_upgrade.update(player, receiver);
         souls.update(player.getSouls());
         waves.update(waveMgr.getCurrentWave());
         gui->drawAll();

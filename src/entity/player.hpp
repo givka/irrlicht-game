@@ -49,6 +49,8 @@ class Player
     void addSoulsEffect(SoulsEffect souls_effect);
     void setSword(Sword sword);
     void removeSouls(int cost);
+    void addMaxHealth(int increment);
+    void addMaxStam(int increment);
 
   private:
     const float MAX_FOV = 2.0;
