@@ -106,6 +106,7 @@ class Enemy
         ic::vector3df direction;
     };
 
+    ig::IGUIFont *m_font;
     std::vector<DamageText> m_damage_texts;
 
     enemy_state m_state = WALKING;

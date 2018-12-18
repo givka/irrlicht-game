@@ -58,6 +58,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
     m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
     m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
     m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
+    m_font = m_device->getGUIEnvironment()->getFont("data/font.png");
 }
 
 void Enemy::checkBloodTimer()
@@ -268,16 +269,17 @@ void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 }
 void Enemy::addDamageText(Player &player, const float damage, damage_type dt)
 {
-    int size = dt == DT_CRIT ? 30 : 10;
+    float size = dt == DT_CRIT ? 5.0f : 3.5f;
     iv::SColor text_color = dt == DT_DOT
                                 ? player.getSword().getEnchantColor(m_current_effect)
-                                : iv::SColor(255, 255, 255, 255);
+                                : iv::SColor(200, 200, 200, 200);
+    if(dt == DT_CRIT)
+        text_color = iv::SColor(200, 200, 200, 0);
 
     std::string damage_text = std::to_string((int)damage);
     std::wstring damage_wtext = std::wstring(damage_text.begin(), damage_text.end());
 
-    irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(0, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((size), (size)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
-
+    irr::scene::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(m_font, damage_wtext.c_str(), m_node, irr::core::dimension2d<irr::f32>((size), (size)), irr::core::vector3df(10, 10, 0), -1, text_color, text_color);
     const ic::vector3df direction = ic::vector3df(10, rand() % 10, -10 + rand() % 20);
     m_damage_texts.push_back({node, (int)m_device->getTimer()->getTime(), direction});
 }
