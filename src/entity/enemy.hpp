@@ -73,12 +73,16 @@ class Enemy
 
     int m_souls;
 
+    enum enemy_state
+    {
+        IDLE, WALKING, ATTACKING, STAGGERED, DYING, DEAD
+    };
+
     void
     updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath(Player &player);
     bool isBeingAttacked(Player &player);
-    bool isAttacking(Player &player);
     void attackPlayer(Player &player);
     void checkEnchantment(Player &player);
     void setEffect(Player &player, ic::vector3df direction);
@@ -88,7 +92,8 @@ class Enemy
     void checkBloodTimer();
     void removeHealth(Player &player, const float damage, damage_type dt);
     void addDamageText(Player &player, const float damage, damage_type dt);
-    void die(Player &player);
+    void switchToState(enemy_state state, Player &player);
+    bool isAtRange(Player &player);
 
     struct DamageText
     {
@@ -99,15 +104,7 @@ class Enemy
 
     std::vector<DamageText> m_damage_texts;
 
-    enum enemy_state
-    {
-        IS_RUNNING,
-        IS_DYING,
-        IS_DEAD,
-        IS_ATTACKING,
-        IS_STOPPED
-    };
-    enemy_state m_state = IS_RUNNING;
+    enemy_state m_state = WALKING;
 };
 
 #endif
