@@ -54,7 +54,6 @@ void Player::updateHitImage()
     m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/hit.png"));
     m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
     m_hit_image->setScaleImage(true);
-    std::cout << m_hit_alpha << std::endl;
 }
 
 void Player::addMaxHealth(int increment)
