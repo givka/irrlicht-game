@@ -41,4 +41,12 @@ is::IParticleSystemSceneNode *setParticuleSystem(irr::IrrlichtDevice *device,
     return ps;
 }
 
+float maxComponent(ic::vector3df v)
+{
+    if(v.X > v.Y && v.X > v.Z)
+        return v.X;
+    if(v.Y > v.Z)
+        return v.Y;
+    return v.Z;
+}
 } // namespace Utils

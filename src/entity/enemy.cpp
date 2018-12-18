@@ -12,14 +12,14 @@ Enemy::Enemy()
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
-    m_souls = m_scale * (20 + rand() % 20);
+    m_souls = (int) (m_scale * (20 + rand() % 20));
 }
 Enemy::Enemy(float health, int damage, float scale, int swing_timer)
     : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false), m_swing_timer(swing_timer)
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
-    m_souls = m_scale * (20 + rand() % 20);
+    m_souls = (int) (m_scale * (20 + rand() % 20));
 }
 
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector, int enemy_id)
@@ -61,19 +61,90 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
     m_font = m_device->getGUIEnvironment()->getFont("data/myfont.xml");
 }
 
-void Enemy::checkBloodTimer()
+//update functions
+void Enemy::switchToState(Enemy::enemy_state state, Player &player)
 {
-    if (!m_blood_node)
-        return;
-
-    if (m_device->getTimer()->getTime() - m_blood_timer > 300)
+    switch (state)
     {
-        m_blood_node->remove();
-        m_blood_node = 0;
-        m_blood_timer = 0;
+        case IDLE:
+            m_node->setMD2Animation(is::EMAT_STAND);
+            m_node->setLoopMode(true);
+            break;
+        case WALKING:
+            m_node->setMD2Animation(is::EMAT_RUN);
+            m_node->setLoopMode(true);
+            break;
+        case ATTACKING:
+            m_node->setMD2Animation(is::EMAT_ATTACK);
+            m_last_swing_time = m_device->getTimer()->getTime();
+            m_node->setLoopMode(false);
+            m_already_hit_player = false;
+            break;
+        case STAGGERED:
+            m_node->setMD2Animation(is::EMAT_PAIN_A);
+            m_node->setLoopMode(false);
+            m_node->setCurrentFrame(m_node->getStartFrame());
+            m_knockback_dir = m_node->getPosition() - player.getPosition();
+            break;
+        case DYING:
+            m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
+            m_death_dir = m_node->getPosition() - player.getPosition();
+            m_knockback_dir = m_node->getPosition() - player.getPosition();
+            m_death_time = m_device->getTimer()->getTime();
+            m_node->setLoopMode(false);
+            m_health_bar->remove();
+            m_health_bar_bg->remove();
+            break;
+        case DEAD:
+            player.addSoulsEffect({m_souls, Player::ST_MONEY, iv::SColor(255, 255, 255, 255), m_node->getPosition(), 0});
+            m_node->remove();
+            m_node = 0;
+            break;
     }
+    m_state = state;
 }
+void Enemy::update(Player &player, std::vector<Enemy> enemies)
+{
+    switch (m_state)
+    {
+        case IDLE:
+            if (!isAtRange(player)) //check if is still at range of player
+                switchToState(WALKING, player);
+            else if (m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()) //check if attack possible
+                switchToState(ATTACKING, player);
+            break;
+        case WALKING:
+            updateRotation(player); //might need to happen out for idle aswell
+            updatePosition(enemies);
+            if (isAtRange(player)) //check if is at range of player
+                switchToState(IDLE, player);
+            break;
+        case ATTACKING:
+            if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
+                switchToState(IDLE, player);
+            attackPlayer(player);
+            break;
+        case STAGGERED:
+            if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
+                switchToState(IDLE, player);
+            updateKnockback(player);
+            //update position //todo: knockback
+            break;
+        case DYING:
+            updateDeath(player);
+        default:
+            return;
+    }
 
+    if (isBeingAttacked(player)) {
+        if (m_state != STAGGERED && m_state != DYING) {
+            switchToState(STAGGERED, player);
+        }
+    }
+    checkDoT(player);
+    updateDamageText();
+    checkBloodTimer();
+}
 void Enemy::updatePosition(std::vector<Enemy> enemies)
 {
     float speed_rotation = 2.5f * m_speed;
@@ -84,15 +155,25 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
     position_enemy.X += speed_rotation * cos((rotation_enemy.Y) * M_PI / 180.0);
     position_enemy.Z -= speed_rotation * sin((rotation_enemy.Y) * M_PI / 180.0);
 
+    ic::vector3df extent = m_node->getTransformedBoundingBox().getExtent();
+    extent.Y = 0;
+    float enemy_radius = (float) ((Utils::maxComponent(extent)) * 0.5);
+    float neighbor_radius = 0.0f;
+
     for (size_t i = 0; i < enemies.size(); i++)
     {
         Enemy neighbour = enemies[i];
         if (m_id != neighbour.m_id)
         {
+            extent = m_node->getTransformedBoundingBox().getExtent();
+            extent.Y = 0;
+            neighbor_radius = (float) (Utils::maxComponent(extent) * 0.5);
+
             ic::vector3df position_neighbour = neighbour.getNode()->getPosition();
             float distX = position_neighbour.X - position_enemy.X;
             float distZ = position_neighbour.Z - position_enemy.Z;
-            if (abs(distX) < 10 && abs(distZ) < 10)
+            if (m_node->getTransformedBoundingBox().getCenter().getDistanceFrom(neighbour.getNode()->getTransformedBoundingBox().getCenter()) < enemy_radius + neighbor_radius)
+            //if (abs(distX) < 10 && abs(distZ) < 10)
                 return;
         }
     }
@@ -118,7 +199,6 @@ void Enemy::updateRotation(Player &player)
     rotation_enemy.Y -= 90;
     m_node->setRotation(rotation_enemy);
 }
-
 void Enemy::updateKnockback(Player &player)
 {
     float speed = 0.05f / m_scale;
@@ -135,10 +215,10 @@ void Enemy::updateKnockback(Player &player)
         rotation.Y += speed * m_knockback_dir.Y;
         rotation.Z += speed * m_knockback_dir.Z;
     }
+
     m_node->setPosition(position);
     m_node->setRotation(rotation);
 }
-
 void Enemy::updateDeath(Player &player)
 {
     int time_dying = m_device->getTimer()->getTime() - m_death_time;
@@ -150,29 +230,40 @@ void Enemy::updateDeath(Player &player)
         updateKnockback(player);
 }
 
+void Enemy::attackPlayer(Player &player)
+{
+    if (m_already_hit_player || m_node->getFrameNr() - m_node->getStartFrame() <= (m_node->getEndFrame() - m_node->getStartFrame()) / 4.0) //only attack by end of swing to let player avoid/parry
+        return;
+
+    if (isAtRange(player))
+    {
+        //player was hit
+        m_already_hit_player = true;
+        if (player.isBlocking())
+        {
+            std::cout << "blocked" << std::endl; //todo: particle effect
+        }
+        else
+        {
+            player.takeDamage(m_damage); //todo: screen flash / particle effect
+        }
+    }
+}
+
+
 bool Enemy::isBeingAttacked(Player &player)
 {
     if (!isAlive())
         return false;
 
-    ic::vector3df position_player = player.getPosition();
     ic::vector3df position_enemy = m_node->getPosition();
-    ic::vector3df rotation_player = player.getRotation();
-    ic::vector3df rotation_enemy = m_node->getRotation();
     Sword sword = player.getSword();
 
     if (sword.getIsAttacking() && m_last_swing_number != sword.getSwingNumber())
     {
-        float const distance = position_player.getDistanceFrom(position_enemy);
-        float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
+        bool is_attacked = sword.getNode()->getTransformedBoundingBox().intersectsWithBox(m_node->getTransformedBoundingBox());
 
-        bool is_attacked = sword.getNode()->getTransformedBoundingBox().intersectsWithBox(m_node->getTransformedBoundingBox()) && angle <= -0.80f;
-
-        // enemy in front of us => angle = -1 or fall under map
-        // cone from -0.8 -> -1 <- -0.8
-        if (!isAtRange(player))
-            return false;
-        if (is_attacked || position_enemy.Y < -20)
+        if (is_attacked)
         {
             const bool is_crit = rand() % 101 <= sword.getCritPercent();
             const float damage = is_crit ? 2 * sword.getAttack() : sword.getAttack();
@@ -183,18 +274,12 @@ bool Enemy::isBeingAttacked(Player &player)
             {
                 m_last_swing_number = sword.getSwingNumber();
                 checkEnchantment(player);
-                //        position_enemy.X -= 25.0 * cos((rotation_enemy.Y) * M_PI / 180.0);
-                //        position_enemy.Y += 20;
-                //        position_enemy.Z += 25.0 * sin((rotation_enemy.Y) * M_PI / 180.0);
-                //        m_node->setPosition(position_enemy);
             }
         }
         return is_attacked;
     }
-
     return false;
 }
-
 void Enemy::checkEnchantment(Player &player)
 {
     Sword::enchant current_enchant = player.getSword().getCurrentEnchant();
@@ -225,6 +310,9 @@ void Enemy::checkEnchantment(Player &player)
 }
 void Enemy::checkDoT(Player &player)
 {
+    if(!isAlive())
+        return;
+    
     if (m_current_effect == Sword::NONE || m_current_effect == Sword::VAMPIRIC)
         return;
 
@@ -255,6 +343,20 @@ void Enemy::checkDoT(Player &player)
     else if (m_current_effect == Sword::FROST)
         m_speed = FROST_SPEED;
 }
+void Enemy::checkBloodTimer()
+{
+    if (!m_blood_node)
+        return;
+
+    if (m_device->getTimer()->getTime() - m_blood_timer > 300)
+    {
+        m_blood_node->remove();
+        m_blood_node = 0;
+        m_blood_timer = 0;
+    }
+}
+
+
 void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 {
     m_health -= damage;
@@ -328,25 +430,6 @@ void Enemy::setEffect(Player &player, ic::vector3df direction)
         emitter->setMaxStartColor(color);
     }
 }
-void Enemy::attackPlayer(Player &player)
-{
-    if (m_already_hit_player || m_node->getFrameNr() - m_node->getStartFrame() <= (m_node->getEndFrame() - m_node->getStartFrame()) / 4.0) //only attack by end of swing to let player avoid/parry
-        return;
-
-    if (isAtRange(player))
-    {
-        //player was hit
-        m_already_hit_player = true;
-        if (player.isBlocking())
-        {
-            std::cout << "blocked" << std::endl; //todo: particle effect
-        }
-        else
-        {
-            player.takeDamage(m_damage); //todo: screen flash / particle effect
-        }
-    }
-}
 void Enemy::addBloodEffect(damage_type dt)
 {
 
@@ -374,86 +457,7 @@ void Enemy::addBloodEffect(damage_type dt)
     m_blood_timer = m_device->getTimer()->getTime();
 }
 
-void Enemy::switchToState(Enemy::enemy_state state, Player &player)
-{
-    switch (state)
-    {
-    case IDLE:
-        m_node->setMD2Animation(is::EMAT_STAND);
-        m_node->setLoopMode(true);
-        break;
-    case WALKING:
-        m_node->setMD2Animation(is::EMAT_RUN);
-        m_node->setLoopMode(true);
-        break;
-    case ATTACKING:
-        m_node->setMD2Animation(is::EMAT_ATTACK);
-        m_last_swing_time = m_device->getTimer()->getTime();
-        m_node->setLoopMode(false);
-        m_already_hit_player = false;
-        break;
-    case STAGGERED:
-        m_node->setMD2Animation(is::EMAT_PAIN_A);
-        m_node->setLoopMode(false);
-        m_knockback_dir = m_node->getPosition() - player.getPosition();
-        break;
-    case DYING:
-        m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
-        m_death_dir = m_node->getPosition() - player.getPosition();
-        m_knockback_dir = m_node->getPosition() - player.getPosition();
-            m_death_time = m_device->getTimer()->getTime();
-        m_node->setLoopMode(false);
-        m_health_bar->remove();
-        m_health_bar_bg->remove();
-        break;
-    case DEAD:
-        player.addSoulsEffect({m_souls, Player::ST_MONEY, iv::SColor(255, 255, 255, 255), m_node->getPosition(), 0});
-        m_node->remove();
-        m_node = 0;
-        break;
-    }
-    m_state = state;
-}
-void Enemy::update(Player &player, std::vector<Enemy> enemies)
-{
-    switch (m_state)
-    {
-    case IDLE:
-        if (!isAtRange(player)) //check if is still at range of player
-            switchToState(WALKING, player);
-        else if (m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()) //check if attack possible
-            switchToState(ATTACKING, player);
-        break;
-    case WALKING:
-        updateRotation(player); //might need to happen out for idle aswell
-        updatePosition(enemies);
-        if (isAtRange(player)) //check if is at range of player
-            switchToState(IDLE, player);
-        break;
-    case ATTACKING:
-        if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
-            switchToState(IDLE, player);
-        attackPlayer(player);
-        break;
-    case STAGGERED:
-        if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
-            switchToState(IDLE, player);
-            updateKnockback(player);
-        //update position //todo: knockback
-        break;
-    case DYING:
-        updateDeath(player);
-    default:
-        return;
-    }
 
-    if (isBeingAttacked(player))
-        if (m_state != STAGGERED && m_state != DYING)
-            switchToState(STAGGERED, player);
-    updateDamageText();
-    checkBloodTimer();
-    checkDoT(player);
-}
 
 //accesseurs
 bool Enemy::isDead()
@@ -480,7 +484,7 @@ bool Enemy::isAlive()
 bool Enemy::isAtRange(Player &player)
 {
     float dist = player.getPosition().getDistanceFrom(m_node->getPosition());
-    if (dist < 60) //todo: bounding box stuff
+    if (dist < 55) //todo: bounding box stuff
     {
         return true;
     }
