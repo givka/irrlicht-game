@@ -34,13 +34,12 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 
 void Player::update(EventReceiver &receiver)
 {
-    updateHitImage();
     updateBloodScreen();
     updateSoulsEffects();
     updatePosition(receiver);
 }
 
-void Player::updateHitImage()
+void Player::updateBloodScreen()
 {
     if (m_hit_alpha == 0)
         return;
@@ -52,9 +51,27 @@ void Player::updateHitImage()
     const int width = m_device->getVideoDriver()->getScreenSize().Width;
     const int height = m_device->getVideoDriver()->getScreenSize().Height;
     m_hit_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
-    m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/hit.png"));
+    m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/screen/hit.png"));
     m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
     m_hit_image->setScaleImage(true);
+
+    float screen_speed = 5;
+    for (size_t i = 0; i < m_blood_screens.size();)
+    {
+        if (m_blood_screens[i].alpha > screen_speed)
+        {
+            m_blood_screens[i].alpha -= screen_speed;
+            std::cout << m_blood_screens[i].alpha << std::endl;
+            m_blood_screens[i].image->setColor(iv::SColor(m_blood_screens[i].alpha, 255, 255, 255));
+            i++;
+        }
+        else
+        {
+            m_blood_screens[i].image->remove();
+            m_blood_screens[i].image = 0;
+            m_blood_screens.erase(m_blood_screens.begin() + i);
+        }
+    }
 }
 
 void Player::addMaxHealth(int increment)
@@ -166,7 +183,7 @@ bool Player::isBlocking()
 void Player::takeDamage(int damage)
 {
     m_health -= damage;
-    m_hit_alpha = 255;
+    m_hit_alpha = 123;
     if (m_health < 0)
         m_health = 0;
     std::cout << "player took " << damage << " damage, current health: " << m_health << std::endl;
@@ -298,35 +315,13 @@ void Player::addBloodScreen()
 
     const int width = m_device->getVideoDriver()->getScreenSize().Width;
     const int height = m_device->getVideoDriver()->getScreenSize().Height;
-    irr::gui::IGUIImage *image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+    irr::gui::IGUIImage *image = m_device->getGUIEnvironment()->addImage(ic::recti(width / 4.0, height / 4.0, width * 3.0 / 4.0, height * 3.0 / 4.0));
     image->setImage(
         m_device->getVideoDriver()->getTexture(std::wstring(blood_path.begin(), blood_path.end()).c_str()));
     image->setColor(iv::SColor(100, 255, 255, 255));
     image->setScaleImage(true);
 
     m_blood_screens.push_back({100, image});
-}
-
-void Player::updateBloodScreen()
-{
-    float speed = 5;
-    std::cout << m_blood_screens.size() << std::endl;
-    for (size_t i = 0; i < m_blood_screens.size();)
-    {
-        if (m_blood_screens[i].alpha > speed)
-        {
-            m_blood_screens[i].alpha -= speed;
-            std::cout << m_blood_screens[i].alpha << std::endl;
-            m_blood_screens[i].image->setColor(iv::SColor(m_blood_screens[i].alpha, 255, 255, 255));
-            i++;
-        }
-        else
-        {
-            m_blood_screens[i].image->remove();
-            m_blood_screens[i].image = 0;
-            m_blood_screens.erase(m_blood_screens.begin() + i);
-        }
-    }
 }
 
 void Player::enemyHitCallback()

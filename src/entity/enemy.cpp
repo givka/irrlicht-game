@@ -353,7 +353,7 @@ void Enemy::addBloodEffect(damage_type dt)
         emitter->setMaxAngleDegrees(360);
         emitter->setMaxStartSize(ic::dimension2df(size, size));
 
-        std::string blood_texture = "data/blood/" + std::to_string(rand() % 5 + 1) + ".png";
+        std::string blood_texture = "data/blood/particules/" + std::to_string(rand() % 5) + ".png";
         std::wstring path = std::wstring(blood_texture.begin(), blood_texture.end());
         m_blood_node->setMaterialTexture(0, m_device->getVideoDriver()->getTexture(path.c_str()));
         m_blood_node->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);

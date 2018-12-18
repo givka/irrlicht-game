@@ -81,7 +81,6 @@ class Player
     std::vector<SoulsEffect> m_souls_effects;
     void updatePosition(EventReceiver &receiver);
     void updateSoulsEffects();
-    void updateHitImage();
     void addBloodScreen();
     void updateBloodScreen();
 
