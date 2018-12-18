@@ -52,6 +52,7 @@ class Player
     void addMaxHealth(int increment);
     void addMaxStam(int increment);
     int getSoulsToShow();
+    void enemyHitCallback();
 
   private:
     const float MAX_FOV = 2.0;
@@ -80,6 +81,14 @@ class Player
     std::vector<SoulsEffect> m_souls_effects;
     void updatePosition(EventReceiver &receiver);
     void updateSoulsEffects();
-    void updateHitImage();
+    void addBloodScreen();
+    void updateBloodScreen();
+
+    struct BloodScreen
+    {
+        float alpha;
+        ig::IGUIImage *image;
+    };
+    std::vector<BloodScreen> m_blood_screens;
 };
 #endif

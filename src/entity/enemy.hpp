@@ -75,11 +75,15 @@ class Enemy
 
     enum enemy_state
     {
-        IDLE, WALKING, ATTACKING, STAGGERED, DYING, DEAD
+        IDLE,
+        WALKING,
+        ATTACKING,
+        STAGGERED,
+        DYING,
+        DEAD
     };
 
-    void
-    updateRotation(Player &player);
+    void updateRotation(Player &player);
     void updatePosition(std::vector<Enemy> enemies);
     void updateDeath(Player &player);
     bool isBeingAttacked(Player &player);

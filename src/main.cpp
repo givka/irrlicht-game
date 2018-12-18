@@ -22,7 +22,7 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const HEIGHT = 800;
+int const HEIGHT = 720;
 int const WIDTH = HEIGHT * 16.0 / 9.0;
 
 int main()
