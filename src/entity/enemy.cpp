@@ -165,7 +165,8 @@ bool Enemy::isBeingAttacked(Player &player)
     {
         float const distance = position_player.getDistanceFrom(position_enemy);
         float const angle = sin((rotation_player.Y - rotation_enemy.Y) * M_PI / 180.0);
-        bool is_attacked = distance < 60.0 && angle <= -0.80f;
+
+        bool is_attacked = sword.getNode()->getTransformedBoundingBox().intersectsWithBox(m_node->getTransformedBoundingBox()) && angle <= -0.80f;
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
