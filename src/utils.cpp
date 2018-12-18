@@ -17,7 +17,10 @@ void showPosition(const std::string &nodeName, ic::vector3df position)
               << ": (" << position.X << ", " << position.Y << ", " << position.Z << ")"
               << std::endl;
 }
-
+void operator<<(std::ostream & stream, ic::vector3df v)
+{
+    stream << v.X << " " << v.Y << " " << v.Z << std::endl;
+}
 is::IParticleSystemSceneNode *setParticuleSystem(irr::IrrlichtDevice *device,
                                                  is::ISceneNode *node,
                                                  ic::vector3df position,
