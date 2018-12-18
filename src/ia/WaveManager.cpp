@@ -56,9 +56,9 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 {
     for (auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
     {
-        int model_id = spawn.model_id;
-        if(model_id < 0)
-            model_id = rand() % 7;
+        // int model_id = spawn.model_id;
+        // if (model_id < 0)
+        int model_id = rand() % 31;
         std::string path_text = "data/models/" + std::to_string(model_id) + ".pcx";
         std::string path_model = "data/models/" + std::to_string(model_id) + ".md2";
 
@@ -66,7 +66,7 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 
         iv::ITexture *texture = device->getVideoDriver()->getTexture(std::wstring(path_text.begin(), path_text.end()).c_str());
 
-        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.swing_timer);
+        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.swing_timer, model_id);
         auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
         auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
 

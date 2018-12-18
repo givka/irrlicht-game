@@ -60,7 +60,6 @@ void Player::updateBloodScreen()
         if (m_blood_screens[i].alpha > screen_speed)
         {
             m_blood_screens[i].alpha -= screen_speed;
-            std::cout << m_blood_screens[i].alpha << std::endl;
             m_blood_screens[i].image->setColor(iv::SColor(m_blood_screens[i].alpha, 255, 255, 255));
             i++;
         }

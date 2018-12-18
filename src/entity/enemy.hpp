@@ -17,7 +17,7 @@ class Enemy
 {
   public:
     Enemy();
-    Enemy(float health, int damage, float scale, int swing_timer);
+    Enemy(float health, int damage, float scale, int swing_timer, int model_id);
     bool isDead();
     bool isAlive();
     void update(Player &player, std::vector<Enemy> enemies);
@@ -33,6 +33,8 @@ class Enemy
         DT_DOT,
         DT_CRIT
     };
+
+    int m_model_id;
 
     int m_id;
     float m_health;
@@ -101,7 +103,6 @@ class Enemy
     void switchToState(enemy_state state, Player &player);
     bool isAtRange(Player &player);
     void updateKnockback(Player &player);
-
 
     struct DamageText
     {
