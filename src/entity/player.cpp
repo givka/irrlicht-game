@@ -185,7 +185,6 @@ void Player::takeDamage(int damage)
     m_hit_alpha = 123;
     if (m_health < 0)
         m_health = 0;
-    std::cout << "player took " << damage << " damage, current health: " << m_health << std::endl;
 }
 
 int Player::getHealth()
@@ -291,10 +290,6 @@ void Player::heal(int health)
     m_health += health;
     if (m_health > m_max_health)
         m_health = m_max_health;
-
-    std::cout << "test" << std::endl;
-
-    std::cout << "player got heal for: " << health << ", current health: " << m_health << std::endl;
 }
 
 void Player::removeSouls(int cost)
