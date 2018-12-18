@@ -294,7 +294,7 @@ int Player::getSoulsToShow()
 
 void Player::addBloodScreen()
 {
-    std::string blood_path = "data/blood/screen/" + std::to_string(rand() % 6) + ".png";
+    std::string blood_path = "data/blood/screen/" + std::to_string(rand() % 7) + ".png";
 
     const int width = m_device->getVideoDriver()->getScreenSize().Width;
     const int height = m_device->getVideoDriver()->getScreenSize().Height;
