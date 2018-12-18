@@ -51,6 +51,7 @@ class Player
     void removeSouls(int cost);
     void addMaxHealth(int increment);
     void addMaxStam(int increment);
+    int getSoulsToShow();
 
   private:
     const float MAX_FOV = 2.0;
@@ -62,6 +63,7 @@ class Player
     is::ICameraSceneNode *m_node;
     bool m_blocking;
     float m_souls = 0;
+    float m_souls_to_show = 0;
     float m_souls_to_add = 0;
 
     int m_health;

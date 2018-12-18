@@ -188,7 +188,7 @@ is::ICameraSceneNode *Player::getNode()
 
 int Player::getSouls()
 {
-    return m_souls + m_souls_to_add;
+    return m_souls;
 }
 
 void Player::addSoulsEffect(SoulsEffect souls_effect)
@@ -213,12 +213,9 @@ void Player::addMaxStam(int increment)
 void Player::updateSoulsEffects()
 {
 
-    if (m_souls_to_add)
-    {
-        float speed = 0.1f * m_souls_to_add;
-        m_souls_to_add -= speed;
-        m_souls += speed;
-    }
+    float speed = 0.1f * m_souls_to_add;
+    m_souls_to_add = fabs(speed) > 0.1 ? m_souls_to_add - speed : 0;
+    m_souls_to_show = fabs(speed) > 0.1 ? m_souls_to_show + speed : m_souls;
 
     for (size_t index = 0; index < m_souls_effects.size();)
     {
@@ -255,7 +252,10 @@ void Player::updateSoulsEffects()
                 heal(m_souls_effects[index].value);
 
             if (m_souls_effects[index].type == ST_MONEY)
+            {
+                m_souls += m_souls_effects[index].value;
                 m_souls_to_add += m_souls_effects[index].value;
+            }
 
             m_souls_effects.erase(m_souls_effects.begin() + index);
         }
@@ -282,5 +282,11 @@ void Player::heal(int health)
 
 void Player::removeSouls(int cost)
 {
+    m_souls -= cost;
     m_souls_to_add -= cost;
+}
+
+int Player::getSoulsToShow()
+{
+    return m_souls_to_show;
 }

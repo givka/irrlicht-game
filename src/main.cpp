@@ -104,7 +104,7 @@ int main()
         loot.update(player, receiver);
         hp_upgrade.update(player, receiver);
         stam_upgrade.update(player, receiver);
-        souls.update(player.getSouls());
+        souls.update(player.getSoulsToShow());
         waves.update(waveMgr.getCurrentWave());
         gui->drawAll();
 
