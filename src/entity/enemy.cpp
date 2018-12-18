@@ -164,6 +164,8 @@ bool Enemy::isBeingAttacked(Player &player)
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
+        if(!isAtRange(player))
+            return false;
         if (is_attacked || position_enemy.Y < -20)
         {
             const bool is_crit = rand() % 101 <= sword.getCritPercent();
