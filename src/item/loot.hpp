@@ -28,6 +28,7 @@ class Loot
 
     void switchSword(Player &player);
     irr::scene::IBillboardTextSceneNode *addTooltipText(std::string text, int y);
+    ig::IGUIFont *m_font;
     void addTooltip(Player &player);
 };
 

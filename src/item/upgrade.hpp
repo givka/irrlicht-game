@@ -40,7 +40,7 @@ class Upgrade
 
     int m_current_val;
     int m_increment;
-
+    ig::IGUIFont *m_font;
     UpgradeType m_type;
 };
 

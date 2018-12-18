@@ -20,6 +20,7 @@ Loot::Loot(irr::IrrlichtDevice *device, Player &player)
     // m_tootlip_bg = m_device->getSceneManager()->addBillboardSceneNode(0, ic::dimension2d<irr::f32>(size * 16.0 / 9.0, size), ic::vector3df(105, 20, 100), -1, iv::SColor(150, 0, 0, 0), iv::SColor(150, 0, 0, 0));
     // m_tootlip_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
     // m_tootlip_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
+    m_font = m_device->getGUIEnvironment()->getFont("data/myfont.xml");
     addTooltip(player);
 }
 
@@ -53,7 +54,7 @@ irr::scene::IBillboardTextSceneNode *Loot::addTooltipText(std::string text, int 
     ic::dimension2du s = m_device->getGUIEnvironment()->getBuiltInFont()->getDimension(wtext.c_str());
 
     is::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(
-        0, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), ic::vector3df(105, y, 100));
+        m_font, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), ic::vector3df(105, y, 100));
     node->setColor(iv::SColor(255, 255, 0, 0));
     return node;
 }

@@ -19,6 +19,7 @@ Upgrade::Upgrade(irr::IrrlichtDevice *device, Player &player, UpgradeType type, 
         break;
     }
     std::cout << m_name << std::endl;
+    m_font = m_device->getGUIEnvironment()->getFont("data/myfont.xml");
     addTooltip(player);
 }
 
@@ -43,20 +44,26 @@ void Upgrade::addTooltip(Player &player)
     m_tooltip_texts.push_back(addTooltipText(std::string("Upgrade: ") + m_name + std::string(" (+")  + std::to_string(m_increment) + std::string(")"), y -= 5));
     m_tooltip_texts.push_back(addTooltipText(std::to_string(m_current_val) + std::string(" -> ") + std::to_string(m_current_val + m_increment), y -= 5));
     std::cout << m_name << "fdkjhgfdkjgfd" << std::endl;
-    m_tooltip_texts.push_back(addTooltipText("Cost: " + std::to_string(m_cost), y -= 10));
+    m_tooltip_texts.push_back(addTooltipText("Cost: " + std::to_string(m_cost), y -= 5));
 }
 
 irr::scene::IBillboardTextSceneNode *Upgrade::addTooltipText(std::string text, int y)
 {
     std::wstring wtext = std::wstring(text.begin(), text.end());
-    ic::dimension2du s = m_device->getGUIEnvironment()->getBuiltInFont()->getDimension(wtext.c_str());
-
+    //ic::dimension2du s = m_font->getDimension(wtext.c_str());
+    std::cout << "wtext " << text.c_str() << std::endl ;
     ic::vector3df pos = m_position;
     pos.Y = y;
 
+    int size = 5;
+
+//    is::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(
+//        m_font, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), pos);
+
     is::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(
-        0, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), pos);
-    node->setColor(iv::SColor(255, 255, 0, 0));
+            m_font, wtext.c_str(), 0, irr::core::dimension2d<irr::f32>((8*size), (size)), pos, -1);
+    node->setColor(iv::SColor(255, 255, 255, 255));
+
     return node;
 }
 

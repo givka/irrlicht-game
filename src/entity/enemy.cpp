@@ -58,7 +58,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
     m_health_bar->setMaterialFlag(iv::EMF_LIGHTING, false);
     m_health_bar_bg->setMaterialType(iv::EMT_TRANSPARENT_ALPHA_CHANNEL);
     m_health_bar_bg->setMaterialFlag(iv::EMF_LIGHTING, false);
-    m_font = m_device->getGUIEnvironment()->getFont("data/font.png");
+    m_font = m_device->getGUIEnvironment()->getFont("data/myfont.xml");
 }
 
 void Enemy::checkBloodTimer()

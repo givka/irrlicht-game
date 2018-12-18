@@ -59,8 +59,8 @@ int main()
     waveMgr.loadJSON("data/waves.json");
 
     Loot loot(device, player);
-    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(0, 10, 100), 10, 50);
-    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(50, 10, 100), 10, 50);
+    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(0, 6, 100), 10, 50);
+    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(50, 6, 100), 10, 50);
 
     // add enemy
     Computer computer;
