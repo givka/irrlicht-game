@@ -35,6 +35,7 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 void Player::update(EventReceiver &receiver)
 {
     updateHitImage();
+    updateBloodScreen();
     updateSoulsEffects();
     updatePosition(receiver);
 }
@@ -289,4 +290,46 @@ void Player::removeSouls(int cost)
 int Player::getSoulsToShow()
 {
     return m_souls_to_show;
+}
+
+void Player::addBloodScreen()
+{
+    std::string blood_path = "data/blood/screen/" + std::to_string(rand() % 6) + ".png";
+
+    const int width = m_device->getVideoDriver()->getScreenSize().Width;
+    const int height = m_device->getVideoDriver()->getScreenSize().Height;
+    irr::gui::IGUIImage *image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+    image->setImage(
+        m_device->getVideoDriver()->getTexture(std::wstring(blood_path.begin(), blood_path.end()).c_str()));
+    image->setColor(iv::SColor(100, 255, 255, 255));
+    image->setScaleImage(true);
+
+    m_blood_screens.push_back({100, image});
+}
+
+void Player::updateBloodScreen()
+{
+    float speed = 5;
+    std::cout << m_blood_screens.size() << std::endl;
+    for (size_t i = 0; i < m_blood_screens.size();)
+    {
+        if (m_blood_screens[i].alpha > speed)
+        {
+            m_blood_screens[i].alpha -= speed;
+            std::cout << m_blood_screens[i].alpha << std::endl;
+            m_blood_screens[i].image->setColor(iv::SColor(m_blood_screens[i].alpha, 255, 255, 255));
+            i++;
+        }
+        else
+        {
+            m_blood_screens[i].image->remove();
+            m_blood_screens[i].image = 0;
+            m_blood_screens.erase(m_blood_screens.begin() + i);
+        }
+    }
+}
+
+void Player::enemyHitCallback()
+{
+    addBloodScreen();
 }

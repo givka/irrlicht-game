@@ -164,7 +164,7 @@ bool Enemy::isBeingAttacked(Player &player)
 
         // enemy in front of us => angle = -1 or fall under map
         // cone from -0.8 -> -1 <- -0.8
-        if(!isAtRange(player))
+        if (!isAtRange(player))
             return false;
         if (is_attacked || position_enemy.Y < -20)
         {
@@ -172,14 +172,15 @@ bool Enemy::isBeingAttacked(Player &player)
             const float damage = is_crit ? 2 * sword.getAttack() : sword.getAttack();
             removeHealth(player, damage, is_crit ? DT_CRIT : DT_NORMAL);
             addBloodEffect(is_crit ? DT_CRIT : DT_NORMAL);
+            player.enemyHitCallback();
             if (isAlive())
             {
                 m_last_swing_number = sword.getSwingNumber();
                 checkEnchantment(player);
-        //        position_enemy.X -= 25.0 * cos((rotation_enemy.Y) * M_PI / 180.0);
-        //        position_enemy.Y += 20;
-        //        position_enemy.Z += 25.0 * sin((rotation_enemy.Y) * M_PI / 180.0);
-        //        m_node->setPosition(position_enemy);
+                //        position_enemy.X -= 25.0 * cos((rotation_enemy.Y) * M_PI / 180.0);
+                //        position_enemy.Y += 20;
+                //        position_enemy.Z += 25.0 * sin((rotation_enemy.Y) * M_PI / 180.0);
+                //        m_node->setPosition(position_enemy);
             }
         }
         return is_attacked;
@@ -341,6 +342,7 @@ void Enemy::attackPlayer(Player &player)
 }
 void Enemy::addBloodEffect(damage_type dt)
 {
+
     const int size = dt == DT_CRIT ? 20 : 10;
 
     if (!m_blood_node)
@@ -365,77 +367,78 @@ void Enemy::addBloodEffect(damage_type dt)
     m_blood_timer = m_device->getTimer()->getTime();
 }
 
-void Enemy::switchToState(Enemy::enemy_state state, Player &player) {
-    switch(state)
+void Enemy::switchToState(Enemy::enemy_state state, Player &player)
+{
+    switch (state)
     {
-        case IDLE:
-            m_node->setMD2Animation(is::EMAT_STAND);
-            m_node->setLoopMode(true);
-            break;
-        case WALKING:
-            m_node->setMD2Animation(is::EMAT_RUN);
-            m_node->setLoopMode(true);
-            break;
-        case ATTACKING:
-            m_node->setMD2Animation(is::EMAT_ATTACK);
-            m_last_swing_time = m_device->getTimer()->getTime();
-            m_node->setLoopMode(false);
-            m_already_hit_player = false;
-            break;
-        case STAGGERED:
-            m_node->setMD2Animation(is::EMAT_PAIN_A);
-            m_node->setLoopMode(false);
-            break;
-        case DYING:
-            m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
-            m_death_dir = m_node->getPosition() - player.getPosition();
-            m_death_time = m_device->getTimer()->getTime();
-            m_node->setLoopMode(false);
-            m_health_bar->remove();
-            m_health_bar_bg->remove();
-            break;
-        case DEAD:
-            player.addSoulsEffect({m_souls, Player::ST_MONEY, iv::SColor(255, 255, 255, 255), m_node->getPosition(), 0});
-            m_node->remove();
-            m_node = 0;
-            break;
+    case IDLE:
+        m_node->setMD2Animation(is::EMAT_STAND);
+        m_node->setLoopMode(true);
+        break;
+    case WALKING:
+        m_node->setMD2Animation(is::EMAT_RUN);
+        m_node->setLoopMode(true);
+        break;
+    case ATTACKING:
+        m_node->setMD2Animation(is::EMAT_ATTACK);
+        m_last_swing_time = m_device->getTimer()->getTime();
+        m_node->setLoopMode(false);
+        m_already_hit_player = false;
+        break;
+    case STAGGERED:
+        m_node->setMD2Animation(is::EMAT_PAIN_A);
+        m_node->setLoopMode(false);
+        break;
+    case DYING:
+        m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
+        m_death_dir = m_node->getPosition() - player.getPosition();
+        m_death_time = m_device->getTimer()->getTime();
+        m_node->setLoopMode(false);
+        m_health_bar->remove();
+        m_health_bar_bg->remove();
+        break;
+    case DEAD:
+        player.addSoulsEffect({m_souls, Player::ST_MONEY, iv::SColor(255, 255, 255, 255), m_node->getPosition(), 0});
+        m_node->remove();
+        m_node = 0;
+        break;
     }
     m_state = state;
 }
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
-    switch(m_state)
+    switch (m_state)
     {
-        case IDLE:
-            if(!isAtRange(player))//check if is still at range of player
-                switchToState(WALKING, player);
-            else if (m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()) //check if attack possible
-                switchToState(ATTACKING, player);
-            break;
-        case WALKING:
-            updateRotation(player); //might need to happen out for idle aswell
-            updatePosition(enemies);
-            if(isAtRange(player)) //check if is at range of player
-                switchToState(IDLE, player);
-            break;
-        case ATTACKING:
-            if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
-                switchToState(IDLE, player);
-            attackPlayer(player);
-            break;
-        case STAGGERED:
-            if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
-                switchToState(IDLE, player);
-            //update position //todo: knockback
-            break;
-        case DYING:
-            updateDeath(player);
-        default:
-            return;
+    case IDLE:
+        if (!isAtRange(player)) //check if is still at range of player
+            switchToState(WALKING, player);
+        else if (m_last_swing_time + m_swing_timer < m_device->getTimer()->getTime()) //check if attack possible
+            switchToState(ATTACKING, player);
+        break;
+    case WALKING:
+        updateRotation(player); //might need to happen out for idle aswell
+        updatePosition(enemies);
+        if (isAtRange(player)) //check if is at range of player
+            switchToState(IDLE, player);
+        break;
+    case ATTACKING:
+        if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
+            switchToState(IDLE, player);
+        attackPlayer(player);
+        break;
+    case STAGGERED:
+        if (m_node->getEndFrame() - m_node->getFrameNr() <= 1) // if animation over
+            switchToState(IDLE, player);
+        //update position //todo: knockback
+        break;
+    case DYING:
+        updateDeath(player);
+    default:
+        return;
     }
 
-    if(isBeingAttacked(player))
-        if(m_state != STAGGERED && m_state != DYING)
+    if (isBeingAttacked(player))
+        if (m_state != STAGGERED && m_state != DYING)
             switchToState(STAGGERED, player);
     updateDamageText();
     checkBloodTimer();
@@ -464,9 +467,10 @@ bool Enemy::isAlive()
     return m_state != DYING && m_state != DEAD;
 }
 
-bool Enemy::isAtRange(Player &player) {
+bool Enemy::isAtRange(Player &player)
+{
     float dist = player.getPosition().getDistanceFrom(m_node->getPosition());
-    if (dist< 40) //todo: bounding box stuff
+    if (dist < 40) //todo: bounding box stuff
     {
         return true;
     }
