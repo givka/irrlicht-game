@@ -22,6 +22,7 @@ typedef struct Spawn
     int damage;
     float scale;
     int swing_timer;
+    int model_id;
     //float speed;
     //todo: model id/pointer, same for tex
 } Spawn;
