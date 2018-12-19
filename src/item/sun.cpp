@@ -15,18 +15,19 @@ Sun::Sun(irr::IrrlichtDevice *device)
     auto em = m_sun_particle->getEmitter();
     em->setMinStartColor(iv::SColor(255, 255, 255, 255));
     em->setMinStartSize(ic::dimension2df(1, 1));
-    em->setMaxStartSize(ic::dimension2df(10, 10));
+    em->setMaxStartSize(ic::dimension2df(2, 2));
     em->setMinLifeTime(0);
     em->setMaxParticlesPerSecond(1000);
-    em->setMaxLifeTime(10000);
-    em->setMaxAngleDegrees(360);
+    em->setMaxLifeTime(100000);
+    em->setMaxAngleDegrees(180);
+    em->setDirection(ic::vector3df(0, 0, 0.05));
 
     m_sun_light = smgr->addLightSceneNode(m_sun_particle, ic::vector3df(0, 0, 0), m_sun_color, 2000);
     m_sky = smgr->addSkyDomeSceneNode(driver->getTexture("data/skydome.jpg"), 16, 8, 0.95f, 2.0f);
 
-    is::ISceneNodeAnimator *anim_cercle = smgr->createFlyCircleAnimator(m_sun_particle->getPosition(), 250, 0.001, ic::vector3df(.0, 0.0f, 1.f), 0);
-    m_sun_particle->addAnimator(anim_cercle);
-    anim_cercle->drop();
+    // is::ISceneNodeAnimator *anim_cercle = smgr->createFlyCircleAnimator(m_sun_particle->getPosition(), 250, 0.001, ic::vector3df(.0, 0.0f, 1.f), 0);
+    // m_sun_particle->addAnimator(anim_cercle);
+    // anim_cercle->drop();
 
     addFires();
 }
