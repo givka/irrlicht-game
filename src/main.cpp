@@ -86,10 +86,11 @@ int main()
 
     std::wstring enemy_count_string = L"Enemies: " + std::to_wstring(0);
 
-    auto enemy_count_text = gui->addStaticText(L"Enemies : ", ic::rect<irr::s32>(10, HEIGHT - 60, 300, HEIGHT));
+    auto enemy_count_text = gui->addStaticText(L"Enemies : ", ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
     enemy_count_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-    int current_enemy_count = 0;
 
+    int current_enemy_count = 0;
+    int wave_end_time = -1;
     while (device->run())
     {
         if(current_enemy_count != computer.getNumberOfEnemies())
@@ -98,18 +99,24 @@ int main()
             enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
             enemy_count_text->setText(enemy_count_string.c_str());
         }
+        else if(wave_end_time != -1)
+            enemy_count_text->setText(L"Next wave incoming");
 
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
         if (computer.isWaveFinished())
         {
-
-                std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
-                waveMgr.incrementWaveId();
-                if(waveMgr.isCurrentWavePredetermined()){
-                    waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                if(wave_end_time == -1)
+                    wave_end_time = device->getTimer()->getTime();
+                else if(wave_end_time < device->getTimer()->getTime() - 5000)
+                {
+                    wave_end_time = -1;
+                    waveMgr.incrementWaveId();
+                    if(waveMgr.isCurrentWavePredetermined())
+                        waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                    else
+                        waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
                 }
-                else
-                    waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+
         }
 
         driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
