@@ -90,8 +90,9 @@ int main()
 
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
                 waveMgr.incrementWaveId();
-                if(waveMgr.isNextWavePredetermined())
+                if(waveMgr.isCurrentWavePredetermined()){
                     waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                }
                 else
                     waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
         }

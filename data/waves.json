@@ -1,53 +1,32 @@
 {
     "waves": [
         {
-            "id": 0,
+            "id": 1,
             "spawns": [
                 {
-                    "spawn_point_id": 0,
+                    "spawn_point_id": 10,
                     "health": 100,
-                    "damage": 10,
-                    "scale": 1.0,
-                    "speed": 1.0,
+                    "damage": 100,
+                    "scale": 3.0,
+                    "speed": 10.0,
                     "swing_timer": 2000,
                     "model_id": 1
                 },
                 {
                     "spawn_point_id": 1,
                     "health": 100,
-                    "damage": 10,
-                    "scale": 1.5,
-                    "speed": 1.0,
-                    "swing_timer": 2000,
-                    "model_id": 2
-                }
-            ]
-        },
-        {
-            "id": 1,
-            "spawns": [
-                {
-                    "spawn_point_id": 2,
-                    "health": 100,
-                    "damage": 10,
-                    "scale": 1.0,
-                    "speed": 1.0,
-                    "swing_timer": 1000,
-                    "model_id": -1
-                },
-                {
-                    "spawn_point_id": 3,
-                    "health": 100,
-                    "damage": 10,
-                    "scale": 1.5,
-                    "speed": 1.0,
+                    "damage": 100,
+                    "scale": 10.0,
+                    "speed": 10.0,
                     "swing_timer": 2000,
                     "model_id": 1
                 }
+
+
             ]
         },
         {
-            "id": 2,
+            "id": 4,
             "spawns": [
                 {
                     "spawn_point_id": 0,

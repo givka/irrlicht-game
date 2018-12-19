@@ -29,7 +29,7 @@ void WaveManager::loadJSON(std::string path_to_json)
     for (auto wave_it = waves.Begin(); wave_it != waves.End(); wave_it++)
     {
         Wave wave;
-        wave.id = id;
+        wave.id = (*wave_it)["id"].GetInt();
         auto spawns = (*wave_it)["spawns"].GetArray();
         for (auto spawn_it = spawns.Begin(); spawn_it != spawns.End(); spawn_it++)
         {
@@ -44,7 +44,6 @@ void WaveManager::loadJSON(std::string path_to_json)
             wave.spawns.push_back(spawn);
         }
         m_waves.push_back(wave);
-        id++;
     }
 }
 
@@ -55,11 +54,18 @@ int WaveManager::getCurrentWave()
 
 void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector)
 {
-    for (auto spawn : m_waves[wave_id].spawns) //assumes ids start at 0 and waves are sorted
+    int wave_index = 0;
+    for(auto w : m_waves)
     {
-        // int model_id = spawn.model_id;
+        if(w.id == wave_id)
+            break;
+        wave_index++;
+    }
+    for (auto spawn : m_waves[wave_index].spawns) //assumes ids start at 0 and waves are sorted
+    {
+        int model_id = spawn.model_id;
         // if (model_id < 0)
-        int model_id = rand() % 31;
+        // int model_id = rand() % 31;
         std::string path_text = "data/models/" + std::to_string(model_id) + ".pcx";
         std::string path_model = "data/models/" + std::to_string(model_id) + ".md2";
 
@@ -86,6 +92,13 @@ void WaveManager::incrementWaveId() {
     m_current_wave ++;
 }
 
-bool WaveManager::isNextWavePredetermined() {
+bool WaveManager::isCurrentWavePredetermined() {
+    for(auto w : m_waves)
+    {
+        if(w.id == m_current_wave)
+        {
+            return true;
+        }
+    }
     return false;
 }
