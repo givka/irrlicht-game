@@ -178,7 +178,7 @@ void Player::checkTeleportation()
 {
     ic::vector3df position = m_node->getPosition();
     ic::vector3df teleporters[2] = {ic::vector3df(-900, 140, -260), ic::vector3df(1080, 140, -260)};
-
+    Utils::showPosition("", m_node->getPosition());
     for (size_t i = 0; i < 2; i++)
     {
         float distance = position.getDistanceFrom(teleporters[i]);

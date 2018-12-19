@@ -26,6 +26,21 @@ class Sun
     is::ISceneNode *m_sky;
 
     void addFires();
+
+    float m_interpolate = 1.0;
+    iv::SColor m_color_to_go;
+
+    // maybe just randomize m_color_to_go ?
+    iv::SColor m_colors[8] = {
+        iv::SColor(255, 255, 255, 255),
+        iv::SColor(255, 255, 255, 0),
+        iv::SColor(255, 255, 0, 255),
+        iv::SColor(255, 255, 0, 0),
+        iv::SColor(255, 0, 255, 255),
+        iv::SColor(255, 0, 255, 0),
+        iv::SColor(255, 0, 0, 255),
+        iv::SColor(255, 0, 0, 0),
+    };
 };
 
 #endif
