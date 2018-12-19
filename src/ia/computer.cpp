@@ -52,3 +52,7 @@ bool Computer::isWaveFinished()
 {
     return m_enemies.size() == 0;
 }
+
+int Computer::getNumberOfEnemies() {
+    return (int) m_enemies.size();
+}

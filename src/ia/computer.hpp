@@ -23,6 +23,7 @@ class Computer
     void addEnemy(Enemy *enemy, ic::vector3df &pos, ic::vector3df &ori, irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector); //todo: obviously needs to be changed
     void update(Player &player);
     bool isWaveFinished();
+    int getNumberOfEnemies();
 
   private:
     std::vector<Enemy> m_enemies;
