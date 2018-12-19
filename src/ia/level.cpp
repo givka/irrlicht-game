@@ -79,3 +79,7 @@ is::IMeshSceneNode *Level::getMapNode()
 {
     return m_map_node;
 }
+
+int Level::getNbSpawnPoints() {
+    return m_spawnPoints.size();
+}

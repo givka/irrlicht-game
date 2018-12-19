@@ -24,7 +24,7 @@ class Level
 
     SpawnPoint getSpawnPoint(int id);
     is::IMeshSceneNode *getMapNode();
-
+    int getNbSpawnPoints();
   private:
     std::vector<SpawnPoint> m_spawnPoints;
     is::IMeshSceneNode *m_map_node;
