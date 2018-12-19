@@ -50,8 +50,8 @@ void WaveGenerator::spawnWave(Level &level, int wave_id, Computer &computer, irr
         //generate stats
         spawn.health = 40 + wave_id * m_health_increment + (rand() % (m_health_variance)) - m_health_variance/2;
         spawn.damage = 10 + wave_id * m_damage_increment + (rand() % (m_damage_variance)) - m_damage_variance/2;
-        spawn.scale = (float) (1.0 + rand() / 2.0 - 0.5);
-        spawn.speed = (float) (1.0 + rand() / 4.0 - 0.25);
+        spawn.scale = 1.0; (float) (1.0 + rand() / 4.0);
+        spawn.speed = 1.0; // (float) (1.0 + rand() / 4.0);
         spawn.swing_timer = 1500 + (rand() % 50) - 25;
         spawn.spawn_point_id = sp;
 
