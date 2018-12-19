@@ -54,8 +54,8 @@ void WaveGenerator::spawnWave(Level &level, int wave_id, Computer &computer, irr
         spawn.speed = 1.0; // (float) (1.0 + rand() / 4.0);
         spawn.swing_timer = 1500 + (rand() % 50) - 25;
         spawn.spawn_point_id = sp;
+        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.speed, model_id, spawn.swing_timer);
 
-        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.speed, spawn.swing_timer, model_id);
         auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
         auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
 
