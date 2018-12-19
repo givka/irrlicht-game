@@ -13,6 +13,7 @@
 #include "item/upgrade.hpp"
 #include "item/sun.hpp"
 #include "ia/waveGenerator.hpp"
+#include "ui/cursor.hpp"
 
 #define DEBUG_INFO
 
@@ -79,6 +80,7 @@ int main()
     //spawn first wave
     PlayerBar health_bar(device, 0.10, 0.10, 0.25, 0.11, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
     PlayerBar stamina_bar(device, 0.10, 0.115, 0.25, 0.125, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
+    Cursor cursor(device);
 
     while (device->run())
     {
@@ -107,6 +109,7 @@ int main()
         souls.update(player.getSoulsToShow());
         waves.update(waveMgr.getCurrentWave());
         sun.update();
+        cursor.update();
 
         gui->drawAll();
 

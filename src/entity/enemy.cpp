@@ -26,7 +26,6 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
 {
 
     auto smgr = device->getSceneManager();
-    auto driver = device->getVideoDriver();
     float const X = rand() % 200;
     float const Z = rand() % 200;
     m_device = device;
@@ -171,11 +170,7 @@ void Enemy::updatePosition(std::vector<Enemy> enemies)
             extent.Y = 0;
             neighbor_radius = (float)(Utils::maxComponent(extent) * 0.5);
 
-            ic::vector3df position_neighbour = neighbour.getNode()->getPosition();
-            float distX = position_neighbour.X - position_enemy.X;
-            float distZ = position_neighbour.Z - position_enemy.Z;
             if (m_node->getTransformedBoundingBox().getCenter().getDistanceFrom(neighbour.getNode()->getTransformedBoundingBox().getCenter()) < enemy_radius + neighbor_radius)
-                //if (abs(distX) < 10 && abs(distZ) < 10)
                 return;
         }
     }
@@ -257,7 +252,6 @@ bool Enemy::isBeingAttacked(Player &player)
     if (!isAlive())
         return false;
 
-    ic::vector3df position_enemy = m_node->getPosition();
     Sword sword = player.getSword();
 
     if (sword.getIsAttacking() && m_last_swing_number != sword.getSwingNumber())
@@ -378,7 +372,9 @@ void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 }
 void Enemy::addDamageText(Player &player, const float damage, damage_type dt)
 {
-    float size = dt == DT_CRIT ? 5.0f : 3.5f;
+
+    float size = (dt == DT_CRIT ? 0.005 : 0.0025) * m_device->getVideoDriver()->getScreenSize().Width;
+
     iv::SColor text_color = dt == DT_DOT
                                 ? player.getSword().getEnchantColor(m_current_effect)
                                 : iv::SColor(200, 200, 200, 200);
