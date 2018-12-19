@@ -24,6 +24,8 @@ class Sun
     irr::scene::ILightSceneNode *m_sun_light;
     iv::SColor m_sun_color;
     is::ISceneNode *m_sky;
+
+    void addFires();
 };
 
 #endif
