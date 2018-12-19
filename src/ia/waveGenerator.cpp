@@ -32,10 +32,6 @@ void WaveGenerator::spawnWave(Level &level, int wave_id, Computer &computer, irr
         not_picked.erase(not_picked.begin() + id);
     }
     //enemies
-    for(auto i : generated)
-    {
-        std::cout << "spawn id: " << i << std::endl;
-    }
     Spawn spawn;
     for(int sp : generated)
     {

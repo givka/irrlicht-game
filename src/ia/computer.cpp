@@ -39,10 +39,7 @@ void Computer::updatePosition(Player &player)
     {
         m_enemies[index].update(player, m_enemies);
         if (m_enemies[index].isDead())
-        {
             m_enemies.erase(m_enemies.begin() + index);
-            std::cout << "enemies remaining: " << m_enemies.size() << std::endl;
-        }
         else
             index++;
     }
