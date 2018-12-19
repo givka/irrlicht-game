@@ -67,6 +67,8 @@ class Player
     float m_souls_to_show = 0;
     float m_souls_to_add = 0;
 
+    is::ISceneNodeAnimatorCollisionResponse *m_collision;
+
     int m_health;
     int m_stamina;
     int m_max_stamina;
@@ -74,6 +76,8 @@ class Player
 
     float m_hit_alpha = 0;
     ig::IGUIImage *m_hit_image = 0;
+    float m_teleport_alpha = 0;
+    ig::IGUIImage *m_teleport_image = 0;
 
     bool m_waiting_for_unblock = false;
 
@@ -83,6 +87,7 @@ class Player
     void updateSoulsEffects();
     void addBloodScreen();
     void updateBloodScreen();
+    void checkTeleportation();
 
     struct BloodScreen
     {
