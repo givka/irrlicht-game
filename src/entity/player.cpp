@@ -25,11 +25,11 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
 
     m_sword.initialise(device, m_node);
 
-    is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(
+    m_collision = smgr->createCollisionResponseAnimator(
         selector, m_node, ic::vector3df(30, 30, 30),
         ic::vector3df(0, -10, 0), ic::vector3df(0, 15, 0));
-    m_node->addAnimator(collision);
-    collision->drop();
+    m_node->addAnimator(m_collision);
+    // collision->drop();
 }
 
 void Player::update(EventReceiver &receiver)
@@ -50,10 +50,25 @@ void Player::updateBloodScreen()
         const int width = m_device->getVideoDriver()->getScreenSize().Width;
         const int height = m_device->getVideoDriver()->getScreenSize().Height;
         m_hit_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
-        m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/blood/screen/hit.png"));
+        m_hit_image->setImage(m_device->getVideoDriver()->getTexture("data/screen/hit.png"));
         m_hit_image->setColor(iv::SColor(m_hit_alpha, 255, 255, 255));
         m_hit_image->setScaleImage(true);
     }
+
+    if (m_teleport_alpha != 0)
+    {
+        if (m_teleport_image)
+            m_teleport_image->remove();
+
+        m_teleport_alpha -= 1;
+        const int width = m_device->getVideoDriver()->getScreenSize().Width;
+        const int height = m_device->getVideoDriver()->getScreenSize().Height;
+        m_teleport_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+        m_teleport_image->setImage(m_device->getVideoDriver()->getTexture("data/screen/teleport.png"));
+        m_teleport_image->setColor(iv::SColor(m_teleport_alpha, 255, 255, 255));
+        m_teleport_image->setScaleImage(true);
+    }
+
     float screen_speed = 5;
     for (size_t i = 0; i < m_blood_screens.size();)
     {
@@ -80,6 +95,7 @@ void Player::addMaxHealth(int increment)
 
 void Player::updatePosition(EventReceiver &receiver)
 {
+    checkTeleportation();
     bool *states = receiver.getStates();
     ic::vector3df position = m_node->getPosition();
     ic::vector3df rotation = m_node->getRotation();
@@ -156,6 +172,26 @@ void Player::updatePosition(EventReceiver &receiver)
     }
     if (m_stamina > m_max_stamina)
         m_stamina = m_max_stamina;
+}
+
+void Player::checkTeleportation()
+{
+    ic::vector3df position = m_node->getPosition();
+    ic::vector3df teleporters[2] = {ic::vector3df(-900, 140, -260), ic::vector3df(1080, 140, -260)};
+
+    for (size_t i = 0; i < 2; i++)
+    {
+        float distance = position.getDistanceFrom(teleporters[i]);
+        if (distance < 30.0)
+        {
+            position = teleporters[i == 0 ? 1 : 0];
+            position.X += i == 0 ? -100 : 100;
+            m_node->setPosition(position);
+            m_collision->setTargetNode(m_node);
+            m_teleport_alpha = 123;
+            break;
+        }
+    }
 }
 
 ic::vector3df Player::getPosition()
@@ -304,7 +340,7 @@ int Player::getSoulsToShow()
 
 void Player::addBloodScreen()
 {
-    std::string blood_path = "data/blood/screen/" + std::to_string(rand() % 7) + ".png";
+    std::string blood_path = "data/screen/" + std::to_string(rand() % 7) + ".png";
 
     const int width = m_device->getVideoDriver()->getScreenSize().Width;
     const int height = m_device->getVideoDriver()->getScreenSize().Height;
