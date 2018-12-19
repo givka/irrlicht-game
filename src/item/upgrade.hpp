@@ -31,7 +31,6 @@ class Upgrade
     irr::scene::IBillboardSceneNode *m_tootlip_bg;
     std::vector<is::IBillboardTextSceneNode *> m_tooltip_texts;
 
-    void switchSword(Player &player);
     irr::scene::IBillboardTextSceneNode *addTooltipText(std::string text, int y);
     void addTooltip(Player &player);
 

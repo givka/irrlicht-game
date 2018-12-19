@@ -80,18 +80,8 @@ void Upgrade::update(Player &player, EventReceiver &receiver)
 
 
             }
+            m_cost *= 1.2;
             addTooltip(player);
         }
     }
-}
-
-void Upgrade::switchSword(Player &player)
-{
-    if (m_device->getTimer()->getTime() - m_timer < 200)
-        return;
-
-    player.removeSouls(m_cost);
-    m_timer = m_device->getTimer()->getTime();
-    m_cost = 0;
-    addTooltip(player);
 }
