@@ -65,8 +65,8 @@ int main()
     waveMgr.loadJSON("data/waves.json");
 
     Loot loot(device, player);
-    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(0, 6, 100), 10, 50);
-    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(50, 6, 100), 10, 50);
+    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(352, 125, -86), 10, 50);
+    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(-119, 125, -141), 10, 50);
 
     // add enemy
     Computer computer;
@@ -90,8 +90,9 @@ int main()
 
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
                 waveMgr.incrementWaveId();
-                if(waveMgr.isNextWavePredetermined())
+                if(waveMgr.isCurrentWavePredetermined()){
                     waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                }
                 else
                     waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
         }
@@ -130,7 +131,8 @@ int main()
         if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
         {
             std::cout << "spawning wave 0" << std::endl;
-            waveMgr.spawnWave(level, 0, computer, device, selector);
+            Utils::showPosition("", player.getPosition());
+            //waveGen.spawnWave(level, 0, computer, device, selector);
         }
     }
     device->drop();

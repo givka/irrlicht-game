@@ -42,7 +42,7 @@ class WaveManager
     unsigned long getLastWaveId();
     void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector); //todo:: model mgt system
     void incrementWaveId();
-    bool isNextWavePredetermined();
+    bool isCurrentWavePredetermined();
   private:
     int m_current_wave;
     std::vector<Wave> m_waves;

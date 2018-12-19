@@ -12,7 +12,7 @@ Loot::Loot(irr::IrrlichtDevice *device, Player &player)
     m_cost = 500 + rand() % 500;
 
     m_sword.initialise(m_device, 0);
-    m_sword.getNode()->setPosition(ic::vector3df(105, -10, 100));
+    m_sword.getNode()->setPosition(ic::vector3df(102, 100, -108));
     m_sword.getNode()->setRotation(ic::vector3df(0, 0, 0));
 
     //TODO: add background tooltip
@@ -34,7 +34,7 @@ void Loot::addTooltip(Player &player)
         m_tooltip_texts[index] = 0;
     }
 
-    int y = 40;
+    int y = (int) m_sword.getNode()->getPosition().Y + 30;
     Sword player_sword = player.getSword();
 
     int diff_damage = player_sword.getDamageMax() - m_sword.getDamageMax();
@@ -45,16 +45,17 @@ void Loot::addTooltip(Player &player)
     m_tooltip_texts.push_back(addTooltipText(player_sword.getDamageText(m_sword), y -= 10));
     m_tooltip_texts.push_back(addTooltipText(player_sword.getCritChanceText(m_sword), y -= 5));
     m_tooltip_texts.push_back(addTooltipText(player_sword.getEnchantText(m_sword), y -= 5));
-    m_tooltip_texts.push_back(addTooltipText("Cost: " + std::to_string(m_cost), y -= 10));
+    m_tooltip_texts.push_back(addTooltipText("Cost: " + std::to_string(m_cost), y -= 15));
 }
 
 irr::scene::IBillboardTextSceneNode *Loot::addTooltipText(std::string text, int y)
 {
+    auto pos = m_sword.getNode()->getPosition();
     std::wstring wtext = std::wstring(text.begin(), text.end());
     ic::dimension2du s = m_device->getGUIEnvironment()->getBuiltInFont()->getDimension(wtext.c_str());
 
     is::IBillboardTextSceneNode *node = m_device->getSceneManager()->addBillboardTextSceneNode(
-        m_font, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), ic::vector3df(105, y, 100));
+        m_font, wtext.c_str(), 0, ic::dimension2d<irr::f32>(s.Width / 2, s.Height / 2), ic::vector3df(pos.X, y, pos.Z));
     node->setColor(iv::SColor(255, 255, 0, 0));
     return node;
 }
