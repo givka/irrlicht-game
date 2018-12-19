@@ -12,6 +12,7 @@
 #include "item/loot.hpp"
 #include "item/upgrade.hpp"
 #include "item/sun.hpp"
+#include "ia/waveGenerator.hpp"
 
 #define DEBUG_INFO
 
@@ -59,6 +60,7 @@ int main()
     Sun sun(device);
 
     WaveManager waveMgr;
+    WaveGenerator waveGen;
     waveMgr.loadJSON("data/waves.json");
 
     Loot loot(device, player);
@@ -75,8 +77,6 @@ int main()
     int lastFPS = -1;
 
     //spawn first wave
-    waveMgr.spawnWave(level, 0, computer, device, selector);
-
     PlayerBar health_bar(device, 0.10, 0.10, 0.25, 0.11, 200, iv::SColorf(0.8, 0.0, 0.0, 0.7));
     PlayerBar stamina_bar(device, 0.10, 0.115, 0.25, 0.125, 200, iv::SColorf(0.0, 0.5, 0.0, 0.7));
 
@@ -85,16 +85,13 @@ int main()
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
         if (computer.isWaveFinished())
         {
-            if (waveMgr.getCurrentWave() == waveMgr.getLastWaveId()) //last wave finished, game over
-            {
-                std::cout << "Spawning wave " << waveMgr.getCurrentWave() << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //but for now we debug
-            }
-            else
-            {
+
                 std::cout << "Spawning wave " << waveMgr.getCurrentWave() + 1 << std::endl;
-                waveMgr.spawnWave(level, waveMgr.getCurrentWave() + 1, computer, device, selector); //spawn next wave
-            }
+                waveMgr.incrementWaveId();
+                if(waveMgr.isNextWavePredetermined())
+                    waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                else
+                    waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
         }
 
         driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
