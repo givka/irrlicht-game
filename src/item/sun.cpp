@@ -4,7 +4,7 @@ Sun::Sun(irr::IrrlichtDevice *device)
     : m_device(device)
 {
 
-    m_sun_color = iv::SColor(255, 255, 255, 0);
+    m_sun_color = iv::SColor(255, 255, 255, 255);
 
     is::ISceneManager *smgr = device->getSceneManager();
 

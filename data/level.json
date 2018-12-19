@@ -5,7 +5,7 @@
         "arena999"
     ],
     "map": {
-        "archive_path": "data/arena999.pk3",
+        "archive_path": "data/arena999custom.pk3",
         "mesh_path": "maps/arena999.bsp",
         "position": [
             0,
