@@ -1,71 +1,162 @@
 {
-    "good_maps": [
-        "q3mbd",
-        "stingdm1",
-        "arena999"
-    ],
-    "map": {
-        "archive_path": "data/arena999custom.pk3",
-        "mesh_path": "maps/arena999.bsp",
-        "position": [
-            0,
-            0,
-            0
-        ]
-    },
-    "spawn_points": [
+	"good_maps": [
+		"q3mbd",
+		"stingdm1",
+		"arena999"
+	],
+	"map": {
+		"archive_path": "data/arena999custom.pk3",
+		"mesh_path": "maps/arena999.bsp",
+		"position": [
+			0,
+			0,
+			0
+		]
+	},
+	"spawn_points": [
+		{
+			"position": [
+				-750,
+				125,
+				0
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 0
+		},
+		{
+			"position": [
+				-750,
+				125,
+				-530
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 1
+		},
+		{
+			"position": [
+				-420,
+				125,
+				-900
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 2
+		},
+		{
+			"position": [
+				-420,
+				125,
+				420
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 3
+		},
+		{
+			"position": [
+				100,
+				125,
+				400
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 4
+		},
+		{
+			"position": [
+				100,
+				125,
+				-900
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 5
+		},
+		{
+			"position": [
+				630,
+				125,
+				-940
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 6
+		},
+		{
+			"position": [
+				630,
+				125,
+				437
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 7
+		},
+		{
+			"position": [
+				920,
+				125,
+				90
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 8
+		},
+		{
+			"position": [
+				-920,
+				125,
+				-540
+			],
+			"orientation": [
+				0,
+				0,
+				0
+			],
+			"id": 9
+		},        
         {
             "position": [
-                -80,
-                20,
-                260
+                -350,
+                125,
+                170
             ],
             "orientation": [
                 0,
                 0,
                 0
             ],
-            "id": 0
-        },
-        {
-            "position": [
-                -560,
-                20,
-                200
-            ],
-            "orientation": [
-                0,
-                0,
-                0
-            ],
-            "id": 1
-        },
-        {
-            "position": [
-                -560,
-                20,
-                -10
-            ],
-            "orientation": [
-                0,
-                0,
-                0
-            ],
-            "id": 2
-        },
-        {
-            "position": [
-                -560,
-                20,
-                90
-            ],
-            "orientation": [
-                0,
-                0,
-                0
-            ],
-            "id": 3
-        }
-    ],
-    "lights": []
+            "id": 10
+        }		
+	],
+	"lights": []
 }
