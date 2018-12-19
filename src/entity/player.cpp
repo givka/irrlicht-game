@@ -364,4 +364,19 @@ void Player::reset()
     m_health = m_max_health;
     m_stamina = m_max_stamina;
     m_node->setPosition(ic::vector3df(0, 150, 0));
+    setSword(Sword());
+    m_souls = 0;
+    m_souls_to_add = 0;
+    m_souls_to_show = 0;
+    for(auto se : m_souls_effects)
+    {
+        se.node->remove();
+    }
+    m_souls_effects.clear();
+
+    for(auto bs : m_blood_screens)
+    {
+        bs.image->remove();
+    }
+    m_blood_screens.clear();
 }

@@ -200,3 +200,10 @@ std::string Sword::getEnchantText(Sword sword)
     return "Enchantment: " + m_enchant_names[m_current_enchant] + " -> " +
            m_enchant_names[sword.m_current_enchant];
 }
+
+void Sword::reset() {
+    m_damage_min = 20;
+    m_damage_max = m_damage_min * 1.2;
+    m_crit_percent = 20;
+    m_current_enchant = NONE;
+}

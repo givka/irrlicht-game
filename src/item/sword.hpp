@@ -50,6 +50,8 @@ class Sword
     std::string getCritChanceText(Sword sword);
     std::string getEnchantText(Sword sword);
 
+    void reset();
+
   private:
     int m_damage_min;
     int m_damage_max;
