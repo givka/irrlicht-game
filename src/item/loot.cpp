@@ -12,7 +12,7 @@ Loot::Loot(irr::IrrlichtDevice *device, Player &player)
     m_cost = 500 + rand() % 500;
 
     m_sword.initialise(m_device, 0);
-    m_sword.getNode()->setPosition(ic::vector3df(105, -10, 100));
+    m_sword.getNode()->setPosition(ic::vector3df(102, 125, -108));
     m_sword.getNode()->setRotation(ic::vector3df(0, 0, 0));
 
     //TODO: add background tooltip
