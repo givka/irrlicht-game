@@ -49,7 +49,18 @@ void Sun::addFires()
 
 void Sun::update()
 {
+    // strange behaviour, the interpolation works only between 1.0 and 0.99
+    if (m_interpolate < 0.99 || m_sun_color.color == m_color_to_go.color)
+    {
+        m_color_to_go = m_colors[rand() % 9];
+        m_interpolate = 1.0;
+    }
+
     ic::vector3df rotation_sky = m_sky->getRotation();
     rotation_sky.Y += 0.05;
     m_sky->setRotation(rotation_sky);
+
+    m_sun_color = m_sun_color.getInterpolated(m_color_to_go, m_interpolate -= 0.00001);
+    m_sun_particle->getEmitter()->setMaxStartColor(m_sun_color);
+    m_sun_light->getLightData().DiffuseColor = m_sun_color;
 }
