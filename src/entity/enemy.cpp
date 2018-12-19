@@ -8,14 +8,14 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Enemy::Enemy()
-    : m_health(100), m_damage(15), m_scale(1.0f), m_already_hit_player(false), m_swing_timer(1000)
+    : m_health(100), m_damage(15), m_scale(1.0f), m_speed(1.0f), m_already_hit_player(false), m_swing_timer(1000)
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
     m_souls = (int)(m_scale * (20 + rand() % 20));
 }
-Enemy::Enemy(float health, int damage, float scale, int swing_timer, int model_id)
-    : m_health(health), m_damage(damage), m_scale(scale), m_already_hit_player(false), m_swing_timer(swing_timer), m_model_id(model_id)
+Enemy::Enemy(float health, int damage, float scale, float speed, int model_id, int swing_timer)
+    : m_health(health), m_damage(damage), m_scale(scale), m_speed(speed), m_already_hit_player(false), m_swing_timer(swing_timer), m_model_id(model_id)
 {
     m_last_swing_time = 0;
     m_max_health = m_health;

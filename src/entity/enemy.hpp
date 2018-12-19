@@ -17,7 +17,7 @@ class Enemy
 {
   public:
     Enemy();
-    Enemy(float health, int damage, float scale, int swing_timer, int model_id);
+    Enemy(float health, int damage, float scale, float speed, int model_id, int swing_timer);
     bool isDead();
     bool isAlive();
     void update(Player &player, std::vector<Enemy> enemies);

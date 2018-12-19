@@ -23,7 +23,7 @@ typedef struct Spawn
     float scale;
     int swing_timer;
     int model_id;
-    //float speed;
+    float speed;
     //todo: model id/pointer, same for tex
 } Spawn;
 
@@ -41,6 +41,8 @@ class WaveManager
     int getCurrentWave();
     unsigned long getLastWaveId();
     void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector); //todo:: model mgt system
+    void incrementWaveId();
+    bool isNextWavePredetermined();
   private:
     int m_current_wave;
     std::vector<Wave> m_waves;

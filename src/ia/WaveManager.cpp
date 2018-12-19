@@ -38,6 +38,7 @@ void WaveManager::loadJSON(std::string path_to_json)
             spawn.health = (*spawn_it)["health"].GetInt();
             spawn.damage = (*spawn_it)["damage"].GetInt();
             spawn.scale = (*spawn_it)["scale"].GetFloat();
+            spawn.speed= (*spawn_it)["speed"].GetFloat();
             spawn.swing_timer = (*spawn_it)["swing_timer"].GetInt();
             spawn.model_id = (*spawn_it)["model_id"].GetInt();
             wave.spawns.push_back(spawn);
@@ -66,7 +67,7 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 
         iv::ITexture *texture = device->getVideoDriver()->getTexture(std::wstring(path_text.begin(), path_text.end()).c_str());
 
-        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.swing_timer, model_id);
+        Enemy enemy(spawn.health, spawn.damage, spawn.scale, spawn.speed, model_id, spawn.swing_timer);
         auto pos = level.getSpawnPoint(spawn.spawn_point_id).getPosition();
         auto rot = level.getSpawnPoint(spawn.spawn_point_id).getOrientation();
 
@@ -79,4 +80,12 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
 unsigned long WaveManager::getLastWaveId()
 {
     return m_waves.size() - 1;
+}
+
+void WaveManager::incrementWaveId() {
+    m_current_wave ++;
+}
+
+bool WaveManager::isNextWavePredetermined() {
+    return false;
 }
