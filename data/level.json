@@ -1,31 +1,71 @@
 {
-	"map" : {
-		"archive_path" : "data/base_textured.pk3",
-		"mesh_path" : "base_textured.bsp",
-		"position" : [-1300, -44, -1249]
-	},
-	"spawn_points" : [
-		{
-			"position" : [-80, 20, 260],
-			"orientation" : [0, 0, 0],
-			"id" : 0
-		},
-		{
-			"position" : [-560, 20, 200],
-			"orientation" : [0, 0, 0],
-			"id" : 1
-		},
-		{
-			"position" : [-560, 20, -10],
-			"orientation" : [0, 0, 0],
-			"id" : 2
-		},
-		{
-			"position" : [-560, 20, 90],
-			"orientation" : [0, 0, 0],
-			"id" : 3
-		}				
-	],
-	"lights" : [
-	]
+    "good_maps": [
+        "q3mbd",
+        "stingdm1",
+        "arena999"
+    ],
+    "map": {
+        "archive_path": "data/arena999.pk3",
+        "mesh_path": "maps/arena999.bsp",
+        "position": [
+            0,
+            0,
+            0
+        ]
+    },
+    "spawn_points": [
+        {
+            "position": [
+                -80,
+                20,
+                260
+            ],
+            "orientation": [
+                0,
+                0,
+                0
+            ],
+            "id": 0
+        },
+        {
+            "position": [
+                -560,
+                20,
+                200
+            ],
+            "orientation": [
+                0,
+                0,
+                0
+            ],
+            "id": 1
+        },
+        {
+            "position": [
+                -560,
+                20,
+                -10
+            ],
+            "orientation": [
+                0,
+                0,
+                0
+            ],
+            "id": 2
+        },
+        {
+            "position": [
+                -560,
+                20,
+                90
+            ],
+            "orientation": [
+                0,
+                0,
+                0
+            ],
+            "id": 3
+        }
+    ],
+    "lights": []
 }

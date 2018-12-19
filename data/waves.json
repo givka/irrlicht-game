@@ -1,100 +1,91 @@
 {
-	"waves":[
-		{
-			"id" : 0,
-			"spawns" : [
-				{
-					"spawn_point_id" : 0,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.0,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 1
-				},
-				{
-					"spawn_point_id" : 1,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.5,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 2
-				}
-			]
-		}, 
-		{
-			"id" : 1,
-			"spawns" : [
-				{
-					"spawn_point_id" : 2,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.0,
-					"speed" : 1.0,
-					"swing_timer" : 1000,
-
-					"model_id" : -1
-				},
-				{
-					"spawn_point_id" : 3,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.5,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 1
-				}
-			]
-		},
-		{
-			"id" : 2,
-			"spawns" : [
-				{
-					"spawn_point_id" : 0,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.0,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 1
-				},
-				{
-					"spawn_point_id" : 1,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 0.5,
-					"speed" : 1.0,
-					"swing_timer" : 800,
-
-					"model_id" : 2
-				},				
-				{
-					"spawn_point_id" : 2,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 1.0,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 3
-				},
-				{
-					"spawn_point_id" : 3,
-					"health" : 100,
-					"damage" : 10,
-					"scale" : 0.5,
-					"speed" : 1.0,
-					"swing_timer" : 2000,
-
-					"model_id" : 4
-				}
-			]
-		}
-	]
-		
+    "waves": [
+        {
+            "id": 0,
+            "spawns": [
+                {
+                    "spawn_point_id": 0,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.0,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 1
+                },
+                {
+                    "spawn_point_id": 1,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.5,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 2
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "spawns": [
+                {
+                    "spawn_point_id": 2,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.0,
+                    "speed": 1.0,
+                    "swing_timer": 1000,
+                    "model_id": -1
+                },
+                {
+                    "spawn_point_id": 3,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.5,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 1
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "spawns": [
+                {
+                    "spawn_point_id": 0,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.0,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 1
+                },
+                {
+                    "spawn_point_id": 1,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 0.5,
+                    "speed": 1.0,
+                    "swing_timer": 800,
+                    "model_id": 2
+                },
+                {
+                    "spawn_point_id": 2,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 1.0,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 3
+                },
+                {
+                    "spawn_point_id": 3,
+                    "health": 100,
+                    "damage": 10,
+                    "scale": 0.5,
+                    "speed": 1.0,
+                    "swing_timer": 2000,
+                    "model_id": 4
+                }
+            ]
+        }
+    ]
 }

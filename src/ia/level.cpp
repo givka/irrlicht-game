@@ -5,10 +5,10 @@
 #include "document.h"
 #include "writer.h"
 #include "stringbuffer.h"
+#include "../utils.hpp"
 
 Level::Level()
 {
-
 }
 
 bool Level::loadFromJSON(std::string path_to_json, irr::IrrlichtDevice *device, iv::IVideoDriver *driver, is::ISceneManager *smgr)
@@ -32,15 +32,27 @@ bool Level::loadFromJSON(std::string path_to_json, irr::IrrlichtDevice *device, 
     map_position.Z = map_pos_array[2].GetFloat();
 
     device->getFileSystem()->addFileArchive(archive_path.c_str());
-    is::IAnimatedMesh *meshMap = smgr->getMesh(mesh_path.c_str());
-    m_map_node = smgr->addOctreeSceneNode(meshMap->getMesh(0));
+    is::IQ3LevelMesh *const mesh = (is::IQ3LevelMesh *)smgr->getMesh(mesh_path.c_str());
+    m_map_node = smgr->addOctreeSceneNode(mesh->getMesh(0));
     m_map_node->setPosition(map_position);
+
+    const is::IMesh *const additional_mesh = mesh->getMesh(is::quake3::E_Q3_MESH_ITEMS);
+    for (irr::u32 i = 0; i != additional_mesh->getMeshBufferCount(); ++i)
+    {
+        const is::IMeshBuffer *meshBuffer = additional_mesh->getMeshBuffer(i);
+        const iv::SMaterial &material = meshBuffer->getMaterial();
+        const irr::s32 shaderIndex = (irr::s32)material.MaterialTypeParam2;
+        const is::quake3::IShader *shader = mesh->getShader(shaderIndex);
+        if (0 == shader)
+            continue;
+        smgr->addQuake3SceneNode(meshBuffer, shader);
+    }
 
     //loading spawnpoints
     auto spawn_points = d["spawn_points"].GetArray();
     ic::vector3df position;
     ic::vector3df orientation;
-    for(auto it = spawn_points.Begin(); it != spawn_points.End(); it++)
+    for (auto it = spawn_points.Begin(); it != spawn_points.End(); it++)
     {
         int id = (*it)["id"].GetInt();
         auto pos_coords = (*it)["position"].GetArray();
@@ -63,6 +75,7 @@ SpawnPoint Level::getSpawnPoint(int id)
     return m_spawnPoints[id]; //TODO: add range check
 }
 
-is::IMeshSceneNode *Level::getMapNode() {
+is::IMeshSceneNode *Level::getMapNode()
+{
     return m_map_node;
 }

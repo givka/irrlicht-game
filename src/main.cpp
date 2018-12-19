@@ -11,6 +11,7 @@
 #include "ui/score.hpp"
 #include "item/loot.hpp"
 #include "item/upgrade.hpp"
+#include "item/sun.hpp"
 
 #define DEBUG_INFO
 
@@ -54,6 +55,8 @@ int main()
 
     Score souls(device, 0.90, 0.90, 1.0);
     Score waves(device, 0.090, 0.11, 1.5);
+
+    Sun sun(device);
 
     WaveManager waveMgr;
     waveMgr.loadJSON("data/waves.json");
@@ -106,6 +109,8 @@ int main()
         stam_upgrade.update(player, receiver);
         souls.update(player.getSoulsToShow());
         waves.update(waveMgr.getCurrentWave());
+        sun.update();
+
         gui->drawAll();
 
         driver->endScene();
