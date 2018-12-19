@@ -103,3 +103,7 @@ bool WaveManager::isCurrentWavePredetermined() {
     }
     return false;
 }
+
+void WaveManager::reset() {
+    m_current_wave = 0;
+}

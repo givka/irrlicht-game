@@ -43,6 +43,7 @@ class WaveManager
     void spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector); //todo:: model mgt system
     void incrementWaveId();
     bool isCurrentWavePredetermined();
+    void reset();
   private:
     int m_current_wave;
     std::vector<Wave> m_waves;

@@ -486,3 +486,12 @@ bool Enemy::isAtRange(Player &player)
     }
     return false;
 }
+
+void Enemy::removeNodes()
+{
+    m_node->remove();
+    m_node = 0;
+    m_state = DEAD;
+    m_health_bar->remove();
+    m_health_bar_bg->remove();
+}

@@ -23,9 +23,10 @@ class Upgrade
   public:
     Upgrade(irr::IrrlichtDevice *device, Player &player, UpgradeType, ic::vector3df position, int increment, int cost);
     void update(Player &player, EventReceiver &receiver);
-
+    void reset();
   private:
     int m_cost;
+    int m_original_cost;
     int m_timer;
     irr::IrrlichtDevice *m_device = m_device;
     irr::scene::IBillboardSceneNode *m_tootlip_bg;

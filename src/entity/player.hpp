@@ -53,6 +53,7 @@ class Player
     void addMaxStam(int increment);
     int getSoulsToShow();
     void enemyHitCallback();
+    void reset();
 
   private:
     const float MAX_FOV = 2.0;

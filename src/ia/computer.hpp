@@ -24,6 +24,7 @@ class Computer
     void update(Player &player);
     bool isWaveFinished();
     int getNumberOfEnemies();
+    void eraseAllEnemies();
 
   private:
     std::vector<Enemy> m_enemies;

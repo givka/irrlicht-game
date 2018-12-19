@@ -22,7 +22,6 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     m_node->setFOV(MIN_FOV);
 
     m_node->setPosition(ic::vector3df(0, 150, 0));
-
     m_sword.initialise(device, m_node);
 
     m_collision = smgr->createCollisionResponseAnimator(
@@ -355,4 +354,14 @@ void Player::addBloodScreen()
 void Player::enemyHitCallback()
 {
     addBloodScreen();
+}
+
+
+void Player::reset()
+{
+    m_max_health = 200;
+    m_max_stamina = 200;
+    m_health = m_max_health;
+    m_stamina = m_max_stamina;
+    m_node->setPosition(ic::vector3df(0, 150, 0));
 }

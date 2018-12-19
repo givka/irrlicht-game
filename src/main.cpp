@@ -91,6 +91,8 @@ int main()
 
     int current_enemy_count = 0;
     int wave_end_time = -1;
+
+    bool flag = false;
     while (device->run())
     {
         if(current_enemy_count != computer.getNumberOfEnemies())
@@ -99,16 +101,18 @@ int main()
             enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
             enemy_count_text->setText(enemy_count_string.c_str());
         }
-        else if(wave_end_time != -1)
+        else if(wave_end_time >= 0)
             enemy_count_text->setText(L"Next wave incoming");
 
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
         if (computer.isWaveFinished())
         {
+            std::cout << "wave finished" << std::endl;
                 if(wave_end_time == -1)
                     wave_end_time = device->getTimer()->getTime();
-                else if(wave_end_time < device->getTimer()->getTime() - 5000)
+                else if(wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 5000)
                 {
+                    std::cout << "respawning shit" << std::endl;
                     wave_end_time = -1;
                     waveMgr.incrementWaveId();
                     if(waveMgr.isCurrentWavePredetermined())
@@ -123,7 +127,7 @@ int main()
 
         player.update(receiver);
         computer.update(player);
-        smgr->drawAll();
+
         health_bar.update(player.getHealth());
         stamina_bar.update(player.getStamina());
         loot.update(player, receiver);
@@ -134,6 +138,7 @@ int main()
         sun.update();
         cursor.update();
 
+        smgr->drawAll();
         gui->drawAll();
 
         driver->endScene();
@@ -150,9 +155,18 @@ int main()
             lastFPS = fps;
         }
 
-        if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+        if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN] && !flag)
         {
-            waveGen.spawnWave(level, 0, computer, device, selector);
+            flag = true;
+            player.reset();
+            hp_upgrade.reset();
+            stam_upgrade.reset();
+            computer.eraseAllEnemies();
+            std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
+            wave_end_time = -2;
+            current_enemy_count = 0;
+            waveMgr.reset();
+            continue;
         }
     }
     device->drop();

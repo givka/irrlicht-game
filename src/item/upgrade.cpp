@@ -1,7 +1,7 @@
 #include "upgrade.hpp"
 
 Upgrade::Upgrade(irr::IrrlichtDevice *device, Player &player, UpgradeType type, ic::vector3df position, int increment, int cost)
-    : m_device(device), m_position(position), m_increment(increment), m_cost(cost), m_type(type)
+    : m_device(device), m_position(position), m_increment(increment), m_cost(cost), m_type(type), m_original_cost(cost)
 {
     switch(type)
     {
@@ -84,4 +84,8 @@ void Upgrade::update(Player &player, EventReceiver &receiver)
             addTooltip(player);
         }
     }
+}
+
+void Upgrade::reset() {
+    m_cost = m_original_cost;
 }

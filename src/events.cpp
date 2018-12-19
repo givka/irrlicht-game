@@ -10,6 +10,10 @@ namespace iv = irr::video;
 
 EventReceiver::EventReceiver()
 {
+    for(int i = 0; i < enum_state::END_ARRAY; i++)
+    {
+        m_states[i] = false;
+    }
 }
 
 bool EventReceiver::keyboard(const SEvent &event)

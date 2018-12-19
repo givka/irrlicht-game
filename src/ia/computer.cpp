@@ -53,3 +53,11 @@ bool Computer::isWaveFinished()
 int Computer::getNumberOfEnemies() {
     return (int) m_enemies.size();
 }
+
+void Computer::eraseAllEnemies() {
+    for(auto e : m_enemies)
+    {
+        e.removeNodes();
+    }
+    m_enemies.clear();
+}
