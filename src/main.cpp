@@ -219,7 +219,7 @@ int main()
                     fader->setEnabled(false);
                     restart_text->setVisible(true);
                 }
-                if (fade_out_time + 2000 < device->getTimer()->getTime() &&
+                if (fade_out_time + 4000 < device->getTimer()->getTime() &&
                     receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
                 {
                     state_init_flag = false;
@@ -305,19 +305,6 @@ int main()
 
             device->setWindowCaption(str.c_str());
             lastFPS = fps;
-        }
-
-        if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN] && !flag)
-        {
-            flag = true;
-            player.reset();
-            hp_upgrade.reset();
-            stam_upgrade.reset();
-            computer.eraseAllEnemies();
-            wave_end_time = -2;
-            current_enemy_count = 0;
-            waveMgr.reset();
-            continue;
         }
     }
     device->drop();

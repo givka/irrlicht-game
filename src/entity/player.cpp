@@ -158,11 +158,6 @@ void Player::updatePosition(EventReceiver &receiver)
             m_stamina_timer = m_device->getTimer()->getTime();
         }
     }
-    if (states[EventReceiver::KEY_DEBUG_SWORD_EFFECT])
-    {
-        Sword::enchant m_current_enchant = static_cast<Sword::enchant>(rand() % Sword::ARRAY_END);
-        m_sword.setEnchantment(m_current_enchant);
-    }
 
     m_node->setPosition(position);
     m_sword.updatePosition();
