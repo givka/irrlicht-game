@@ -58,7 +58,7 @@ void Sun::update()
     // strange behaviour, the interpolation works only between 1.0 and 0.99
     if (m_interpolate < 0.99 || m_sun_color.color == m_color_to_go.color)
     {
-        m_color_to_go = m_colors[rand() % 9];
+        m_color_to_go = m_colors[rand() % 8];
         m_interpolate = 1.0;
     }
 

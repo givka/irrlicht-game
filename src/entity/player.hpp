@@ -72,6 +72,7 @@ class Player
 
     int m_health;
     int m_stamina;
+    int m_stamina_timer;
     int m_max_stamina;
     int m_max_health;
 

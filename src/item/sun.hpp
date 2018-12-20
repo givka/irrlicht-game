@@ -31,7 +31,7 @@ class Sun
     iv::SColor m_color_to_go;
 
     // maybe just randomize m_color_to_go ?
-    iv::SColor m_colors[8] = {
+    iv::SColor m_colors[7] = {
         iv::SColor(255, 255, 255, 255),
         iv::SColor(255, 255, 255, 0),
         iv::SColor(255, 255, 0, 255),
@@ -39,7 +39,6 @@ class Sun
         iv::SColor(255, 0, 255, 255),
         iv::SColor(255, 0, 255, 0),
         iv::SColor(255, 0, 0, 255),
-        iv::SColor(255, 0, 0, 0),
     };
 };
 
