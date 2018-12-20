@@ -13,7 +13,7 @@ class Cursor
   public:
     Cursor(irr::IrrlichtDevice *device);
     void update();
-
+    void setVisible(bool);
   private:
     irr::IrrlichtDevice *m_device;
     ig::IGUIImage *m_image = 0;

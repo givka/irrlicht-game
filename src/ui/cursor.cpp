@@ -24,3 +24,7 @@ void Cursor::update()
     m_image->setScaleImage(true);
     m_image->setColor(iv::SColor(123, 255, 0, 0));
 }
+
+void Cursor::setVisible(bool b) {
+    m_image->setVisible(b);
+}

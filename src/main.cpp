@@ -31,7 +31,6 @@ int const WIDTH = HEIGHT * 16.0 / 9.0;
 typedef enum GameState
 {
     MENU_SCREEN,
-    HELP_SCREEN,
     GAME,
     END_SCREEN
 } GameState;
@@ -46,8 +45,6 @@ void initState(GameState state)
         case MENU_SCREEN:
             std::cout << "init menu" << std::endl;
             break;
-        case HELP_SCREEN:
-            std::cout << "init help" << std::endl;
             break;
         case END_SCREEN:
             std::cout << "init end" << std::endl;
@@ -128,14 +125,18 @@ int main()
     bool state_init_flag = false;
     auto start_text = gui->addStaticText(L"Press [E] to start",
                                          ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
-    auto help_text = gui->addStaticText(L"Press [R] for help",
-                                        ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
+    auto help_text = gui->addStaticText(L"Press [R] to display help",
+                                        ic::rect<irr::s32>(10, HEIGHT - 60, WIDTH, HEIGHT));
     auto title_text = gui->addStaticText(L"NOM DU JEU",
                                          ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
     auto game_over_text = gui->addStaticText(L"YOU DIED",
                                              ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
     auto restart_text = gui->addStaticText(L"Press [R] to restart",
                                          ic::rect<irr::s32>(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT));
+    auto help_screen_text = gui->addStaticText(L"Waves of monsters will appear !\nDefeat them all to progress\nYou can upgrade your character ([E] to buy)\n[Z, Q, S, D] to move\n[Left Click] to Attack\n[Right Click] to parry\n",
+                                         ic::rect<irr::s32>(0, 0, WIDTH, HEIGHT));
+    help_screen_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+    help_screen_text->setVisible(false);
 
     restart_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
     restart_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - restart_text->getTextWidth() / 2, HEIGHT/2 + 70, WIDTH, HEIGHT));
@@ -168,33 +169,21 @@ int main()
                     title_text->setVisible(false);
                     help_text->setVisible(false);
                     enemy_count_text->setVisible(true);
+                    help_screen_text->setVisible(false);
                     initState(GAME);
                     game_state = GAME;
                     continue;
                 } else if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN]) {
-                    initState(HELP_SCREEN);
-                    game_state = HELP_SCREEN;
-                    start_text->setVisible(false);
-                    title_text->setVisible(false);
-                    help_text->setVisible(false);
-                    state_init_flag = true;
+                    help_screen_text->setVisible(true);
                 }
                 break;
-            }
-            case HELP_SCREEN:
-                driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
-                                    ic::rect<s32>(0, 0, 1920, 1007));
-                if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
-                {
-                    initState(MENU_SCREEN);
-                    game_state = MENU_SCREEN;
-                }
-                break;
+            };
             case END_SCREEN: {
                 if(!state_init_flag)
                 {
                     waves.setVisible(false);
                     souls.setVisible(false);
+                    cursor.setVisible(false);
                     fader->fadeOut(4000);
                     fade_out_time = device->getTimer()->getTime();
                     state_init_flag = true;
@@ -212,6 +201,7 @@ int main()
                     state_init_flag = false;
                     game_over_text->setVisible(false);
                     restart_text->setVisible(false);
+                    enemy_count_text->setVisible(true);
                     initState(GAME);
                     game_state = GAME;
                     flag = true;
@@ -225,6 +215,7 @@ int main()
                     waveMgr.reset();
                     waves.setVisible(true);
                     souls.setVisible(true);
+                    cursor.setVisible(true);
                     continue;
                 }
                 break;
