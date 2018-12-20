@@ -28,6 +28,34 @@ using namespace std;
 int const HEIGHT = 720;
 int const WIDTH = HEIGHT * 16.0 / 9.0;
 
+typedef enum GameState
+{
+    MENU_SCREEN,
+    HELP_SCREEN,
+    GAME,
+    END_SCREEN
+} GameState;
+
+void initState(GameState state)
+{
+    switch (state)
+    {
+    case GAME:
+        std::cout << "init game" << std::endl;
+        break;
+    case MENU_SCREEN:
+        std::cout << "init menu" << std::endl;
+        break;
+    case HELP_SCREEN:
+        std::cout << "init help" << std::endl;
+        break;
+    case END_SCREEN:
+        std::cout << "init end" << std::endl;
+        break;
+    default:
+        break;
+    }
+}
 int main()
 {
     EventReceiver receiver;
@@ -93,51 +121,98 @@ int main()
     int wave_end_time = -1;
 
     bool flag = false;
+
+    GameState game_state = MENU_SCREEN;
+    initState(game_state);
     while (device->run())
     {
-        if (current_enemy_count != computer.getNumberOfEnemies())
+        switch (game_state)
         {
-            current_enemy_count = computer.getNumberOfEnemies();
-            enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
-            enemy_count_text->setText(enemy_count_string.c_str());
-        }
-        else if (wave_end_time >= 0)
-            enemy_count_text->setText(L"Next wave incoming");
-
-        //check for end of wave, start next wave //TODO: add score, pause between waves, etc
-        if (computer.isWaveFinished())
-        {
-            if (wave_end_time == -1)
-                wave_end_time = device->getTimer()->getTime();
-            else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+        case MENU_SCREEN:
+            if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON])
             {
-                wave_end_time = -1;
-                waveMgr.incrementWaveId();
-                if (waveMgr.isCurrentWavePredetermined())
-                    waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
-                else
-                    waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+                initState(GAME);
+                game_state = GAME;
+                continue;
             }
+            else if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+            {
+                initState(HELP_SCREEN);
+                game_state = HELP_SCREEN;
+            }
+            break;
+        case HELP_SCREEN:
+            if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+            {
+                initState(MENU_SCREEN);
+                game_state = MENU_SCREEN;
+            }
+            break;
+        case END_SCREEN:
+            if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+            {
+                initState(GAME);
+                game_state = GAME;
+                flag = true;
+                player.reset();
+                hp_upgrade.reset();
+                stam_upgrade.reset();
+                computer.eraseAllEnemies();
+                std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
+                wave_end_time = -2;
+                current_enemy_count = 0;
+                waveMgr.reset();
+                continue;
+            }
+            break;
+        case GAME:
+            if (current_enemy_count != computer.getNumberOfEnemies())
+            {
+                current_enemy_count = computer.getNumberOfEnemies();
+                enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
+                enemy_count_text->setText(enemy_count_string.c_str());
+            }
+            else if (wave_end_time >= 0)
+                enemy_count_text->setText(L"Next wave incoming");
+
+            //check for end of wave, start next wave //TODO: add score, pause between waves, etc
+            if (computer.isWaveFinished())
+            {
+                if (wave_end_time == -1)
+                    wave_end_time = device->getTimer()->getTime();
+                else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+                {
+                    wave_end_time = -1;
+                    waveMgr.incrementWaveId();
+                    if (waveMgr.isCurrentWavePredetermined())
+                        waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                    else
+                        waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+                }
+            }
+
+            driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
+
+            player.update(receiver);
+            computer.update(player);
+
+            smgr->drawAll();
+            health_bar.update(player.getHealth(), player.getMaxHealth());
+            stamina_bar.update(player.getStamina(), player.getMaxStamina());
+            loot.update(player, receiver);
+            hp_upgrade.update(player, receiver);
+            stam_upgrade.update(player, receiver);
+            souls.update(player.getSoulsToShow());
+            waves.update(waveMgr.getCurrentWave());
+            sun.update();
+            cursor.update();
+            if (player.getHealth() <= 0)
+            {
+                initState(END_SCREEN);
+                game_state = END_SCREEN;
+            }
+            break;
         }
-
-        driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
-
-        player.update(receiver);
-        computer.update(player);
-
-        loot.update(player, receiver);
-        hp_upgrade.update(player, receiver);
-        stam_upgrade.update(player, receiver);
-        souls.update(player.getSoulsToShow());
-        waves.update(waveMgr.getCurrentWave());
-        sun.update();
-        cursor.update();
-
-        smgr->drawAll();
-
-        health_bar.update(player.getHealth(), player.getMaxHealth());
-        stamina_bar.update(player.getStamina(), player.getMaxStamina());
-
         gui->drawAll();
 
         driver->endScene();
