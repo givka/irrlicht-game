@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.6)
 PROJECT(irrlicht-game)
 
 #Set default build type to Debug
-SET(DEFAULT_BUILD_TYPE "Debug")
+SET(DEFAULT_BUILD_TYPE "Release")
 SET(CMAKE_BUILD_TYPE "${DEFAULT_BUILD_TYPE}" CACHE
       STRING "Choose the type of build." FORCE)
 
