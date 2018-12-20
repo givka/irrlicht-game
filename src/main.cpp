@@ -9,7 +9,6 @@
 #include "ia/WaveManager.h"
 #include "ui/playerbar.hpp"
 #include "ui/score.hpp"
-#include "item/loot.hpp"
 #include "item/upgrade.hpp"
 #include "item/sun.hpp"
 #include "ia/waveGenerator.hpp"
@@ -92,9 +91,9 @@ int main()
     WaveGenerator waveGen;
     waveMgr.loadJSON("data/waves.json");
 
-    Loot loot(device, player);
-    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(352, 125, -86), 10, 50);
-    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(-119, 125, -141), 10, 50);
+    Upgrade hp_upgrade(device, HEALTH, ic::vector3df(352, 125, -86), 10, 50, player);
+    Upgrade damage_upgrade(device, SWORD, ic::vector3df(102, 125, -108), 10, 10, player);
+    Upgrade stam_upgrade(device, STAMINA, ic::vector3df(-119, 125, -141), 10, 50, player);
 
     // add enemy
     Computer computer;
@@ -199,7 +198,7 @@ int main()
             smgr->drawAll();
             health_bar.update(player.getHealth(), player.getMaxHealth());
             stamina_bar.update(player.getStamina(), player.getMaxStamina());
-            loot.update(player, receiver);
+            damage_upgrade.update(player, receiver);
             hp_upgrade.update(player, receiver);
             stam_upgrade.update(player, receiver);
             souls.update(player.getSoulsToShow());
