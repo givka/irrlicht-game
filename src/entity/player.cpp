@@ -21,12 +21,12 @@ void Player::initialise(irr::IrrlichtDevice *device, is::ITriangleSelector *sele
     device->getCursorControl()->setVisible(false);
     m_node->setFOV(MIN_FOV);
 
-    m_node->setPosition(ic::vector3df(0, 150, 0));
+    m_node->setPosition(ic::vector3df(0, 180, 0));
     m_sword.initialise(device, m_node);
 
     m_collision = smgr->createCollisionResponseAnimator(
         selector, m_node, ic::vector3df(30, 30, 30),
-        ic::vector3df(0, -10, 0), ic::vector3df(0, 15, 0));
+        ic::vector3df(0, -10, 0), ic::vector3df(0, 34, 0));
     m_node->addAnimator(m_collision);
     // collision->drop();
 }
@@ -363,7 +363,7 @@ void Player::reset()
     m_max_stamina = 200;
     m_health = m_max_health;
     m_stamina = m_max_stamina;
-    m_node->setPosition(ic::vector3df(0, 150, 0));
+    m_node->setPosition(ic::vector3df(0, 180, 0));
     setSword(Sword());
     m_souls = 0;
     m_souls_to_add = 0;

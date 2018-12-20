@@ -37,7 +37,9 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
     m_node->setPosition(core::vector3df(X, 0, Z));
     m_node->setScale(core::vector3df(m_scale, m_scale, m_scale));
 
-    ic::vector3df boxMaxEdge = m_node->getTransformedBoundingBox().MaxEdge;
+    ic::vector3df edges[8];
+    m_node->getTransformedBoundingBox().getEdges(edges);
+    auto boxMaxEdge = m_node->getTransformedBoundingBox().MaxEdge;
     ic::vector3df boxCenter = m_node->getTransformedBoundingBox().getCenter();
     ic::vector3df ellipseRadius = boxMaxEdge - boxCenter;
 
@@ -83,7 +85,7 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
         m_node->setMD2Animation(is::EMAT_PAIN_A);
         m_node->setLoopMode(false);
         m_node->setCurrentFrame(m_node->getStartFrame());
-        m_knockback_dir = m_node->getPosition() - player.getPosition();
+        m_knockback_dir = (m_node->getPosition() - player.getPosition())/ic::vector3df(1.f, 2.0f, 1.f);
         break;
     case DYING:
         m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
