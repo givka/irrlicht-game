@@ -300,7 +300,7 @@ void Enemy::checkEnchantment(Player &player)
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
     case Sword::VAMPIRIC:
-        player.addSoulsEffect({0.1 * player.getSword().getAttack(), Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
+        player.addSoulsEffect({(int) (0.1 * player.getSword().getAttack()), Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
         break;
     case Sword::POISON:
         setEffect(player, ic::vector3df(0, 0.2f, 0));

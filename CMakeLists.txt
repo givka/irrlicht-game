@@ -21,5 +21,5 @@ ADD_EXECUTABLE(irrlicht-game ${SOURCES} ${HEADERS})
 TARGET_LINK_LIBRARIES(irrlicht-game	libIrrlicht.so)
 
 #build flags
-SET(CMAKE_CXX_FLAGS "-O3 -std=c++11 -Wall -Wextra -Wno-unused-parameter")
+SET(CMAKE_CXX_FLAGS "-O3 -std=c++11")
 SET(CMAKE_CXX_FLAGS_DEBUG  "-g")
