@@ -107,12 +107,10 @@ int main()
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
         if (computer.isWaveFinished())
         {
-            std::cout << "wave finished" << std::endl;
                 if(wave_end_time == -1)
                     wave_end_time = device->getTimer()->getTime();
-                else if(wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 5000)
+                else if(wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
                 {
-                    std::cout << "respawning shit" << std::endl;
                     wave_end_time = -1;
                     waveMgr.incrementWaveId();
                     if(waveMgr.isCurrentWavePredetermined())
