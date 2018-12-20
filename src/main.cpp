@@ -24,8 +24,8 @@ namespace iv = irr::video;
 
 using namespace std;
 
-int const HEIGHT = 720;
-int const WIDTH = HEIGHT * 16.0 / 9.0;
+int HEIGHT = 720;
+int WIDTH = HEIGHT * 16.0 / 9.0;
 
 typedef enum GameState
 {
@@ -38,18 +38,18 @@ void initState(GameState state)
 {
     switch (state)
     {
-    case GAME:
-        std::cout << "init game" << std::endl;
-        break;
-    case MENU_SCREEN:
-        std::cout << "init menu" << std::endl;
-        break;
-        break;
-    case END_SCREEN:
-        std::cout << "init end" << std::endl;
-        break;
-    default:
-        break;
+        case GAME:
+            std::cout << "init game" << std::endl;
+            break;
+        case MENU_SCREEN:
+            std::cout << "init menu" << std::endl;
+            break;
+            break;
+        case END_SCREEN:
+            std::cout << "init end" << std::endl;
+            break;
+        default:
+            break;
     }
 }
 int main()
@@ -136,145 +136,164 @@ int main()
                                                ic::rect<irr::s32>(0, 0, WIDTH, HEIGHT));
     help_screen_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
     help_screen_text->setVisible(false);
-
     restart_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-    restart_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - restart_text->getTextWidth() / 2, HEIGHT / 2 + 70, WIDTH, HEIGHT));
     restart_text->setVisible(false);
-    game_over_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
     game_over_text->setOverrideColor(iv::SColor(255, 255, 0, 0));
     game_over_text->setVisible(false);
+
+
+    start_text->setRelativePosition(ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
+    help_text->setRelativePosition(ic::rect<irr::s32>(10, HEIGHT - 60, WIDTH, HEIGHT));
+    help_screen_text->setRelativePosition(ic::rect<irr::s32>(0, 0, WIDTH, HEIGHT));
+    restart_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - restart_text->getTextWidth() / 2, HEIGHT / 2 + 70, WIDTH, HEIGHT));
+    game_over_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
+    title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
 
     auto fader = gui->addInOutFader();
     int fade_out_time = 0;
 
     while (device->run())
     {
+        if(WIDTH != device->getVideoDriver()->getScreenSize().Width || HEIGHT != device->getVideoDriver()->getScreenSize().Height)
+        {
+            state_init_flag = false;
+            WIDTH = device->getVideoDriver()->getScreenSize().Width;
+            HEIGHT = device->getVideoDriver()->getScreenSize().Height;
+
+            start_text->setRelativePosition(ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
+            help_text->setRelativePosition(ic::rect<irr::s32>(10, HEIGHT - 60, WIDTH, HEIGHT));
+            help_screen_text->setRelativePosition(ic::rect<irr::s32>(0, 0, WIDTH, HEIGHT));
+            restart_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - restart_text->getTextWidth() / 2, HEIGHT / 2 + 70, WIDTH, HEIGHT));
+            game_over_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
+            title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
+            enemy_count_text->setRelativePosition(ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
+            fader->setRelativePosition(ic::rect<s32>(0, 0, WIDTH, HEIGHT));
+        }
         switch (game_state)
         {
-        case MENU_SCREEN:
-        {
-            if (!state_init_flag)
+            case MENU_SCREEN:
             {
-                enemy_count_text->setVisible(false);
-                driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
-                                    ic::rect<s32>(0, 0, 1920, 1007));
-                start_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                help_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                title_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT / 2, WIDTH, HEIGHT));
-                state_init_flag = true;
-            }
-            if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON])
-            {
-                state_init_flag = false;
-                start_text->setVisible(false);
-                title_text->setVisible(false);
-                help_text->setVisible(false);
-                enemy_count_text->setVisible(true);
-                help_screen_text->setVisible(false);
-                initState(GAME);
-                game_state = GAME;
-                continue;
-            }
-            else if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
-            {
-                help_screen_text->setVisible(true);
-            }
-            break;
-        };
-        case END_SCREEN:
-        {
-            if (!state_init_flag)
-            {
-                waves.setVisible(false);
-                souls.setVisible(false);
-                cursor.setVisible(false);
-                fader->fadeOut(4000);
-                fader->setVisible(true);
-                fade_out_time = device->getTimer()->getTime();
-                state_init_flag = true;
-                enemy_count_text->setVisible(false);
-            }
-            game_over_text->setVisible(true);
-            if (fade_out_time + 4000 < device->getTimer()->getTime())
-            {
-                fader->setVisible(false);
-                driver->beginScene(true, true, iv::SColor(255, 0, 0, 0));
-                fader->setEnabled(false);
-                restart_text->setVisible(true);
-            }
-            if (fade_out_time + 2000 < device->getTimer()->getTime() &&
-                receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
-            {
-                state_init_flag = false;
-                game_over_text->setVisible(false);
-                restart_text->setVisible(false);
-                enemy_count_text->setVisible(true);
-                initState(GAME);
-                game_state = GAME;
-                flag = true;
-                player.reset();
-                hp_upgrade.reset();
-                stam_upgrade.reset();
-                computer.eraseAllEnemies();
-                std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
-                wave_end_time = -2;
-                current_enemy_count = 0;
-                waveMgr.reset();
-                waves.setVisible(true);
-                souls.setVisible(true);
-                cursor.setVisible(true);
-                continue;
-            }
-            break;
-        }
-        case GAME:
-            if (current_enemy_count != computer.getNumberOfEnemies())
-            {
-                current_enemy_count = computer.getNumberOfEnemies();
-                enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
-                enemy_count_text->setText(enemy_count_string.c_str());
-            }
-            else if (wave_end_time >= 0)
-                enemy_count_text->setText(L"Next wave incoming");
-
-            //check for end of wave, start next wave //TODO: add score, pause between waves, etc
-            if (computer.isWaveFinished())
-            {
-                if (wave_end_time == -1)
-                    wave_end_time = device->getTimer()->getTime();
-                else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+                if (!state_init_flag)
                 {
-                    wave_end_time = -1;
-                    waveMgr.incrementWaveId();
-                    if (waveMgr.isCurrentWavePredetermined())
-                        waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
-                    else
-                        waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+                    enemy_count_text->setVisible(false);
+                    driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
+                                        ic::rect<s32>(0, 0, 1920, 1007));
+                    start_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    help_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    title_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    state_init_flag = true;
                 }
-            }
-
-            driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
-
-            player.update(receiver);
-            computer.update(player);
-
-            smgr->drawAll();
-            health_bar.update(player.getHealth(), player.getMaxHealth());
-            stamina_bar.update(player.getStamina(), player.getMaxStamina());
-            damage_upgrade.update(player, receiver);
-            hp_upgrade.update(player, receiver);
-            stam_upgrade.update(player, receiver);
-            souls.update(player.getSoulsToShow());
-            waves.update(waveMgr.getCurrentWave());
-            sun.update();
-            cursor.update();
-            if (player.getHealth() <= 0 || player.getPosition().Y < -50)
+                if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON])
+                {
+                    state_init_flag = false;
+                    start_text->setVisible(false);
+                    title_text->setVisible(false);
+                    help_text->setVisible(false);
+                    enemy_count_text->setVisible(true);
+                    help_screen_text->setVisible(false);
+                    initState(GAME);
+                    game_state = GAME;
+                    continue;
+                }
+                else if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+                {
+                    help_screen_text->setVisible(true);
+                }
+                break;
+            };
+            case END_SCREEN:
             {
-                initState(END_SCREEN);
-                game_state = END_SCREEN;
+                if (!state_init_flag)
+                {
+                    waves.setVisible(false);
+                    souls.setVisible(false);
+                    cursor.setVisible(false);
+                    fader->fadeOut(4000);
+                    fader->setVisible(true);
+                    fade_out_time = device->getTimer()->getTime();
+                    state_init_flag = true;
+                    enemy_count_text->setVisible(false);
+                }
+                game_over_text->setVisible(true);
+                if (fade_out_time + 4000 < device->getTimer()->getTime())
+                {
+                    fader->setVisible(false);
+                    driver->beginScene(true, true, iv::SColor(255, 0, 0, 0));
+                    fader->setEnabled(false);
+                    restart_text->setVisible(true);
+                }
+                if (fade_out_time + 2000 < device->getTimer()->getTime() &&
+                    receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+                {
+                    state_init_flag = false;
+                    game_over_text->setVisible(false);
+                    restart_text->setVisible(false);
+                    enemy_count_text->setVisible(true);
+                    initState(GAME);
+                    game_state = GAME;
+                    flag = true;
+                    player.reset();
+                    hp_upgrade.reset();
+                    stam_upgrade.reset();
+                    computer.eraseAllEnemies();
+                    std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
+                    wave_end_time = -2;
+                    current_enemy_count = 0;
+                    waveMgr.reset();
+                    waves.setVisible(true);
+                    souls.setVisible(true);
+                    cursor.setVisible(true);
+                    continue;
+                }
+                break;
             }
-            break;
+            case GAME:
+                if (current_enemy_count != computer.getNumberOfEnemies())
+                {
+                    current_enemy_count = computer.getNumberOfEnemies();
+                    enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
+                    enemy_count_text->setText(enemy_count_string.c_str());
+                }
+                else if (wave_end_time >= 0)
+                    enemy_count_text->setText(L"Next wave incoming");
+
+                //check for end of wave, start next wave //TODO: add score, pause between waves, etc
+                if (computer.isWaveFinished())
+                {
+                    if (wave_end_time == -1)
+                        wave_end_time = device->getTimer()->getTime();
+                    else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+                    {
+                        wave_end_time = -1;
+                        waveMgr.incrementWaveId();
+                        if (waveMgr.isCurrentWavePredetermined())
+                            waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                        else
+                            waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+                    }
+                }
+
+                driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
+
+                player.update(receiver);
+                computer.update(player);
+
+                smgr->drawAll();
+                health_bar.update(player.getHealth(), player.getMaxHealth());
+                stamina_bar.update(player.getStamina(), player.getMaxStamina());
+                damage_upgrade.update(player, receiver);
+                hp_upgrade.update(player, receiver);
+                stam_upgrade.update(player, receiver);
+                souls.update(player.getSoulsToShow());
+                waves.update(waveMgr.getCurrentWave());
+                sun.update();
+                cursor.update();
+                if (player.getHealth() <= 0 || player.getPosition().Y < -50)
+                {
+                    initState(END_SCREEN);
+                    game_state = END_SCREEN;
+                }
+                break;
         }
         gui->drawAll();
 
