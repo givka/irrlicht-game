@@ -378,6 +378,7 @@ void Player::reset()
     m_max_stamina = 200;
     m_health = m_max_health;
     m_stamina = m_max_stamina;
+    goToInitPosition();
     m_node->setPosition(ic::vector3df(0, 170, 0));
     setSword(Sword());
     m_souls = 0;
@@ -404,4 +405,12 @@ int Player::getMaxHealth()
 int Player::getMaxStamina()
 {
     return m_max_stamina;
+}
+
+void Player::goToInitPosition()
+{
+
+    m_node->setPosition(ic::vector3df(0, 170, 0));
+    m_node->setRotation(ic::vector3df(0, 0, 0));
+    m_collision->setTargetNode(m_node);
 }

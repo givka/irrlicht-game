@@ -100,5 +100,7 @@ class Player
         ig::IGUIImage *image;
     };
     std::vector<BloodScreen> m_blood_screens;
+
+    void goToInitPosition();
 };
 #endif
