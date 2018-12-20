@@ -54,6 +54,8 @@ class Player
     int getSoulsToShow();
     void enemyHitCallback();
     void reset();
+    int getMaxHealth();
+    int getMaxStamina();
 
   private:
     const float MAX_FOV = 2.0;

@@ -267,6 +267,7 @@ void Player::addSoulsEffect(SoulsEffect souls_effect)
 void Player::addMaxStam(int increment)
 {
     m_max_stamina += increment;
+    m_stamina += increment;
 }
 
 void Player::updateSoulsEffects()
@@ -388,4 +389,14 @@ void Player::reset()
         bs.image->remove();
     }
     m_blood_screens.clear();
+}
+
+int Player::getMaxHealth()
+{
+    return m_max_health;
+}
+
+int Player::getMaxStamina()
+{
+    return m_max_stamina;
 }

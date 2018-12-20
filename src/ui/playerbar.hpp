@@ -2,6 +2,7 @@
 #define PLAYERBAR_H
 
 #include "irrlicht.h"
+#include "../entity/player.hpp"
 
 namespace ic = irr::core;
 namespace is = irr::scene;
@@ -11,11 +12,7 @@ class PlayerBar
 {
   public:
     PlayerBar(irr::IrrlichtDevice *device, float x0, float y0, float x1, float y1, int max, iv::SColorf fg_color);
-    void draw();
-    void setMaxVal(int max_val);
-    void update(int val);
-    void setBGRect(ic::recti bg_rect);
-    void setFGColor(iv::SColorf color);
+    void update(int val, int max_val);
 
   private:
     float m_x0;
@@ -23,6 +20,7 @@ class PlayerBar
     float m_x1;
     float m_y1;
     int m_max_val;
+    int m_origin_max_val;
     irr::IrrlichtDevice *m_device;
     float m_percentage;
     ic::recti m_bg_rect;

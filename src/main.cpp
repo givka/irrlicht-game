@@ -95,37 +95,35 @@ int main()
     bool flag = false;
     while (device->run())
     {
-        if(current_enemy_count != computer.getNumberOfEnemies())
+        if (current_enemy_count != computer.getNumberOfEnemies())
         {
             current_enemy_count = computer.getNumberOfEnemies();
             enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
             enemy_count_text->setText(enemy_count_string.c_str());
         }
-        else if(wave_end_time >= 0)
+        else if (wave_end_time >= 0)
             enemy_count_text->setText(L"Next wave incoming");
 
         //check for end of wave, start next wave //TODO: add score, pause between waves, etc
         if (computer.isWaveFinished())
         {
-                if(wave_end_time == -1)
-                    wave_end_time = device->getTimer()->getTime();
-                else if(wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
-                {
-                    wave_end_time = -1;
-                    waveMgr.incrementWaveId();
-                    if(waveMgr.isCurrentWavePredetermined())
-                        waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
-                    else
-                        waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
-                }
-
+            if (wave_end_time == -1)
+                wave_end_time = device->getTimer()->getTime();
+            else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+            {
+                wave_end_time = -1;
+                waveMgr.incrementWaveId();
+                if (waveMgr.isCurrentWavePredetermined())
+                    waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                else
+                    waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
+            }
         }
 
         driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
 
         player.update(receiver);
         computer.update(player);
-
 
         loot.update(player, receiver);
         hp_upgrade.update(player, receiver);
@@ -137,8 +135,8 @@ int main()
 
         smgr->drawAll();
 
-        health_bar.update(player.getHealth());
-        stamina_bar.update(player.getStamina());
+        health_bar.update(player.getHealth(), player.getMaxHealth());
+        stamina_bar.update(player.getStamina(), player.getMaxStamina());
 
         gui->drawAll();
 
