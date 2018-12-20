@@ -12,14 +12,14 @@ Enemy::Enemy()
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
-    m_souls = (int)(m_scale * (20 + rand() % 20));
+    m_souls = m_health;
 }
 Enemy::Enemy(float health, int damage, float scale, float speed, int model_id, int swing_timer)
     : m_health(health), m_damage(damage), m_scale(scale), m_speed(speed), m_already_hit_player(false), m_swing_timer(swing_timer), m_model_id(model_id)
 {
     m_last_swing_time = 0;
     m_max_health = m_health;
-    m_souls = (int)(m_scale * (20 + rand() % 20));
+    m_souls = m_health;
 }
 
 void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv::ITexture *texture, is::ITriangleSelector *selector, int enemy_id)
@@ -106,7 +106,7 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
 }
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
-    if(m_node->getPosition().Y < 0)
+    if (m_node->getPosition().Y < 0)
     {
         auto pos = m_node->getPosition();
         pos.Y = 150;
@@ -490,7 +490,7 @@ bool Enemy::isAlive()
 bool Enemy::isAtRange(Player &player)
 {
     float dist = player.getPosition().getDistanceFrom(m_node->getPosition());
-    if (dist < 55 * m_scale/2) //todo: bounding box stuff
+    if (dist < 55 * m_scale / 2) //todo: bounding box stuff
     {
         return true;
     }
