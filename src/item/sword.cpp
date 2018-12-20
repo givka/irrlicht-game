@@ -59,8 +59,6 @@ void Sword::setEnchantment(enchant new_enchantment)
 
 void Sword::setAttack()
 {
-    if (m_is_attacking)
-        return;
     m_is_blocking = false;
     m_is_attacking = true;
     m_sword_going_down = true;

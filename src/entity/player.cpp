@@ -146,7 +146,12 @@ void Player::updatePosition(EventReceiver &receiver)
     }
     if (states[EventReceiver::KEY_ATTACK])
     {
-        m_sword.setAttack();
+        if (m_stamina > 40 && !m_sword.getIsAttacking())
+        {
+            m_sword.setAttack();
+            m_stamina -= 40;
+            m_stamina_timer = m_device->getTimer()->getTime();
+        }
     }
     if (states[EventReceiver::KEY_DEBUG_SWORD_EFFECT])
     {
@@ -158,9 +163,14 @@ void Player::updatePosition(EventReceiver &receiver)
     m_sword.updatePosition();
 
     if (m_blocking)
+    {
         m_stamina -= 2;
-    else
+        m_stamina_timer = m_device->getTimer()->getTime();
+    }
+    else if (m_device->getTimer()->getTime() - m_stamina_timer > 1000)
+    {
         m_stamina += 1;
+    }
 
     if (m_stamina <= 0)
     {
@@ -356,7 +366,6 @@ void Player::enemyHitCallback()
     addBloodScreen();
 }
 
-
 void Player::reset()
 {
     m_max_health = 200;
@@ -368,13 +377,13 @@ void Player::reset()
     m_souls = 0;
     m_souls_to_add = 0;
     m_souls_to_show = 0;
-    for(auto se : m_souls_effects)
+    for (auto se : m_souls_effects)
     {
         se.node->remove();
     }
     m_souls_effects.clear();
 
-    for(auto bs : m_blood_screens)
+    for (auto bs : m_blood_screens)
     {
         bs.image->remove();
     }
