@@ -39,14 +39,11 @@ void initState(GameState state)
     switch (state)
     {
         case GAME:
-            std::cout << "init game" << std::endl;
             break;
         case MENU_SCREEN:
-            std::cout << "init menu" << std::endl;
             break;
             break;
         case END_SCREEN:
-            std::cout << "init end" << std::endl;
             break;
         default:
             break;
@@ -236,7 +233,6 @@ int main()
                     hp_upgrade.reset();
                     stam_upgrade.reset();
                     computer.eraseAllEnemies();
-                    std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
                     wave_end_time = -2;
                     current_enemy_count = 0;
                     waveMgr.reset();
@@ -318,7 +314,6 @@ int main()
             hp_upgrade.reset();
             stam_upgrade.reset();
             computer.eraseAllEnemies();
-            std::cout << "remaining: " << computer.getNumberOfEnemies() << std::endl;
             wave_end_time = -2;
             current_enemy_count = 0;
             waveMgr.reset();

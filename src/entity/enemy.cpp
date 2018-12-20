@@ -246,7 +246,6 @@ void Enemy::attackPlayer(Player &player)
         if (player.isBlocking())
         {
             player.setStunAlpha(255);
-            std::cout << "blocked" << std::endl; //todo: particle effect
         }
         else
         {
@@ -363,8 +362,6 @@ void Enemy::removeHealth(Player &player, const float damage, damage_type dt)
 {
     m_health -= damage;
     m_last_hit_type = dt;
-
-    std::cout << "current model hit: " << m_model_id << std::endl;
 
     float health_bar_size = m_health_bar_size * m_health / m_max_health;
     m_health_bar->setSize(ic::dimension2df(health_bar_size, 1));

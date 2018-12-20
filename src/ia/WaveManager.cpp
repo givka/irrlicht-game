@@ -61,7 +61,6 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
             break;
         wave_index++;
     }
-    std::cout << "index " << wave_index << std::endl;
     for (auto spawn : m_waves[wave_index].spawns) //assumes ids start at 0 and waves are sorted
     {
         int model_id = spawn.model_id;
