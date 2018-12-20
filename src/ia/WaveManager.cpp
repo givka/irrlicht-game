@@ -67,7 +67,7 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
         int model_id = spawn.model_id;
         // if (model_id < 0)
         // int model_id = rand() % 31;
-        std::string path_text = "data/models/" + std::to_string(model_id) + ".pcx";
+        std::string path_text = "data/validated_models/" + std::to_string(model_id) + ".pcx";
         std::string path_model = "data/models/" + std::to_string(model_id) + ".md2";
 
         is::IAnimatedMesh *mesh = device->getSceneManager()->getMesh(std::wstring(path_model.begin(), path_model.end()).c_str());
