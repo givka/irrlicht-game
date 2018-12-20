@@ -128,8 +128,7 @@ int main()
         player.update(receiver);
         computer.update(player);
 
-        health_bar.update(player.getHealth());
-        stamina_bar.update(player.getStamina());
+
         loot.update(player, receiver);
         hp_upgrade.update(player, receiver);
         stam_upgrade.update(player, receiver);
@@ -139,6 +138,10 @@ int main()
         cursor.update();
 
         smgr->drawAll();
+
+        health_bar.update(player.getHealth());
+        stamina_bar.update(player.getStamina());
+
         gui->drawAll();
 
         driver->endScene();
