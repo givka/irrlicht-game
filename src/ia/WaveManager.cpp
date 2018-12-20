@@ -38,7 +38,7 @@ void WaveManager::loadJSON(std::string path_to_json)
             spawn.health = (*spawn_it)["health"].GetInt();
             spawn.damage = (*spawn_it)["damage"].GetInt();
             spawn.scale = (*spawn_it)["scale"].GetFloat();
-            spawn.speed= (*spawn_it)["speed"].GetFloat();
+            spawn.speed = (*spawn_it)["speed"].GetFloat();
             spawn.swing_timer = (*spawn_it)["swing_timer"].GetInt();
             spawn.model_id = (*spawn_it)["model_id"].GetInt();
             wave.spawns.push_back(spawn);
@@ -55,9 +55,9 @@ int WaveManager::getCurrentWave()
 void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::IrrlichtDevice *device, is::ITriangleSelector *selector)
 {
     int wave_index = 0;
-    for(auto w : m_waves)
+    for (auto w : m_waves)
     {
-        if(w.id == wave_id)
+        if (w.id == wave_id)
             break;
         wave_index++;
     }
@@ -67,8 +67,8 @@ void WaveManager::spawnWave(Level &level, int wave_id, Computer &computer, irr::
         int model_id = spawn.model_id;
         // if (model_id < 0)
         // int model_id = rand() % 31;
-        std::string path_text = std::to_string(model_id) + ".pcx";
-        std::string path_model = std::to_string(model_id) + ".md2";
+        std::string path_text = "data/enemies/" + std::to_string(model_id) + ".pcx";
+        std::string path_model = "data/enemies/" + std::to_string(model_id) + ".md2";
 
         is::IAnimatedMesh *mesh = device->getSceneManager()->getMesh(std::wstring(path_model.begin(), path_model.end()).c_str());
 
@@ -89,14 +89,16 @@ unsigned long WaveManager::getLastWaveId()
     return m_waves.size() - 1;
 }
 
-void WaveManager::incrementWaveId() {
-    m_current_wave ++;
+void WaveManager::incrementWaveId()
+{
+    m_current_wave++;
 }
 
-bool WaveManager::isCurrentWavePredetermined() {
-    for(auto w : m_waves)
+bool WaveManager::isCurrentWavePredetermined()
+{
+    for (auto w : m_waves)
     {
-        if(w.id == m_current_wave)
+        if (w.id == m_current_wave)
         {
             return true;
         }
@@ -104,6 +106,7 @@ bool WaveManager::isCurrentWavePredetermined() {
     return false;
 }
 
-void WaveManager::reset() {
+void WaveManager::reset()
+{
     m_current_wave = 0;
 }
