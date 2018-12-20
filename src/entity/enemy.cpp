@@ -490,7 +490,7 @@ bool Enemy::isAlive()
 bool Enemy::isAtRange(Player &player)
 {
     float dist = player.getPosition().getDistanceFrom(m_node->getPosition());
-    if (dist < 55 * m_scale) //todo: bounding box stuff
+    if (dist < 55 * m_scale/2) //todo: bounding box stuff
     {
         return true;
     }

@@ -29,15 +29,38 @@
                 {
                     "spawn_point_id": 0,
                     "health": 1000,
-                    "damage": 50,
-                    "scale": 2.5,
-                    "speed": 0.7,
-                    "swing_timer": 3000,
+                    "damage": 30,
+                    "scale": 2.9,
+                    "speed": 0.6,
+                    "swing_timer": 4000,
                     "model_id": 0
                 },
                 {
                     "spawn_point_id": 1,
-                    "health": 100,
+                    "health": 10,
+                    "damage": 10,
+                    "scale": 0.5,
+                    "speed": 1.0,
+                    "swing_timer": 800,
+                    "model_id": 2
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "spawns": [
+                {
+                    "spawn_point_id": 10,
+                    "health": 1500,
+                    "damage": 60,
+                    "scale": 2.9,
+                    "speed": 0.6,
+                    "swing_timer": 3000,
+                    "model_id": 2
+                },
+                {
+                    "spawn_point_id": 1,
+                    "health": 10,
                     "damage": 10,
                     "scale": 0.5,
                     "speed": 1.0,
