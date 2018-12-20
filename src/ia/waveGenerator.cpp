@@ -35,7 +35,7 @@ void WaveGenerator::spawnWave(Level &level, int wave_id, Computer &computer, irr
     Spawn spawn;
     for(int sp : generated)
     {
-        int model_id = rand() % 31;
+        int model_id = rand() % 19;
 
         //choose model
         std::string path_text = "data/models/" + std::to_string(model_id) + ".pcx";

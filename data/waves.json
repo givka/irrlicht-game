@@ -7,16 +7,16 @@
                     "spawn_point_id": 10,
                     "health": 100,
                     "damage": 100,
-                    "scale": 1.5,
+                    "scale": 1.0,
                     "speed": 1.0,
                     "swing_timer": 2000,
-                    "model_id": 1
+                    "model_id": 2
                 },
                 {
                     "spawn_point_id": 1,
                     "health": 100,
                     "damage": 100,
-                    "scale": 1.5,
+                    "scale": 1.0,
                     "speed": 1.0,
                     "swing_timer": 2000,
                     "model_id": 1
