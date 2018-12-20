@@ -62,3 +62,10 @@ void Score::update(int score)
         m_images.push_back(image);
     }
 }
+
+void Score::setVisible(bool b) {
+    for(auto i : m_images)
+    {
+        i->setVisible(b);
+    }
+}

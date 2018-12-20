@@ -16,6 +16,7 @@ class Score
   public:
     Score(irr::IrrlichtDevice *device, float x, float y, float scale);
     void update(int score);
+    void setVisible(bool);
 
   private:
     irr::IrrlichtDevice *m_device;
