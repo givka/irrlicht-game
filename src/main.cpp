@@ -269,7 +269,7 @@ int main()
             waves.update(waveMgr.getCurrentWave());
             sun.update();
             cursor.update();
-            if (player.getHealth() <= 0)
+            if (player.getHealth() <= 0 || player.getPosition().Y < -50)
             {
                 initState(END_SCREEN);
                 game_state = END_SCREEN;
