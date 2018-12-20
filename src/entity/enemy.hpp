@@ -56,10 +56,6 @@ class Enemy
     int m_last_dot_time = 0;
     int m_dot_tick_number = 0;
     Sword::enchant m_current_effect = Sword::NONE;
-    float resistance_fire = 0.5;
-    float resistance_poison = 0.3;
-    float DOT_DAMAGE = 20;
-    float VAMPIRIC_HEAL = 5;
     float FROST_SPEED = 0.25;
 
     // health bar
