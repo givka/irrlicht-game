@@ -108,10 +108,8 @@ void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
     if(m_node->getPosition().Y < 0)
     {
-        auto pos = m_node->getPosition();
-        pos.Y = 150;
-        m_node->setPosition(pos);
-        std::cout << "dsfgjdkslsdjklfgdsjklfds\n";
+        std::cout << "OOB" << std::endl;
+        switchToState(DYING, player);
     }
     switch (m_state)
     {
