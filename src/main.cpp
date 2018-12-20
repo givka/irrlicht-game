@@ -88,9 +88,9 @@ int main()
     WaveGenerator waveGen;
     waveMgr.loadJSON("data/waves.json");
 
-    Upgrade hp_upgrade(device, HEALTH, ic::vector3df(352, 125, -86), 10, 50, player);
+    Upgrade hp_upgrade(device, HEALTH, ic::vector3df(352, 125, -86), 10, 25, player);
     Upgrade damage_upgrade(device, SWORD, ic::vector3df(102, 125, -108), 10, 10, player);
-    Upgrade stam_upgrade(device, STAMINA, ic::vector3df(-119, 125, -141), 10, 50, player);
+    Upgrade stam_upgrade(device, STAMINA, ic::vector3df(-119, 125, -141), 10, 25, player);
 
     // add enemy
     Computer computer;
