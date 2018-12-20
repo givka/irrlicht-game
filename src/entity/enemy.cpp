@@ -240,11 +240,12 @@ void Enemy::attackPlayer(Player &player)
         m_already_hit_player = true;
         if (player.isBlocking())
         {
+            player.setStunAlpha(255);
             std::cout << "blocked" << std::endl; //todo: particle effect
         }
         else
         {
-            player.takeDamage(m_damage); //todo: screen flash / particle effect
+            player.takeDamage(m_damage);
         }
     }
 }

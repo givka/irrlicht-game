@@ -54,18 +54,18 @@ void Player::updateBloodScreen()
         m_hit_image->setScaleImage(true);
     }
 
-    if (m_teleport_alpha != 0)
+    if (m_stun_alpha != 0)
     {
-        if (m_teleport_image)
-            m_teleport_image->remove();
+        if (m_stun_image)
+            m_stun_image->remove();
 
-        m_teleport_alpha -= 1;
+        m_stun_alpha -= 1;
         const int width = m_device->getVideoDriver()->getScreenSize().Width;
         const int height = m_device->getVideoDriver()->getScreenSize().Height;
-        m_teleport_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
-        m_teleport_image->setImage(m_device->getVideoDriver()->getTexture("data/screen/teleport.png"));
-        m_teleport_image->setColor(iv::SColor(m_teleport_alpha, 255, 255, 255));
-        m_teleport_image->setScaleImage(true);
+        m_stun_image = m_device->getGUIEnvironment()->addImage(ic::recti(0, 0, width, height));
+        m_stun_image->setImage(m_device->getVideoDriver()->getTexture("data/screen/teleport.png"));
+        m_stun_image->setColor(iv::SColor(m_stun_alpha, 255, 255, 255));
+        m_stun_image->setScaleImage(true);
     }
 
     float screen_speed = 5;
@@ -84,6 +84,11 @@ void Player::updateBloodScreen()
             m_blood_screens.erase(m_blood_screens.begin() + i);
         }
     }
+}
+
+void Player::setStunAlpha(int alpha)
+{
+    m_stun_alpha = alpha;
 }
 
 void Player::addMaxHealth(int increment)
@@ -196,7 +201,7 @@ void Player::checkTeleportation()
             position.X += i == 0 ? -100 : 100;
             m_node->setPosition(position);
             m_collision->setTargetNode(m_node);
-            m_teleport_alpha = 123;
+            setStunAlpha(255);
             break;
         }
     }
