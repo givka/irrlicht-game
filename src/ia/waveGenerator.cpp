@@ -38,8 +38,8 @@ void WaveGenerator::spawnWave(Level &level, int wave_id, Computer &computer, irr
         int model_id = rand() % 16;
 
         //choose model
-        std::string path_text = "data/validated_models/" + std::to_string(model_id) + ".pcx";
-        std::string path_model = "data/validated_models/" + std::to_string(model_id) + ".md2";
+        std::string path_text = std::to_string(model_id) + ".pcx";
+        std::string path_model = std::to_string(model_id) + ".md2";
         is::IAnimatedMesh *mesh = device->getSceneManager()->getMesh(std::wstring(path_model.begin(), path_model.end()).c_str());
         iv::ITexture *texture = device->getVideoDriver()->getTexture(std::wstring(path_text.begin(), path_text.end()).c_str());
 
