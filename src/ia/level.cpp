@@ -66,7 +66,7 @@ bool Level::loadFromJSON(std::string path_to_json, irr::IrrlichtDevice *device, 
         orientation.Z = orient_coords[2].GetFloat();
 
         //TODO: spheres are for debugging
-        m_spawnPoints.push_back(SpawnPoint(id, position, orientation, true, smgr->addSphereSceneNode(5.0f, 16, 0, -1, position)));
+        m_spawnPoints.push_back(SpawnPoint(id, position, orientation, true, 0));
     }
     //loading lights: TODO
 }

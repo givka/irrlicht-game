@@ -124,23 +124,53 @@ int main()
 
     GameState game_state = MENU_SCREEN;
     initState(game_state);
+
+    bool state_init_flag = false;
+    auto start_text = gui->addStaticText(L"Press [E] to start",
+                                                     ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
+    auto help_text = gui->addStaticText(L"Press [R] for help",
+                                                     ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
+    auto title_text = gui->addStaticText(L"NOM DU JEU",
+                                                    ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
     while (device->run())
     {
         switch(game_state)
         {
-            case MENU_SCREEN:
-                if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON])
+            case MENU_SCREEN: {
+                if(!state_init_flag)
                 {
+
+                enemy_count_text->setVisible(false);
+                driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
+                                    ic::rect<s32>(0, 0, 1920, 1007));
+                start_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                help_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                title_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT/2, WIDTH, HEIGHT));
+                    state_init_flag = true;
+                }
+                if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON]) {
+                    state_init_flag = false;
+                    start_text->setVisible(false);
+                    title_text->setVisible(false);
+                    help_text->setVisible(false);
+                    enemy_count_text->setVisible(true);
                     initState(GAME);
                     game_state = GAME;
                     continue;
-                }else if(receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
-                {
+                } else if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN]) {
                     initState(HELP_SCREEN);
                     game_state = HELP_SCREEN;
+                    start_text->setVisible(false);
+                    title_text->setVisible(false);
+                    help_text->setVisible(false);
+                    state_init_flag = true;
                 }
                 break;
+            }
             case HELP_SCREEN:
+                driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
+                                    ic::rect<s32>(0, 0, 1920, 1007));
                 if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
                 {
                     initState(MENU_SCREEN);
