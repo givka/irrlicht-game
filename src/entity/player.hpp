@@ -56,6 +56,7 @@ class Player
     void reset();
     int getMaxHealth();
     int getMaxStamina();
+    void setStunAlpha(int alpha);
 
   private:
     const float MAX_FOV = 2.0;
@@ -80,8 +81,8 @@ class Player
 
     float m_hit_alpha = 0;
     ig::IGUIImage *m_hit_image = 0;
-    float m_teleport_alpha = 0;
-    ig::IGUIImage *m_teleport_image = 0;
+    float m_stun_alpha = 0;
+    ig::IGUIImage *m_stun_image = 0;
 
     bool m_waiting_for_unblock = false;
 

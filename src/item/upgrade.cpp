@@ -63,7 +63,12 @@ void Upgrade::addTooltip(Player &player)
 
 is::ISceneNode *Upgrade::addSphere(iv::SColor color)
 {
-    is::ISceneNode *node = m_device->getSceneManager()->addCubeSceneNode(10, 0, -1, m_position);
+    is::ISceneNode *node = m_device->getSceneManager()->addCubeSceneNode(10, 0, -1, m_position, ic::vector3df(50, 0, 0));
+    is::IParticleSystemSceneNode *particle_node = Utils::setParticuleSystem(m_device, node, ic::vector3df(0, 0, 0), color);
+    particle_node->getEmitter()->setMaxStartSize(ic::dimension2df(10, 10));
+    particle_node->getEmitter()->setMinStartSize(ic::dimension2df(25, 25));
+    particle_node->getEmitter()->setMaxAngleDegrees(360);
+    particle_node->getEmitter()->setMaxLifeTime(200);
     return node;
 }
 

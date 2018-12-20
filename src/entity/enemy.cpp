@@ -85,7 +85,7 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
         m_node->setMD2Animation(is::EMAT_PAIN_A);
         m_node->setLoopMode(false);
         m_node->setCurrentFrame(m_node->getStartFrame());
-        m_knockback_dir = (m_node->getPosition() - player.getPosition())/ic::vector3df(1.f, 2.0f, 1.f);
+        m_knockback_dir = (m_node->getPosition() - player.getPosition()) / ic::vector3df(1.f, 2.0f, 1.f);
         break;
     case DYING:
         m_node->setMD2Animation(is::EMAT_DEATH_FALLBACK);
@@ -247,11 +247,12 @@ void Enemy::attackPlayer(Player &player)
         m_already_hit_player = true;
         if (player.isBlocking())
         {
+            player.setStunAlpha(255);
             std::cout << "blocked" << std::endl; //todo: particle effect
         }
         else
         {
-            player.takeDamage(m_damage); //todo: screen flash / particle effect
+            player.takeDamage(m_damage);
         }
     }
 }
@@ -302,7 +303,7 @@ void Enemy::checkEnchantment(Player &player)
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
     case Sword::VAMPIRIC:
-        player.addSoulsEffect({VAMPIRIC_HEAL, Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
+        player.addSoulsEffect({0.1 * player.getSword().getAttack(), Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
         break;
     case Sword::POISON:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
@@ -341,9 +342,9 @@ void Enemy::checkDoT(Player &player)
     m_dot_tick_number++;
 
     if (m_current_effect == Sword::FIRE)
-        removeHealth(player, resistance_fire * DOT_DAMAGE, DT_DOT);
+        removeHealth(player, 0.1 * player.getSword().getAttack(), DT_DOT);
     else if (m_current_effect == Sword::POISON)
-        removeHealth(player, resistance_poison * DOT_DAMAGE, DT_DOT);
+        removeHealth(player, 0.1 * player.getSword().getAttack(), DT_DOT);
     else if (m_current_effect == Sword::FROST)
         m_speed = FROST_SPEED;
 }
