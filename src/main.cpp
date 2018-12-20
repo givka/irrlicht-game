@@ -132,6 +132,20 @@ int main()
                                         ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
     auto title_text = gui->addStaticText(L"NOM DU JEU",
                                          ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
+    auto game_over_text = gui->addStaticText(L"YOU DIED",
+                                             ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
+    auto restart_text = gui->addStaticText(L"Press [R] to restart",
+                                         ic::rect<irr::s32>(WIDTH/2, HEIGHT/2, WIDTH, HEIGHT));
+
+    restart_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+    restart_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - restart_text->getTextWidth() / 2, HEIGHT/2 + 70, WIDTH, HEIGHT));
+    restart_text->setVisible(false);
+    game_over_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT/2, WIDTH, HEIGHT));
+    game_over_text->setOverrideColor(iv::SColor(255, 255, 0, 0));
+    game_over_text->setVisible(false);
+
+    auto fader = gui->addInOutFader();
+    int fade_out_time = 0;
     while (device->run())
     {
         switch (game_state)
@@ -176,9 +190,28 @@ int main()
                     game_state = MENU_SCREEN;
                 }
                 break;
-            case END_SCREEN:
-                if (receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN])
+            case END_SCREEN: {
+                if(!state_init_flag)
                 {
+                    waves.setVisible(false);
+                    souls.setVisible(false);
+                    fader->fadeOut(4000);
+                    fade_out_time = device->getTimer()->getTime();
+                    state_init_flag = true;
+                    enemy_count_text->setVisible(false);
+                }
+                    game_over_text->setVisible(true);
+                    if(fade_out_time + 4000 < device->getTimer()->getTime())
+                    {
+                        fader->setVisible(false);
+                        driver->beginScene(true, true, iv::SColor(255, 0, 0, 0));
+                        fader->setEnabled(false);
+                        restart_text->setVisible(true);
+                    }
+                if (fade_out_time + 2000 < device->getTimer()->getTime() && receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN]) {
+                    state_init_flag = false;
+                    game_over_text->setVisible(false);
+                    restart_text->setVisible(false);
                     initState(GAME);
                     game_state = GAME;
                     flag = true;
@@ -190,9 +223,12 @@ int main()
                     wave_end_time = -2;
                     current_enemy_count = 0;
                     waveMgr.reset();
+                    waves.setVisible(true);
+                    souls.setVisible(true);
                     continue;
                 }
                 break;
+            }
             case GAME:
                 if(current_enemy_count != computer.getNumberOfEnemies())
                 {
