@@ -43,7 +43,7 @@ void Enemy::initialise(irr::IrrlichtDevice *device, is::IAnimatedMesh *mesh, iv:
     ic::vector3df boxCenter = m_node->getTransformedBoundingBox().getCenter();
     ic::vector3df ellipseRadius = boxMaxEdge - boxCenter;
 
-    is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(selector, m_node, ellipseRadius);
+    is::ISceneNodeAnimatorCollisionResponse *collision = smgr->createCollisionResponseAnimator(selector, m_node, ellipseRadius * m_scale);
     m_node->addAnimator(collision);
     collision->drop();
 
@@ -106,6 +106,13 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
 }
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
+    if(m_node->getPosition().Y < 0)
+    {
+        auto pos = m_node->getPosition();
+        pos.Y = 150;
+        m_node->setPosition(pos);
+        std::cout << "dsfgjdkslsdjklfgdsjklfds\n";
+    }
     switch (m_state)
     {
     case IDLE:
@@ -482,7 +489,7 @@ bool Enemy::isAlive()
 bool Enemy::isAtRange(Player &player)
 {
     float dist = player.getPosition().getDistanceFrom(m_node->getPosition());
-    if (dist < 55) //todo: bounding box stuff
+    if (dist < 55 * m_scale) //todo: bounding box stuff
     {
         return true;
     }
