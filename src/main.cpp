@@ -123,8 +123,8 @@ int main()
                                          ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
     auto help_text = gui->addStaticText(L"Press [R] to display help",
                                         ic::rect<irr::s32>(10, HEIGHT - 60, WIDTH, HEIGHT));
-    auto title_text = gui->addStaticText(L"NOM DU JEU",
-                                         ic::rect<irr::s32>(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT));
+    auto title_text = gui->addStaticText(L"IrrSouls",
+                                         ic::rect<irr::s32>(WIDTH / 2, HEIGHT / 2, 2*WIDTH, HEIGHT));
     auto game_over_text = gui->addStaticText(L"YOU DIED",
                                              ic::rect<irr::s32>(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT));
     auto restart_text = gui->addStaticText(L"Press [R] to restart",
@@ -298,7 +298,7 @@ int main()
         int fps = driver->getFPS();
         if (lastFPS != fps)
         {
-            core::stringw str = L"BARRIERE - BOUCAUD - Irrlicht Engine [";
+            core::stringw str = L"IrrSouls - Arthur BARRIERE - Adrien BOUCAUD - Irrlicht Engine [";
             str += driver->getName();
             str += "] FPS:";
             str += fps;
