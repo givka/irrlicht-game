@@ -32,7 +32,7 @@ void Sword::initialise(irr::IrrlichtDevice *device, is::ISceneNode *nodePlayer)
     m_node_light = smgr->addLightSceneNode(m_node,
                                            ic::vector3df(12.5, -10, -15),
                                            iv::SColorf(getCurrentEnchantColor()),
-                                           250.0f);
+                                           500.0f);
 
     m_particles.clear();
 
@@ -201,7 +201,8 @@ std::string Sword::getEnchantText(Sword sword)
            m_enchant_names[sword.m_current_enchant];
 }
 
-void Sword::reset() {
+void Sword::reset()
+{
     m_damage_min = 20;
     m_damage_max = m_damage_min * 1.2;
     m_crit_percent = 20;
