@@ -9,7 +9,6 @@
 #include "ia/WaveManager.h"
 #include "ui/playerbar.hpp"
 #include "ui/score.hpp"
-#include "item/loot.hpp"
 #include "item/upgrade.hpp"
 #include "item/sun.hpp"
 #include "ia/waveGenerator.hpp"
@@ -89,9 +88,9 @@ int main()
     WaveGenerator waveGen;
     waveMgr.loadJSON("data/waves.json");
 
-    Loot loot(device, player);
-    Upgrade hp_upgrade(device, player, HEALTH, ic::vector3df(352, 125, -86), 10, 50);
-    Upgrade stam_upgrade(device, player, STAMINA, ic::vector3df(-119, 125, -141), 10, 50);
+    Upgrade hp_upgrade(device, HEALTH, ic::vector3df(352, 125, -86), 10, 50, player);
+    Upgrade damage_upgrade(device, SWORD, ic::vector3df(102, 125, -108), 10, 10, player);
+    Upgrade stam_upgrade(device, STAMINA, ic::vector3df(-119, 125, -141), 10, 50, player);
 
     // add enemy
     Computer computer;
@@ -147,6 +146,7 @@ int main()
 
     auto fader = gui->addInOutFader();
     int fade_out_time = 0;
+
     while (device->run())
     {
         switch (game_state)
@@ -179,25 +179,25 @@ int main()
                 break;
             };
             case END_SCREEN: {
-                if(!state_init_flag)
-                {
+                if (!state_init_flag) {
                     waves.setVisible(false);
                     souls.setVisible(false);
                     cursor.setVisible(false);
                     fader->fadeOut(4000);
+                    fader->setVisible(true);
                     fade_out_time = device->getTimer()->getTime();
                     state_init_flag = true;
                     enemy_count_text->setVisible(false);
                 }
-                    game_over_text->setVisible(true);
-                    if(fade_out_time + 4000 < device->getTimer()->getTime())
-                    {
-                        fader->setVisible(false);
-                        driver->beginScene(true, true, iv::SColor(255, 0, 0, 0));
-                        fader->setEnabled(false);
-                        restart_text->setVisible(true);
-                    }
-                if (fade_out_time + 2000 < device->getTimer()->getTime() && receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN]) {
+                game_over_text->setVisible(true);
+                if (fade_out_time + 4000 < device->getTimer()->getTime()) {
+                    fader->setVisible(false);
+                    driver->beginScene(true, true, iv::SColor(255, 0, 0, 0));
+                    fader->setEnabled(false);
+                    restart_text->setVisible(true);
+                }
+                if (fade_out_time + 2000 < device->getTimer()->getTime() &&
+                    receiver.getStates()[EventReceiver::KEY_DEBUG_TRIGGER_SPAWN]) {
                     state_init_flag = false;
                     game_over_text->setVisible(false);
                     restart_text->setVisible(false);
@@ -220,53 +220,53 @@ int main()
                 }
                 break;
             }
-            case GAME:
-                if(current_enemy_count != computer.getNumberOfEnemies())
+        case GAME:
+            if (current_enemy_count != computer.getNumberOfEnemies())
+            {
+                current_enemy_count = computer.getNumberOfEnemies();
+                enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
+                enemy_count_text->setText(enemy_count_string.c_str());
+            }
+            else if (wave_end_time >= 0)
+                enemy_count_text->setText(L"Next wave incoming");
+
+            //check for end of wave, start next wave //TODO: add score, pause between waves, etc
+            if (computer.isWaveFinished())
+            {
+                if (wave_end_time == -1)
+                    wave_end_time = device->getTimer()->getTime();
+                else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
                 {
-                    current_enemy_count = computer.getNumberOfEnemies();
-                    enemy_count_string = L"Enemies: " + std::to_wstring(current_enemy_count);
-                    enemy_count_text->setText(enemy_count_string.c_str());
+                    wave_end_time = -1;
+                    waveMgr.incrementWaveId();
+                    if (waveMgr.isCurrentWavePredetermined())
+                        waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
+                    else
+                        waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
                 }
-                else if(wave_end_time >= 0)
-                    enemy_count_text->setText(L"Next wave incoming");
+            }
 
-                //check for end of wave, start next wave //TODO: add score, pause between waves, etc
-                if (computer.isWaveFinished())
-                {
-                    if (wave_end_time == -1)
-                        wave_end_time = device->getTimer()->getTime();
-                    else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
-                    {
-                        wave_end_time = -1;
-                        waveMgr.incrementWaveId();
-                        if (waveMgr.isCurrentWavePredetermined())
-                            waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
-                        else
-                            waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
-                    }
-                }
+            driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
 
-                driver->beginScene(true, true, iv::SColor(0, 0, 0, 0));
+            player.update(receiver);
+            computer.update(player);
 
-                player.update(receiver);
-                computer.update(player);
-
-                smgr->drawAll();
-                health_bar.update(player.getHealth(), player.getMaxHealth());
-                stamina_bar.update(player.getStamina(), player.getMaxStamina());
-                loot.update(player, receiver);
-                hp_upgrade.update(player, receiver);
-                stam_upgrade.update(player, receiver);
-                souls.update(player.getSoulsToShow());
-                waves.update(waveMgr.getCurrentWave());
-                sun.update();
-                cursor.update();
-                if (player.getHealth() <= 0)
-                {
-                    initState(END_SCREEN);
-                    game_state = END_SCREEN;
-                }
-                break;
+            smgr->drawAll();
+            health_bar.update(player.getHealth(), player.getMaxHealth());
+            stamina_bar.update(player.getStamina(), player.getMaxStamina());
+            damage_upgrade.update(player, receiver);
+            hp_upgrade.update(player, receiver);
+            stam_upgrade.update(player, receiver);
+            souls.update(player.getSoulsToShow());
+            waves.update(waveMgr.getCurrentWave());
+            sun.update();
+            cursor.update();
+            if (player.getHealth() <= 0)
+            {
+                initState(END_SCREEN);
+                game_state = END_SCREEN;
+            }
+            break;
         }
         gui->drawAll();
 

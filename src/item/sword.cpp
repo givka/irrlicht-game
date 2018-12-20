@@ -9,7 +9,7 @@ namespace is = irr::scene;
 namespace iv = irr::video;
 
 Sword::Sword()
-    : m_damage_min(20), m_damage_max(m_damage_min * 1.2), m_crit_percent(20), m_current_enchant(NONE)
+    : m_damage_min(20), m_damage_max(m_damage_min * 1.2), m_crit_percent(0), m_current_enchant(NONE)
 {
 }
 
