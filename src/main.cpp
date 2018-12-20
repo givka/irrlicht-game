@@ -38,10 +38,10 @@ typedef enum GameState
 
 void initState(GameState state)
 {
-    switch(state)
+    switch (state)
     {
         case GAME:
-        std::cout << "init game" << std::endl;
+            std::cout << "init game" << std::endl;
             break;
         case MENU_SCREEN:
             std::cout << "init menu" << std::endl;
@@ -127,26 +127,25 @@ int main()
 
     bool state_init_flag = false;
     auto start_text = gui->addStaticText(L"Press [E] to start",
-                                                     ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
+                                         ic::rect<irr::s32>(10, HEIGHT - 100, 500, HEIGHT));
     auto help_text = gui->addStaticText(L"Press [R] for help",
-                                                     ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
+                                        ic::rect<irr::s32>(10, HEIGHT - 60, 500, HEIGHT));
     auto title_text = gui->addStaticText(L"NOM DU JEU",
-                                                    ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
+                                         ic::rect<irr::s32>(WIDTH / 2, HEIGHT/2 , WIDTH, HEIGHT));
     while (device->run())
     {
-        switch(game_state)
+        switch (game_state)
         {
             case MENU_SCREEN: {
                 if(!state_init_flag)
                 {
-
-                enemy_count_text->setVisible(false);
-                driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
-                                    ic::rect<s32>(0, 0, 1920, 1007));
-                start_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                help_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                title_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
-                title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT/2, WIDTH, HEIGHT));
+                    enemy_count_text->setVisible(false);
+                    driver->draw2DImage(driver->getTexture("data/bg.png"), ic::rect<s32>(0, 0, WIDTH, HEIGHT),
+                                        ic::rect<s32>(0, 0, 1920, 1007));
+                    start_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    help_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    title_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
+                    title_text->setRelativePosition(ic::rect<s32>(WIDTH / 2 - title_text->getTextWidth() / 2, HEIGHT/2, WIDTH, HEIGHT));
                     state_init_flag = true;
                 }
                 if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON]) {
@@ -207,13 +206,13 @@ int main()
                 //check for end of wave, start next wave //TODO: add score, pause between waves, etc
                 if (computer.isWaveFinished())
                 {
-                    if(wave_end_time == -1)
+                    if (wave_end_time == -1)
                         wave_end_time = device->getTimer()->getTime();
-                    else if(wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
+                    else if (wave_end_time == -2 || wave_end_time < device->getTimer()->getTime() - 3000)
                     {
                         wave_end_time = -1;
                         waveMgr.incrementWaveId();
-                        if(waveMgr.isCurrentWavePredetermined())
+                        if (waveMgr.isCurrentWavePredetermined())
                             waveMgr.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector); //spawn next wave
                         else
                             waveGen.spawnWave(level, waveMgr.getCurrentWave(), computer, device, selector);
@@ -226,8 +225,8 @@ int main()
                 computer.update(player);
 
                 smgr->drawAll();
-                health_bar.update(player.getHealth());
-                stamina_bar.update(player.getStamina());
+                health_bar.update(player.getHealth(), player.getMaxHealth());
+                stamina_bar.update(player.getStamina(), player.getMaxStamina());
                 loot.update(player, receiver);
                 hp_upgrade.update(player, receiver);
                 stam_upgrade.update(player, receiver);
@@ -235,7 +234,8 @@ int main()
                 waves.update(waveMgr.getCurrentWave());
                 sun.update();
                 cursor.update();
-                if(player.getHealth() <= 0) {
+                if (player.getHealth() <= 0)
+                {
                     initState(END_SCREEN);
                     game_state = END_SCREEN;
                 }
