@@ -132,7 +132,7 @@ int main()
                                              ic::rect<irr::s32>(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT));
     auto restart_text = gui->addStaticText(L"Press [R] to restart",
                                            ic::rect<irr::s32>(WIDTH / 2, HEIGHT / 2, WIDTH, HEIGHT));
-    auto help_screen_text = gui->addStaticText(L"Waves of monsters will appear !\nDefeat them all to progress\nYou can upgrade your character ([E] to buy)\n[Z, Q, S, D] to move\n[Left Click] to Attack\n[Right Click] to parry\n",
+    auto help_screen_text = gui->addStaticText(L"Waves of monsters will appear !\nDefeat them all to progress\nUse teleporters to get out of bad situations\nYou can upgrade your character ([E] to buy)\n[Z, Q, S, D] to move\n[Left Click] to Attack\n[Right Click] to parry\n",
                                                ic::rect<irr::s32>(0, 0, WIDTH, HEIGHT));
     help_screen_text->setOverrideColor(iv::SColor(255, 255, 255, 255));
     help_screen_text->setVisible(false);
@@ -269,7 +269,7 @@ int main()
             waves.update(waveMgr.getCurrentWave());
             sun.update();
             cursor.update();
-            if (player.getHealth() <= 0)
+            if (player.getHealth() <= 0 || player.getPosition().Y < -50)
             {
                 initState(END_SCREEN);
                 game_state = END_SCREEN;
