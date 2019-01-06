@@ -95,6 +95,9 @@ void Upgrade::update(Player &player, EventReceiver &receiver)
 
     if (receiver.getStates()[EventReceiver::KEY_SWITCH_WEAPON])
     {
+        if (m_device->getTimer()->getTime() - m_timer < 200)
+            return;
+        m_timer = m_device->getTimer()->getTime();
 
         if (player.getNode()->getPosition().getDistanceFrom(m_position) < 50 && player.getSouls() > m_cost)
         {
@@ -128,9 +131,6 @@ void Upgrade::reset()
 
 void Upgrade::changeSword(Player &player)
 {
-    if (m_device->getTimer()->getTime() - m_timer < 200)
-        return;
-    m_timer = m_device->getTimer()->getTime();
     Sword sword_buffer = player.getSword();
     player.setSword(m_sword);
 
