@@ -106,7 +106,7 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
 }
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
-    if (m_node->getPosition().Y < 0 && m_state != DEAD && m_state != DYING)
+    if (m_node->getPosition().Y < 0 && m_state != DYING)
     {
         switchToState(DYING, player);
     }
