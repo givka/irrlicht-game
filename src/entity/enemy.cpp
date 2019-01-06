@@ -106,9 +106,8 @@ void Enemy::switchToState(Enemy::enemy_state state, Player &player)
 }
 void Enemy::update(Player &player, std::vector<Enemy> enemies)
 {
-    if (m_node->getPosition().Y < 0)
+    if (m_node->getPosition().Y < 0 && m_state != DEAD && m_state != DYING)
     {
-        std::cout << "OOB" << std::endl;
         switchToState(DYING, player);
     }
     switch (m_state)
@@ -300,7 +299,7 @@ void Enemy::checkEnchantment(Player &player)
         setEffect(player, ic::vector3df(0, 0.2f, 0));
         break;
     case Sword::VAMPIRIC:
-        player.addSoulsEffect({(int) (0.1 * player.getSword().getAttack()), Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
+        player.addSoulsEffect({(int)(0.1 * player.getSword().getAttack()), Player::ST_HEALTH, player.getSword().getEnchantColor(Sword::VAMPIRIC), m_node->getPosition(), 0});
         break;
     case Sword::POISON:
         setEffect(player, ic::vector3df(0, 0.2f, 0));
